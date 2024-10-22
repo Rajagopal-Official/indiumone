@@ -5,14 +5,19 @@
     min-height: 100vh;
     background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%);
     animation: backgroundAnimation 5s ease-in-out infinite alternate;
-    overflow: hidden; 
+    overflow: hidden;
   "
 >
   <div
     style="
       display: flex;
       flex: 1;
-      background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%);
+      background: linear-gradient(
+        257deg,
+        #47f3d0 0%,
+        #278ef1 52%,
+        #cb5edc 100%
+      );
     "
   >
     <div
@@ -62,8 +67,8 @@
         <img
           src="../../assets/login.jpg"
           style="
-            width: 400px; 
-            height: auto; 
+            width: 400px;
+            height: auto;
             border-radius: 15px;
             object-fit: cover;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
@@ -102,7 +107,9 @@
           style="
             width: 350px;
             text-align: center;
-            background: transparent linear-gradient(180deg, #4584ED 0%, #4584ED24 100%) 0% 0% no-repeat padding-box;
+            background: transparent
+              linear-gradient(180deg, #4584ed 0%, #4584ed24 100%) 0% 0%
+              no-repeat padding-box;
             backdrop-filter: blur(10px);
             padding: 30px; /* Adjust padding */
             border-radius: 15px;
@@ -113,22 +120,10 @@
           onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 12px 24px rgba(0, 0, 0, 0.3)'"
           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(0, 0, 0, 0.2)'"
         >
-          <h2
-            style="
-              font-size: 24px;
-              margin-bottom: 20px;
-              color: black
-            "
-          >
+          <h2 style="font-size: 24px; margin-bottom: 20px; color: black">
             Sign In
           </h2>
-          <p
-            style="
-              font-size: 14px;
-              color: black;
-              margin-bottom: 20px;
-            "
-          >
+          <p style="font-size: 14px; color: black; margin-bottom: 20px">
             Sign in to see and use all the applications that are internally
             managed and used by our organization.
           </p>
@@ -155,7 +150,7 @@
             <img
               src="../../assets/microsoft-icon.png"
               alt="Microsoft Logo"
-              style="width: 24px; margin-right: 10px;border: black;"
+              style="width: 24px; margin-right: 10px; border: black"
             />
             Sign in with Microsoft
           </button>
@@ -166,7 +161,7 @@
 
   <mat-toolbar
     color="primary"
-    style="justify-content: flex-end; height: 30px; padding: 0 16px;"
+    style="justify-content: flex-end; height: 30px; padding: 0 16px"
   >
     <span style="font-size: 14px; color: white">
       &copy; {{ currentYear }} Indium Software. All rights reserved.
