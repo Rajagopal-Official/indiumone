@@ -4,6 +4,8 @@ import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { MsalService, MSAL_INSTANCE, MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalBroadcastService } from '@azure/msal-angular';
 import { msalConfig, loginRequest } from '../src/app/auth/auth-config';
 import { appConfig } from './app/app.config';
+import {register} from 'swiper/element/bundle'
+register()
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
