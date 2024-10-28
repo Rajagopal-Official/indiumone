@@ -1,0 +1,276 @@
+<div
+  style="
+    background-color: cornflowerblue;
+    border-radius: 8px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 80vh;
+  "
+>
+  <div style="display: flex; justify-content: flex-end;">
+    <button mat-icon-button (click)="close()" style="cursor: pointer;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    style="
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: cornflowerblue;
+    "
+  >
+    <h2 style="text-align: center; margin-bottom: 20px">
+      Add a New Application to our Organization
+    </h2>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationName"
+        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        >Application Name</label
+      >
+      <input
+        id="applicationName"
+        type="text"
+        formControlName="applicationName"
+        style="
+          width: 97%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+        "
+      />
+      @if(form.get('applicationName')?.invalid &&
+      (form.get('applicationName')?.dirty ||
+      form.get('applicationName')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        Application Name field is required.
+      </div>
+      }
+    </div>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationCategory"
+        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        >Accessible Categories</label
+      >
+      <mat-form-field appearance="fill" style="width: 100%" class="mat-select-container">
+        <mat-select
+          [formControl]="form.controls.accessibleDepartments"
+          multiple
+          (selectionChange)="onDepartmentsChange($event)"
+          style="width: 100%"
+        >
+          @for (department of departments; track department) {
+          <mat-option
+            [value]="department"
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            {{ department }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-chip-listbox>
+        @for (dept of selectedDepartments; track dept) {
+        <mat-chip-option (removed)="removeDepartment(dept)">
+          {{ dept }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </div>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationRedirectLink"
+        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        >Application Redirect Link</label
+      >
+      <input
+        id="applicationRedirectLink"
+        type="text"
+        formControlName="applicationRedirectLink"
+        style="
+          width: 97%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+        "
+      />
+      @if(form.get('applicationRedirectLink')?.invalid &&
+      (form.get('applicationRedirectLink')?.dirty ||
+      form.get('applicationRedirectLink')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        Application Redirect Link field is required.
+      </div>
+      }
+    </div>
+
+    <div style="margin-bottom: 9px;display: flex;flex-direction: column;">
+        <label
+          for="applicationImage"
+          style="display: block; margin-bottom: 5px; font-weight: 400;"
+          >Application Image</label
+        >
+        <input
+          id="applicationImage"
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          style="
+            width: 97%;
+            padding: 8px;
+            border: 1px solid black;
+            border-radius: 4px;
+            height: 35px;
+            background-color: #687ae8;
+            color: black;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        />
+        @if(form.get('applicationImage')?.invalid &&
+        (form.get('applicationImage')?.dirty ||
+        form.get('applicationImage')?.touched)){
+        <div style="color: red; margin-top: 5px">
+          Application Image field is required.
+        </div>
+        }
+      </div>
+      
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationDescription"
+        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        >Application Description</label
+      >
+      <textarea
+        id="applicationDescription"
+        formControlName="applicationDescription"
+        style="
+          width: 97%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          resize: vertical;
+          background-color: #687ae8;
+          color: black;
+        "
+      ></textarea>
+      @if(form.get('applicationDescription')?.invalid &&
+      (form.get('applicationDescription')?.dirty ||
+      form.get('applicationDescription')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        Application Description field is required.
+      </div>
+      }
+    </div>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="accessibleDepartments"
+        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        >Accessible Departments</label
+      >
+      <mat-form-field appearance="fill" style="width: 100%" class="mat-select-container">
+        <mat-select
+          [formControl]="form.controls.accessibleDepartments"
+          multiple
+          (selectionChange)="onDepartmentsChange($event)"
+          style="width: 100%"
+        >
+          @for (department of departments; track department) {
+          <mat-option
+            [value]="department"
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            {{ department }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-chip-listbox>
+        @for (dept of selectedDepartments; track dept) {
+        <mat-chip-option (removed)="removeDepartment(dept)">
+          {{ dept }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      "
+    >
+      <button
+        type="submit"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #538392;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          border-radius: 20px;
+          border: 2px solid black;
+          cursor: pointer;
+        "
+      >
+        Submit
+      </button>
+      <button
+        mat-raised-button
+        (click)="close()"
+        color="accent"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #538392;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          cursor: pointer;
+          border-radius: 20px;
+          border: 2px solid black;
+          cursor: pointer;
+        "
+      >
+        Close
+      </button>
+    </div>
+  </form>
+</div>
