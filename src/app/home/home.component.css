@@ -348,3 +348,12 @@ links
     width: 100%;
   }
 }
+.toolbar {
+  justify-content: flex-end;
+  height: 30px;
+  padding: 0 16px;
+}
+.footer-text {
+  font-size: 14px;
+  color: white;
+}
