@@ -71,6 +71,13 @@ export class AuthComponent implements OnInit {
     this.AuthService.logout();
   }
 
+  navigateToSSO() {
+    const sourceUrl = encodeURIComponent(`${window.location.origin}/home`);
+    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${sourceUrl}`;
+
+    window.location.href = ssoUrl; // Redirect the user to the SSO UR
+  }
+
   @HostListener('window:mousemove')
   @HostListener('window:keypress')
   resetSessionTimer() {

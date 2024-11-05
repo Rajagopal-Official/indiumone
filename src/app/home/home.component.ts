@@ -1,4 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  signal,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../auth/auth.service';
 import { Home } from './home.model';
@@ -20,6 +27,11 @@ import { NotificationModalComponent } from '../notification-modal/notification-m
 import { NewApplicationComponent } from '../new-application/new-application.component';
 import { GrantAccessComponent } from '../grant-access/grant-access.component';
 import { ApplicationsService } from '../applications.service';
+import {
+  HttpClientModule,
+  HttpClient,
+  HttpHeaders,
+} from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -37,18 +49,31 @@ import { ApplicationsService } from '../applications.service';
     MatSidenavModule,
     MatListModule,
     RouterLink,
-    MatTooltipModule
+    MatTooltipModule,
+    HttpClientModule,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  constructor(private authService: AuthService, private dialog: MatDialog, private applicationsService: ApplicationsService) {}
   notificationsService = inject(NotificationsService);
   usernameSignal = this.authService.getUsernameSignal();
   currentYear: number = new Date().getFullYear();
+  authorizedApps: any[] = []; // Store authorized apps
+
+  constructor(
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private applicationsService: ApplicationsService,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit() {
+    // Call the method to fetch authorized apps if the token exists
+    this.fetchAuthorizedApps();
+  }
 
   getDisplayName(): string {
     const username = this.usernameSignal();
@@ -63,34 +88,48 @@ export class HomeComponent {
     this.authService.logout();
   }
 
+  // Method to fetch authorized apps
+  // Method to fetch authorized apps
+  fetchAuthorizedApps(): void {
+    const token = sessionStorage.getItem('authToken'); // Get token from session storage
+
+    if (token) {
+      const url = '/api/get_authorized_apps'; // Use the proxy endpoint
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`, // Add token to Authorization header
+        'Content-Type': 'application/json',
+      });
+
+      this.http.get<any[]>(url, { headers }).subscribe(
+        (response) => {
+          console.log('Authorized apps response:', response);
+
+          // Map the response to match `filteredItems` structure
+          const formattedItems = response.map((item) => ({
+            title: item.app_name,
+            image: item.app_image_url,
+            description: item.app_description,
+            department: item.department_access_restriction,
+            link: item.app_url,
+          }));
+
+          // Update `filteredItems` with the formatted items
+          this.filteredItems.set(formattedItems);
+        },
+        (error) => {
+          console.error('Error fetching authorized apps:', error);
+        }
+      );
+    } else {
+      console.log('No token found in session storage.');
+    }
+  }
+
   searchTerm = signal<string>('');
   items = signal<Home[]>(this.applicationsService.applications());
   filteredItems = signal<Home[]>(this.items());
   slides = signal<any[]>([
-    {
-      title: 'An AI-Driven Digital Engineering Company',
-      stream: 'Engineering +AI',
-      desc: 'Indium is a fast-growing, AI-driven digital engineering services company, developing cutting-edge solutions across applications and data.',
-      img: '../../assets/AI.jpg',
-    },
-    {
-      title: 'Apps of our Organization',
-      stream: 'Can utilize all the apps at one place',
-      desc: 'One stop place to leverage all the technical essentials ,which is made for us and made by us',
-      img: '../../assets/slide2.jpg',
-    },
-    {
-      title: 'Engineering Solutions Hub',
-      stream: 'Accelerate your projects with our in-house tools',
-      desc: 'Access all the powerful engineering solutions and platforms developed by our teams to enhance productivity.',
-      img: '../../assets/Engineering.jpg',
-    },
-    {
-      title: 'AI-Driven Innovation Center',
-      stream: 'Unlock AI tools and platforms',
-      desc: 'Explore a collection of AI-powered apps and services designed to drive innovation across projects and processes.',
-      img: '../../assets/AWS.jpg',
-    },
+    // Your slide data...
   ]);
 
   searchApps() {

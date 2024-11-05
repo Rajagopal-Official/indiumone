@@ -139,61 +139,61 @@
 
     <section id="cards1" class="cards1">
       @for (item of filteredItems(); track item.title) {
-        <div class="box" style="background-color: #eafaff; padding: 10px">
-          <img
-            [src]="item.image"
-            [alt]="item.title"
-            style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 1.2)"
-          />
-          <h3 style="font-weight: 700">{{ item.title }}</h3>
-          <h3 style="font-weight: 300; font-size: 8;">
-            <span style="font-weight: 500">Department:</span>{{ item.department }}
-          </h3>
-          <p>{{ item.description }}</p>
-          <a [href]="item.link" target="_blank" class="btn">
-            <div style="display: flex; gap: 10px">
-              <button
-                mat-raised-button
-                color="warn"
-                style="
-                  height: auto;
-                  width: auto;
-                  margin: 20px 0;
-                  padding: 10px;
-                  border-radius: 7px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <p style="font-size: 11px; margin: 0; padding: 0">
-                  Navigate to App
-                </p>
-              </button>
-              <button
-                mat-raised-button
-                color="warn"
-                style="
-                  height: auto;
-                  width: auto;
-                  margin: 20px 0;
-                  padding: 10px;
-                  border-radius: 7px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <p style="font-size: 11px; margin: 0; padding: 0">
-                  Request Access
-                </p>
-              </button>
-            </div>
-          </a>
-        </div>
+      <div class="box" style="background-color: #eafaff; padding: 10px">
+        <img
+          [src]="item.image"
+          [alt]="item.title"
+          style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 1.2)"
+        />
+        <h3 style="font-weight: 700">{{ item.title }}</h3>
+        <h3 style="font-weight: 300; font-size: 8">
+          <span style="font-weight: 500">Department:</span>{{ item.department }}
+        </h3>
+        <p>{{ item.description }}</p>
+        <a [href]="item.link" target="_blank" class="btn">
+          <div style="display: flex; gap: 10px">
+            <button
+              mat-raised-button
+              color="warn"
+              style="
+                height: auto;
+                width: auto;
+                margin: 20px 0;
+                padding: 10px;
+                border-radius: 7px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <p style="font-size: 11px; margin: 0; padding: 0">
+                Navigate to App
+              </p>
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              style="
+                height: auto;
+                width: auto;
+                margin: 20px 0;
+                padding: 10px;
+                border-radius: 7px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <p style="font-size: 11px; margin: 0; padding: 0">
+                Request Access
+              </p>
+            </button>
+          </div>
+        </a>
+      </div>
       }
     </section>
-        <!-- Notification Modal -->
+    <!-- Notification Modal -->
     <ng-template matDialogContainer>
       <app-notifications-dialog></app-notifications-dialog>
     </ng-template>

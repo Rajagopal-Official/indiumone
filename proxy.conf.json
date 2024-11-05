@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://indiumssoauth.azurewebsites.net",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

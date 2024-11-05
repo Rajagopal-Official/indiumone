@@ -5,17 +5,16 @@ import { loginRequest } from './auth-config';
 import Swal from 'sweetalert2';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private timeoutId: any;
   private sessionDuration = 0.2 * 60 * 1000; // 20 seconds
-  private usernameSignal: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+  private usernameSignal: WritableSignal<string | undefined> = signal<
+    string | undefined
+  >(undefined);
 
-  constructor(
-    private authService: MsalService,
-    private router: Router
-  ) {}
+  constructor(private authService: MsalService, private router: Router) {}
 
   getUsernameSignal() {
     return this.usernameSignal;
@@ -25,20 +24,32 @@ export class AuthService {
     this.usernameSignal.set(username);
   }
 
+  // logout() {
+  //   this.authService.logout().subscribe(() => {
+  //     this.setUsername(undefined);
+  //     this.clearSessionTimer();
+  //     localStorage.clear();
+  //     sessionStorage.clear(); // Clear session storage
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'Logged out successfully',
+  //       showConfirmButton: false,
+  //       timer: 1500
+  //     });
+  //     this.router.navigate(['/login']); // Redirect to login page after logout
+  //   });
+  // }
+
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.setUsername(undefined);
-      this.clearSessionTimer();
-      localStorage.clear();
-      sessionStorage.clear(); // Clear session storage
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged out successfully',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      this.router.navigate(['/login']); // Redirect to login page after logout
+    // Clear token and session data
+    sessionStorage.removeItem('authToken'); // Erase token from session storage
+    Swal.fire({
+      icon: 'success',
+      title: 'Logged out successfully',
+      showConfirmButton: false,
+      timer: 1500,
     });
+    this.router.navigate(['/']); // Redirect to the login page
   }
 
   login() {
@@ -50,7 +61,7 @@ export class AuthService {
           icon: 'success',
           title: 'Logged in successfully',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
         this.startSessionTimer();
       }
