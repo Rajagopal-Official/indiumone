@@ -4,4 +4,6 @@ export interface Home {
     description: string;
     link: string;
     department: string | string[];
+    bandComparison?:string,
+    bandLevel?:string
   }

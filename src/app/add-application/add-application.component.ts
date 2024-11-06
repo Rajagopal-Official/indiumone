@@ -12,11 +12,11 @@ import { ApplicationsService } from '../applications.service';
   selector: 'app-new-application',
   standalone: true,
   imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatChipsModule, MatIconModule],
-  templateUrl: './new-application.component.html',
-  styleUrl: './new-application.component.css',
+  templateUrl: './add-application.component.html',
+  styleUrl: './add-application.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class NewApplicationComponent {
+export class AddApplicationComponent {
   form = new FormGroup({
     applicationName: new FormControl(''),
     applicationCategory: new FormControl(''),
@@ -31,7 +31,7 @@ export class NewApplicationComponent {
   departments: string[] = ['Admin', 'HR', 'Finance', 'IT', 'Marketing', 'Data & AI', 'Application Engineering', 'Digital Assurance'];
   selectedDepartments: string[] = [];
 
-  constructor(public dialogRef: MatDialogRef<NewApplicationComponent>, private applicationsService: ApplicationsService) {}
+  constructor(public dialogRef: MatDialogRef<AddApplicationComponent>, private applicationsService: ApplicationsService) {}
 
   onSubmit() {
     const newApplication: Home = {

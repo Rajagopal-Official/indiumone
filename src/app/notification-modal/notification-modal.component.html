@@ -1,4 +1,4 @@
-<div style="background-color: cornflowerblue; padding: 20px">
+<div style="background-color: whitesmoke !important; padding: 20px">
   <div style="display: flex; justify-content: flex-end">
     <button mat-icon-button (click)="close()" style="cursor: pointer">
       <mat-icon>close</mat-icon>
@@ -6,7 +6,11 @@
   </div>
   <h2 style="font-weight: 700">Notifications</h2>
   <ul style="list-style-type: none; padding: 0">
-    @for (notification of notifications(); track $index) {
+    @if(notifications().length == 0) {
+    <p style="text-align: center; font-weight: 500">
+      There is No Notifications Currently to display🙂
+    </p>
+    } @for (notification of notifications(); track $index) {
     <li
       style="
         display: flex;
@@ -16,7 +20,7 @@
       "
     >
       <div style="display: flex; gap: 5px">
-        <span style="font-weight: 500; text-decoration: underline">{{
+        <span style="font-weight: 500;">{{
           notification.split(":")[0]
         }}</span>
         <span>{{ notification.split(":")[1] }}</span>
@@ -25,8 +29,12 @@
         <button mat-icon-button color="primary">
           <mat-icon>check_circle</mat-icon>
         </button>
-        <button mat-icon-button color="warn">
-          <mat-icon>cancel</mat-icon>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteNotification($index)"
+        >
+          <mat-icon>delete</mat-icon>
         </button>
       </div>
     </li>

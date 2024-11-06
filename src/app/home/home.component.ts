@@ -1,4 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  signal,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../auth/auth.service';
 import { Home } from './home.model';
@@ -11,7 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { NotificationsService } from '../notifications.service';
 import { MatListModule } from '@angular/material/list';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
@@ -20,6 +27,7 @@ import { NotificationModalComponent } from '../notification-modal/notification-m
 import { NewApplicationComponent } from '../new-application/new-application.component';
 import { GrantAccessComponent } from '../grant-access/grant-access.component';
 import { ApplicationsService } from '../applications.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home',
@@ -37,15 +45,21 @@ import { ApplicationsService } from '../applications.service';
     MatSidenavModule,
     MatListModule,
     RouterLink,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  constructor(private authService: AuthService, private dialog: MatDialog, private applicationsService: ApplicationsService) {}
+  constructor(
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private applicationsService: ApplicationsService,
+    private router: Router
+  ) {}
   notificationsService = inject(NotificationsService);
   usernameSignal = this.authService.getUsernameSignal();
   currentYear: number = new Date().getFullYear();
@@ -62,10 +76,10 @@ export class HomeComponent {
   logout(): void {
     this.authService.logout();
   }
-
+  isLoading = signal<boolean>(true);
   searchTerm = signal<string>('');
-  items = signal<Home[]>(this.applicationsService.applications());
-  filteredItems = signal<Home[]>(this.items());
+  items = signal<Home[]>([]);
+  filteredItems = signal<Home[]>([]);
   slides = signal<any[]>([
     {
       title: 'An AI-Driven Digital Engineering Company',
@@ -92,6 +106,21 @@ export class HomeComponent {
       img: '../../assets/AWS.jpg',
     },
   ]);
+  ngOnInit() {
+    this.isLoading.set(true);
+    this.applicationsService.fetchApplications().subscribe({
+      complete: () => {
+        this.items.set(this.applicationsService.applications());
+        console.log('Items:', this.items());
+        this.filteredItems.set(this.items());
+        console.log('Filtered Items:', this.filteredItems());
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error fetching applications:', error);
+      }
+    });
+  }
 
   searchApps() {
     const searchTerm = this.searchTerm().toLowerCase();
@@ -114,24 +143,16 @@ export class HomeComponent {
   toggleModal(): void {
     this.dialog.open(NotificationModalComponent, {
       width: '650px',
-      panelClass: 'blurred-backdrop',
       backdropClass: 'blurred-backdrop',
+      autoFocus: false,
     });
   }
 
   toggleApplicationModal(): void {
-    this.dialog.open(NewApplicationComponent, {
-      width: '650px',
-      panelClass: 'blurred-backdrop',
-      backdropClass: 'blurred-backdrop',
-    });
+    this.router.navigate(['/add-application'])
   }
 
   toggleAccessModal(): void {
-    this.dialog.open(GrantAccessComponent, {
-      width: '650px',
-      panelClass: 'blurred-backdrop',
-      backdropClass: 'blurred-backdrop',
-    });
+    this.router.navigate(['/grant-access']);
   }
 }

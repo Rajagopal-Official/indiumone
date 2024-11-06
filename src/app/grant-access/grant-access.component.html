@@ -1,162 +1,279 @@
-<div style="background-color: cornflowerblue !important;padding: 20px;max-height: 80vh;overflow-y: auto;">
-<div style="padding: 16px; margin: 16px; width: 80%; padding: 20px;background-color: cornflowerblue !important;margin: auto;">
-    <div style="display: flex; justify-content: flex-end;">
-        <button mat-icon-button (click)="close()" style="cursor: pointer;">
-          <mat-icon>close</mat-icon>
+<div class="main-container">
+  <div class="content-container">
+    <h2 class="title">Granting Access for a Application🛡️</h2>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select an Application</mat-label>
+      <mat-select
+        [formControl]="form.controls.departmentAccess"
+        multiple
+        (selectionChange)="onApplicationsChange($event)"
+        style="width: 100% !important"
+      >
+        @for (title of applicationTitles(); track title) {
+        <mat-option [value]="title">
+          {{ title }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-chip-listbox>
+      @for (app of selectedApplications; track app) {
+      <mat-chip-option (removed)="removeApplication(app)">
+        {{ app }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
         </button>
+      </mat-chip-option>
+      }
+    </mat-chip-listbox>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select Department</mat-label>
+      <mat-select
+        [formControl]="form.controls.departmentAccess"
+        multiple
+        (selectionChange)="onDepartmentsChange($event)"
+      >
+        @for (department of departments; track department) {
+        <mat-option [value]="department">
+          {{ department }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-chip-listbox>
+      @for (dept of selectedDepartments; track dept) {
+      <mat-chip-option (removed)="removeDepartment(dept)">
+        {{ dept }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-option>
+      }
+    </mat-chip-listbox>
+
+    <div class="input-container">
+      <label for="accessMailId">Mail of the Resource to be given Access</label>
+      <input
+        id="accessMailId"
+        type="email"
+        [formControl]="form.controls.accessMailId"
+      />
+    </div>
+
+    <div class="input-container">
+      <label for="accessPersonName">Resource Name</label>
+      <input
+        id="accessPersonName"
+        type="text"
+        [formControl]="form.controls.accessPersonName"
+      />
+    </div>
+
+    <div class="questions-container">
+      <h3>Security Questions</h3>
+
+      @for (question of questions(); track question; let i = $index) {
+      <div
+        class="question-item"
+        [class.answered-yes]="question.answer === true"
+        [class.answered-no]="question.answer === false"
+      >
+        <div class="question-content">
+          <span class="question-text">{{ question.text }}</span>
+          <div class="button-group">
+            <button
+              mat-flat-button
+              color="accent"
+              style="display: flex; align-items: center; gap: 8px"
+              matTooltip="Click here to add a new project"
+              (click)="openCommentModal(i)"
+            >
+              <mat-icon>comment</mat-icon>
+              <span>Add Comments</span>
+            </button>
+            <button
+              mat-flat-button
+              color="accent"
+              style="display: flex; align-items: center; gap: 8px"
+              matTooltip="Click here to add a new project"
+              (click)="openAttachmentModal(i)"
+            >
+              <mat-icon>attachment</mat-icon>
+              <span>Add Attachments</span>
+            </button>
+            <button
+              mat-raised-button
+              class="btn-yes"
+              (click)="answerQuestion(i, true)"
+            >
+              Yes
+            </button>
+            <button
+              mat-raised-button
+              class="btn-no"
+              (click)="answerQuestion(i, false)"
+            >
+              No
+            </button>
+          </div>
+        </div>
       </div>
-  <h2 style="text-align: center; white-space: nowrap">
-    Granting Access for a Application🛡️
-  </h2>
-
-  <mat-form-field appearance="fill" style="width: 100%" >
-    <mat-label>Select an Application</mat-label>
-    <mat-select
-      [formControl]="form.controls.departmentAccess"
-      multiple
-      (selectionChange)="onApplicationsChange($event)"
-      style="width: 100%"
-    >
-      @for (title of applicationTitles(); track title) {
-      <mat-option
-        [value]="title"
-        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >
-        {{ title }}
-      </mat-option>
       }
-    </mat-select>
-  </mat-form-field>
+    </div>
 
-  <mat-chip-listbox>
-    @for (app of selectedApplications; track app) {
-    <mat-chip-option (removed)="removeApplication(app)">
-      {{ app }}
-      <button matChipRemove>
-        <mat-icon>cancel</mat-icon>
+    <div class="button-container">
+      <button mat-raised-button type="submit" class="action-button">
+        Add Application
       </button>
-    </mat-chip-option>
-    }
-  </mat-chip-listbox>
-
-  <mat-form-field appearance="fill" style="width: 100%; margin-top: 16px">
-    <mat-label>Select Department</mat-label>
-    <mat-select
-      [formControl]="form.controls.departmentAccess"
-      multiple
-      (selectionChange)="onDepartmentsChange($event)"
-      style="width: 100%"
-    >
-      @for (department of departments; track department) {
-      <mat-option
-        [value]="department"
-        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-      >
-        {{ department }}
-      </mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-chip-listbox>
-    @for (dept of selectedDepartments; track dept) {
-    <mat-chip-option (removed)="removeDepartment(dept)">
-      {{ dept }}
-      <button matChipRemove>
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-option>
-    }
-  </mat-chip-listbox>
-  <div style="margin-bottom: 9px">
-    <label
-      for="accessMailId"
-      style="display: block; margin-bottom: 5px; font-weight: 400;"
-      >Mail of the Resource to be given Acess</label
-    >
-    <input
-      id="accessMailId"
-      type="email"
-      formControlName="accessMailId"
-      style="
-        width: 97%;
-        padding: 8px;
-        border: 1px solid black;
-        border-radius: 4px;
-        height: 35px;
-        background-color: #687ae8;
-        color: black;
-      "
-    />
-  </div>
-  <div style="margin-bottom: 9px">
-    <label
-      for="accessPersonName"
-      style="display: block; margin-bottom: 5px; font-weight: 400;"
-      >Resource Name</label
-    >
-    <input
-      id="accessPersonName"
-      type="text"
-      formControlName="accessPersonName"
-      style="
-        width: 97%;
-        padding: 8px;
-        border: 1px solid black;
-        border-radius: 4px;
-        height: 35px;
-        background-color: #687ae8;
-        color:black
-
-      "
-    />
-  </div>
-  <div
-    style="
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 30px;
-    "
-  >
-    <button
-      type="submit"
-      style="
-        width: 150px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #538392;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        border-radius: 20px;
-        border: 2px solid black;
-        cursor: pointer;
-      "
-    >
-      Add Application
-    </button>
-    <button
-      mat-raised-button
-      (click)="close()"
-      color="accent"
-      style="
-        width: 150px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #538392;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        border-radius: 20px;
-        border: 2px solid black;
-        cursor: pointer;
-      "
-    >
-      Close
-    </button>
+    </div>
   </div>
 </div>
+
+<!-- Modal for Comments -->
+<div *ngIf="showCommentModal" class="modal">
+  <div
+    class="modal-content"
+    style="
+      text-align: center;
+      background-color: #fefefe;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+      margin: 15% auto;
+    "
+  >
+    <span
+      class="close"
+      (click)="closeCommentModal()"
+      style="float: right; font-size: 28px; font-weight: bold; cursor: pointer"
+      >&times;</span
+    >
+    <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px">
+      Add Comments
+    </h3>
+
+    <textarea
+      [(ngModel)]="currentComment"
+      placeholder="Enter your comments here..."
+      style="
+        width: 80%;
+        height: 80px;
+        margin: auto;
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+        resize: vertical;
+      "
+    ></textarea>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      "
+    >
+      <button
+        mat-raised-button
+        (click)="saveComment()"
+        style="
+          margin-top: 20px;
+          background-color: #538392;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 4px;
+          display: inline-block;
+        "
+      >
+        Save Comment
+      </button>
+      <button
+        mat-raised-button
+        (click)="saveComment()"
+        style="
+          margin-top: 20px;
+          background-color: #538392;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 4px;
+          display: inline-block;
+        "
+      >
+        Save as Draft
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Attachments -->
+<div
+  *ngIf="showAttachmentModal"
+  class="modal"
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  "
+>
+  <div
+    class="modal-content"
+    style="
+      width: 50%;
+      background-color: #fefefe;
+      padding: 20px;
+      border: 1px solid #888;
+      text-align: center;
+    "
+  >
+    <span
+      class="close"
+      (click)="closeAttachmentModal()"
+      style="float: right; font-size: 28px; font-weight: bold; cursor: pointer"
+      >&times;</span
+    >
+    <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px">
+      Add Attachments
+    </h3>
+
+    <input
+      type="file"
+      (change)="onFileChange($event)"
+      multiple
+      style="
+        margin-bottom: 20px;
+        display: block;
+        width: 80%;
+        margin: auto;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      "
+    />
+
+    <button
+      mat-raised-button
+      (click)="uploadFiles()"
+      style="
+        background-color: #538392;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        margin-top: 10px;
+      "
+    >
+      Upload
+    </button>
+  </div>
 </div>

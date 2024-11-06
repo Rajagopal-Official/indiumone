@@ -1,3 +1,4 @@
+// auth.component.ts
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,14 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      this.router.navigate(['/get-token'], { queryParams: { token } });
+    }
+
+    // Regular login flow
     const accounts = this.authService.instance.getAllAccounts();
     if (accounts.length > 0) {
       this.isLoggedIn = true;
@@ -39,7 +48,7 @@ export class AuthComponent implements OnInit {
       }).then(() => {
         this.router.navigate(['/home']);
       });
-      this.AuthService.startSessionTimer(); // Start session timer on init
+      this.AuthService.startSessionTimer();
     } else {
       this.authService.handleRedirectObservable().subscribe({
         next: (result) => {

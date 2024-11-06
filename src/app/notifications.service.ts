@@ -1,19 +1,23 @@
-  import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class NotificationsService {
+@Injectable({
+  providedIn: 'root'
+})
+export class NotificationsService {
 
-    constructor() { }
-    isSidebarOpen = false;
-    notifications = signal<string[]>([
-      'Notification 1: Rajagopal has requested access for Greythr App',
-      'Notification 2: Nirai has requested access for Tuzo App',
-      'Notification 3: Safrin has requested access for Trimms Application',
-    ]);
-    toggleSidebar() {
-      this.isSidebarOpen = !this.isSidebarOpen;
-    }
+  constructor() { }
+  isSidebarOpen = false;
+  notifications = signal<string[]>([
+    'Rajagopal from HR has requested access for Greythr App',
+    'Nirai from Data Engineering has requested access for Tuzo App',
+    'Safrin from UI/UX Team requested access for Trimms Application',
+  ]);
 
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
+
+  removeNotification(index: number) {
+    this.notifications.update(notifications => notifications.filter((_, i) => i !== index));
+  }
+}

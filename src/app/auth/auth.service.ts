@@ -1,22 +1,26 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
-import { Router } from '@angular/router';
-import { loginRequest } from './auth-config';
+import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private authToken: string | null = null;
   private timeoutId: any;
-  private sessionDuration = 0.2 * 60 * 1000; // 20 seconds
-  private usernameSignal: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+  private sessionDuration = 60 * 60 * 1000;
+  private usernameSignal: WritableSignal<string | undefined> = signal<
+    string | undefined
+  >(undefined);
 
   constructor(
     private authService: MsalService,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private httpClient: HttpClient
   ) {}
-
   getUsernameSignal() {
     return this.usernameSignal;
   }
@@ -24,37 +28,58 @@ export class AuthService {
   setUsername(username: string | undefined) {
     this.usernameSignal.set(username);
   }
+  login() {
+    const sourceUrl = 'http://localhost:4200/get-token';
+    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${encodeURIComponent(
+      sourceUrl
+    )}`;
+    console.log('Redirecting to:', ssoUrl);
+    // Redirect to SSO login URL
+    window.location.href = ssoUrl;
+  }
+  
 
-  logout() {
-    this.authService.logout().subscribe(() => {
-      this.setUsername(undefined);
-      this.clearSessionTimer();
-      localStorage.clear();
-      sessionStorage.clear(); // Clear session storage
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged out successfully',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      this.router.navigate(['/login']); // Redirect to login page after logout
-    });
+  getToken(): string | null {
+    if (!this.authToken) {
+      this.authToken = localStorage.getItem('authToken');
+    }
+    return this.authToken;
   }
 
-  login() {
-    this.authService.loginRedirect(loginRequest).subscribe(() => {
-      const account = this.authService.instance.getActiveAccount();
-      if (account) {
-        this.setUsername(account.username);
-        Swal.fire({
-          icon: 'success',
-          title: 'Logged in successfully',
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.startSessionTimer();
-      }
+  getAuthorizedApps() {
+    const token = localStorage.getItem('token')
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
+
+    return this.httpClient.get(
+      'https://indiumssoauth.azurewebsites.net/get_authorized_apps',
+      { headers }
+    );
+  }
+
+  logout() {
+    // this.authService.logout().subscribe(() => {
+    //   this.clearSessionTimer();
+    //   localStorage.clear();
+    //   sessionStorage.clear();
+    //   Swal.fire({
+    //     icon: 'success',
+    //     title: 'Logged out successfully',
+    //     showConfirmButton: false,
+    //     timer: 1500,
+    //   });
+    //   this.router.navigate(['/']);
+    // });
+    localStorage.clear()
+    Swal.fire({
+          icon: 'success',
+          title: 'Logged out successfully',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.router.navigate(['/']);
   }
 
   startSessionTimer() {
@@ -62,7 +87,7 @@ export class AuthService {
       clearTimeout(this.timeoutId);
     }
     this.timeoutId = setTimeout(() => {
-      this.logout(); // Logout and redirect to login page after session expires
+      this.logout();
     }, this.sessionDuration);
   }
 
