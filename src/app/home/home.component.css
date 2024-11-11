@@ -23,7 +23,7 @@ a {
 }
 
 .container {
-  width: 90%;
+  width: 100%;
   margin: auto;
 }
 
@@ -45,15 +45,13 @@ navbar
 =======*/
 .navbar .logo img {
   width: 110px;
-  margin-right: 20px;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
-  height: 60px;
+    height: 120px;
   align-items: center;
-  overflow: hidden;
 }
 
 .main-menu {
@@ -85,69 +83,130 @@ navbar
 /*========
 showcase
 =========*/
+/* Update the slider container styles */
+/* Container for the entire slider section */
+/* Container for the entire slider section */
+.slider-container {
+  width: 40%;
+  right: 15px;
+  float: right;
+  top: 60px;
+  margin-top: 40px;
+  height: 350px;
+  overflow: hidden;
+  padding: 20px;
+  background: #fff;
+}
+
+/* Swiper specific styles */
+swiper-container {
+  width: 100% !important;
+  height: 300px !important; 
+  position: relative;
+  overflow: hidden;
+}
+
+swiper-slide {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Showcase styles */
 .showcase {
-  background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%)
-    no-repeat center center/contain;
-  height: 450px;
   width: 100%;
+  height: 100%;
+  background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%);
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: black;
-}
-
-.showcase-content {
-  width: 100%;
-  padding-left: 60px;
-}
-
-.showcase-content h1 {
-  margin-bottom: 10px;
-}
-
-.showcase-content p {
-  margin-bottom: 10px;
-}
-
-.showcase-content .btn {
-  color: black;
-  background-color: white;
-  padding: 10px 20px;
-  margin-top: 10px;
-  display: inline-block;
+  padding: 40px;
   box-sizing: border-box;
 }
 
-.showcase-content a:hover {
-  background-color: rgb(232, 232, 232);
+.showcase-content {
+  width: 60%;
+  padding: 10px;
 }
 
-.showcase-content span {
-  transition: all 0.3s ease;
+.showcase-content h1 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #fff;
 }
 
-.showcase-content a:hover span {
-  border-bottom: 2px solid black;
-  margin-right: 10px;
+.showcase-content p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #fff;
 }
 
 .showcase-image {
-  height: 300px;
-  width: 300px;
-  margin-right: 45px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
+  margin-left: 55px;
+  object-fit: cover;
 }
 
+/* Navigation buttons */
+::ng-deep .swiper-button-next,
+::ng-deep .swiper-button-prev {
+  width: 25px !important;
+  height: 25px !important;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  color: #000 !important;
+}
+
+::ng-deep .swiper-button-next {
+  right: 5px !important;
+}
+
+::ng-deep .swiper-button-prev {
+  left: 5px !important;
+}
+
+::ng-deep .swiper-button-next::after,
+::ng-deep .swiper-button-prev::after {
+  font-size: 12px !important;
+  font-weight: bold;
+}
+/* Adjust the main content area to accommodate the slider */
+.cards1 {
+  width: 60%;
+  padding: 28px 20px;
+  margin-left: 20px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .slider-container {
+    width: 100%;
+    position: relative;
+    right: auto;
+    top: auto;
+    margin-bottom: 20px;
+  }
+
+  .cards1 {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .showcase-content {
+    width: 70%;
+  }
+}
 /*========
 home cardsnavbar
 ==========*/
 .navbar-wrapper {
-  height: 60px;
-  position: sticky;
+  height: 120px;
   top: 0;
   width: 100%;
-  background-color: white;
-  z-index: 1000;
+    
 }
 
 .cards1 {
@@ -158,16 +217,17 @@ home cardsnavbar
 }
 
 .box {
-  width: 22%;
+  width: 40%;
+  margin-bottom: 50px;
 }
 
 .box h3 {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .box img {
-  width: 100%;
-  height: 200px;
+  width: 60%;
+  height: 120px;
   margin-bottom: 30px;
 }
 
@@ -361,9 +421,9 @@ links
     font-size: 14px;
   }
 
-  .right-menu {
+  /* .right-menu {
     margin-right: 40px;
-  }
+  } */
 
   .showcase {
     align-items: center;
@@ -404,14 +464,18 @@ links
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: black !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
 }
 
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-  color: white !important;
-  background: #333 !important;
-  border-radius: 50%;
+.swiper-button-next {
+  right: 10px;
+}
+
+.swiper-button-prev {
+  left: 10px;
 }
 mat-tab-group {
   z-index: 10;
@@ -423,8 +487,8 @@ mat-form-field {
 
 .search-container {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  justify-content: flex-start; /* Change from center to flex-start */
+  margin-left: 20px;
   background-color: #eefefb;
 }
 
@@ -506,3 +570,114 @@ mat-list-item {
   background-color: #aba1a1;
   opacity: 0.7 !important;
 }
+.mat-mdc-text-field-wrapper.mdc-text-field--filled {
+  background-color: #ff4081!important;
+  border: 1px solid black;
+  /* height: auto; */
+}
+.mat-mdc-form-field-label {
+  color: white !important;
+  font-weight: 700 !important;
+}
+
+.mat-mdc-select-value {
+  color: white !important;
+}
+
+.mat-mdc-option {
+  color: white !important;
+}
+
+.mat-mdc-option.mat-selected {
+  color: white !important;
+}
+
+.mat-mdc-select-panel {
+  background-color: #ff4081 !important;
+}
+
+.mat-mdc-option.mat-selected:not(.mat-option-disabled) {
+  color: black !important;
+}
+
+.mat-mdc-select-trigger {
+  color: black;
+}
+
+.mat-mdc-select-placeholder {
+  color: white !important;
+  font-weight: 500;
+}
+::-webkit-file-upload-button{
+  background-color:'#687ae8' ;
+}
+::ng-deep .mat-mdc-select-panel {
+  border-radius: 20px !important;
+}
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+}
+.mat-mdc-select-trigger {
+  height: 10px !important;
+}
+.mat-mdc-form-field {
+  /* Reduce overall height */
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Reduce the height of the form field */
+.mat-mdc-form-field-flex {
+  min-height: 10px !important;
+}
+
+/* Center the label and adjust its size */
+.mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  min-height: unset !important;
+  height: 30px !important;
+}
+.notification-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 30px !important;
+  margin: 0 ;
+  padding: 0 10px !important;
+  margin-top: 10px;
+}
+
+.notification-btn .mat-icon {
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+/* Prevent label transition */
+.mat-mdc-form-field-label {
+  position: static !important;
+  transform: none !important;
+  color: white !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-form-field-label-wrapper {
+  top: 0 !important;
+  padding-top: 0 !important;
+  position: static !important;
+  transform: none !important;
+}
+
+/* Remove floating label animation */
+.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.mdc-floating-label--float-above {
+  transform: none !important;
+}
+

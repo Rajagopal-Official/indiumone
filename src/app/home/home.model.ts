@@ -5,5 +5,6 @@ export interface Home {
     link: string;
     department: string | string[];
     bandComparison?:string,
-    bandLevel?:string
+    bandLevel?:string,
+    app_status:number
   }

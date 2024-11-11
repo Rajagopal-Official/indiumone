@@ -5,11 +5,17 @@ import {
   signal,
   ViewChild,
   OnInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../auth/auth.service';
 import { Home } from './home.model';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,10 +30,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationModalComponent } from '../notification-modal/notification-modal.component';
-import { NewApplicationComponent } from '../new-application/new-application.component';
-import { GrantAccessComponent } from '../grant-access/grant-access.component';
 import { ApplicationsService } from '../applications.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips'; 
+import { MatChipListbox, MatChipOption } from '@angular/material/chips';
 
 @Component({
   selector: 'app-home',
@@ -46,11 +52,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatListModule,
     RouterLink,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatChipsModule, 
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
@@ -64,6 +73,9 @@ export class HomeComponent implements OnInit {
   usernameSignal = this.authService.getUsernameSignal();
   currentYear: number = new Date().getFullYear();
 
+  form = new FormGroup({
+    configurations: new FormControl(''),
+  });
   getDisplayName(): string {
     const username = this.usernameSignal();
     if (username) {
@@ -118,7 +130,7 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching applications:', error);
-      }
+      },
     });
   }
 
@@ -149,10 +161,41 @@ export class HomeComponent implements OnInit {
   }
 
   toggleApplicationModal(): void {
-    this.router.navigate(['/add-application'])
+    this.router.navigate(['/add-application']);
   }
 
   toggleAccessModal(): void {
     this.router.navigate(['/grant-access']);
+  }
+  editApplication(): void {
+    this.router.navigate(['/applications']);
+  }
+
+  categories = ['Admin', 'HR', 'Finance', 'IT', 'Marketing', 'Data & AI', 'Application Engineering', 'Digital Assurance'];
+  selectedCategories: string[] = [];
+  toggleCategory(category: string): void {
+    const index = this.selectedCategories.indexOf(category);
+    if (index >= 0) {
+      this.selectedCategories.splice(index, 1);
+    } else {
+      this.selectedCategories.push(category);
+    }
+    this.filterItems();
+  }
+
+  isCategorySelected(category: string): boolean {
+    return this.selectedCategories.includes(category);
+  }
+
+  removeCategory(category: string): void {
+    const index = this.selectedCategories.indexOf(category);
+    if (index >= 0) {
+      this.selectedCategories.splice(index, 1);
+    }
+    this.filterItems();
+  }
+  filterItems(): void {
+    // Implement your filtering logic here based on selectedCategories
+    // For example, you can filter `filteredItems` based on the selected categories
   }
 }

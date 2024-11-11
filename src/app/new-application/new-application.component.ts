@@ -42,6 +42,7 @@ export class NewApplicationComponent {
       department: this.form.value.accessibleDepartments || [],
       bandComparison: this.form.value.bandComparison || '', // Include band comparison
       bandLevel: this.form.value.bandLevel || '', // Include band level
+      app_status:1
     };
     this.applicationsService.addApplication(newApplication);
     this.close();

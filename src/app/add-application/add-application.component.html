@@ -1,25 +1,25 @@
 <div
   style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     background-color: whitesmoke !important;
     border-radius: 8px;
     padding: 10px;
     overflow-y: auto;
-    max-height: 80vh;
   "
 >
-  <div style="display: flex; justify-content: flex-end;">
-    <button mat-icon-button (click)="close()" style="cursor: pointer;">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
   <form
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
     style="
       max-width: 600px;
-      margin: auto;
+      width: 100%;
       padding: 20px;
-      background-color: cornflowerblue;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     "
   >
     <h2 style="text-align: center; margin-bottom: 20px">
@@ -36,6 +36,7 @@
         id="applicationName"
         type="text"
         formControlName="applicationName"
+        required
         style="
           width: 97%;
           padding: 8px;
@@ -45,6 +46,7 @@
           background-color: #687ae8;
           color: black;
         "
+        value=""
       />
       @if(form.get('applicationName')?.invalid &&
       (form.get('applicationName')?.dirty ||
@@ -55,7 +57,7 @@
       }
     </div>
 
-    <div style="margin-bottom: 9px">
+    <!-- <div style="margin-bottom: 9px">
       <label
         for="applicationCategory"
         style="display: block; margin-bottom: 5px; font-weight: 400;"
@@ -92,8 +94,8 @@
         </mat-chip-option>
         }
       </mat-chip-listbox>
-    </div>
-    <div style="margin-bottom: 9px">
+    </div> -->
+    <!-- <div style="margin-bottom: 9px">
         <label
           for="accessForBandLevel"
           style="display: block; margin-bottom: 5px; font-weight: 400;"
@@ -124,18 +126,19 @@
             </mat-select>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
 
-    <div style="margin-bottom: 9px">
+     <div style="margin-bottom: 9px">
       <label
-        for="applicationRedirectLink"
+        for="applicationDescription"
         style="display: block; margin-bottom: 5px; font-weight: 400;"
-        >Application Redirect Link</label
+        >Application Description</label
       >
       <input
-        id="applicationRedirectLink"
+        id="applicationDescription"
         type="text"
-        formControlName="applicationRedirectLink"
+        formControlName="applicationDescription"
+        required
         style="
           width: 97%;
           padding: 8px;
@@ -146,16 +149,16 @@
           color: black;
         "
       />
-      @if(form.get('applicationRedirectLink')?.invalid &&
-      (form.get('applicationRedirectLink')?.dirty ||
-      form.get('applicationRedirectLink')?.touched)){
+      @if(form.get('applicationDescription')?.invalid &&
+      (form.get('applicationDescription')?.dirty ||
+      form.get('applicationDescription')?.touched)){
       <div style="color: red; margin-top: 5px">
-        Application Redirect Link field is required.
+        Application Description field is required.
       </div>
       }
     </div>
 
-    <div style="margin-bottom: 9px;display: flex;flex-direction: column;">
+    <!-- <div style="margin-bottom: 9px;display: flex;flex-direction: column;">
         <label
           for="applicationImage"
           style="display: block; margin-bottom: 5px; font-weight: 400;"
@@ -187,10 +190,10 @@
           Application Image field is required.
         </div>
         }
-      </div>
+      </div> -->
       
 
-    <div style="margin-bottom: 9px">
+    <!-- <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
         style="display: block; margin-bottom: 5px; font-weight: 400;"
@@ -216,7 +219,7 @@
         Application Description field is required.
       </div>
       }
-    </div>
+    </div> -->
 
     <div style="margin-bottom: 9px">
       <label
@@ -227,9 +230,9 @@
       <mat-form-field appearance="fill" style="width: 100%" class="mat-select-container">
         <mat-select
           [formControl]="form.controls.accessibleDepartments"
-          multiple
           (selectionChange)="onDepartmentsChange($event)"
           style="width: 100%"
+          required
         >
           @for (department of departments; track department) {
           <mat-option
@@ -245,16 +248,6 @@
           }
         </mat-select>
       </mat-form-field>
-      <mat-chip-listbox>
-        @for (dept of selectedDepartments; track dept) {
-        <mat-chip-option (removed)="removeDepartment(dept)">
-          {{ dept }}
-          <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-option>
-        }
-      </mat-chip-listbox>
     </div>
 
     <div
@@ -280,28 +273,9 @@
           border: 2px solid black;
           cursor: pointer;
         "
+        (click)="onSubmit()"
       >
         Submit
-      </button>
-      <button
-        mat-raised-button
-        (click)="close()"
-        color="accent"
-        style="
-          width: 150px;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #538392;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          cursor: pointer;
-          border-radius: 20px;
-          border: 2px solid black;
-          cursor: pointer;
-        "
-      >
-        Close
       </button>
     </div>
   </form>

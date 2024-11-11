@@ -5,11 +5,14 @@ import { MsalGuard } from '@azure/msal-angular';
 import { authGuard } from './auth/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { GrantAccessComponent } from './grant-access/grant-access.component';
+import { NewApplicationComponent } from './new-application/new-application.component';
 import { AddApplicationComponent } from './add-application/add-application.component';
+import { EditApplicationComponent } from './edit-application/edit-application.component';
+import { EditPageComponent } from './edit-page/edit-page.component';
 
 export const routes: Routes = [
   { path: '', component: AuthComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent,canActivate:[authGuard] },
   {
     path: 'grant-access',
     component: GrantAccessComponent,
@@ -21,6 +24,18 @@ export const routes: Routes = [
   {
     path: 'add-application',
     component: AddApplicationComponent,
+  },
+  {
+    path: 'applications',
+    component: EditApplicationComponent,
+  },
+  {
+    path: 'edit-app',
+    component: EditPageComponent,
+  },
+  {
+    path: 'view-application',
+    component: EditPageComponent,
   },
   { path: '**', redirectTo: '' },
  

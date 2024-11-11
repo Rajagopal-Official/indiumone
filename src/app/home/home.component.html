@@ -1,117 +1,150 @@
 <body>
-  <div class="menu-btn">
-    <i class="bi bi-list"></i>
-  </div>
-
   <div class="container">
-    <div class="navbar-wrapper">
-      <nav class="navbar">
-        <div style="display: flex; align-items: center; gap: 10px">
-          <div class="logo">
-            <img src="../../assets/IndiumLogo.png" alt="Indium Logo" />
-          </div>
+    <mat-toolbar
+      color="primary"
+      style="
+        height: 60px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      "
+    >
+      <div style="margin-right: 20px">
+        <img
+          src="../../assets/IndiumLogo.png"
+          alt="Indium Logo"
+          style="height: 50px; width: auto"
+        />
+      </div>
 
-          <button
-            mat-flat-button
-            color="accent"
-            style="display: flex; align-items: center; gap: 8px"
-            matTooltip="Click here to see notifications"
-            (click)="toggleModal()"
-          >
-            <mat-icon>notifications</mat-icon>
-            <span>Notifications</span>
-          </button>
-          <button
-            mat-flat-button
-            color="accent"
-            style="display: flex; align-items: center; gap: 8px"
-            matTooltip="Click here to add a new project"
-            (click)="toggleApplicationModal()"
-          >
-            <mat-icon>group_add</mat-icon>
-            <span>Add Application</span>
-          </button>
-          <button
-            mat-flat-button
-            color="accent"
-            style="display: flex; align-items: center; gap: 8px"
-            matTooltip="Click here to grant access to a application"
-            (click)="toggleAccessModal()"
-          >
-            <mat-icon>shield_check</mat-icon>
-            <span>Grant Access</span>
-          </button>
-        </div>
+      <p
+        style="
+          text-align: center;
+          margin: 0;
+          padding: 0;
+          margin-right: 20px;
+          font-size: 13px;
+          font-style: italic;
+          font-weight: 600;
+          flex-grow: 1;
+          color: black;
+        "
+      >
+        Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
+      </p>
 
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 0px;
-          "
+      <div style="display: flex; align-items: center; gap: 10px">
+        <button
+          mat-flat-button
+          color="accent"
+          class="notification-btn"
+          matTooltip="Click here to see notifications"
+          (click)="toggleModal()"
         >
-          <p
-            style="
-              text-align: center;
-              margin: 0;
-              padding: 0;
-              margin-right: 25px;
-              font-size: 13px;
-              font-style: italic;
-              font-weight: 600;
-            "
+          <mat-icon style="font-size: 24px; width: 24px; height: 24px"
+            >notifications_active</mat-icon
           >
-            Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
-          </p>
+        </button>
 
-          <button
-            mat-flat-button
-            (click)="logout()"
-            style="
-              background-color: #10375c;
-              color: #f3f3e0;
-              width: 90px;
-              height: auto;
-              cursor: pointer;
-              padding: 10px;
-              border-radius: 20px;
-            "
+        <div style="margin-top: 15px; padding: 8px; border-radius: 20px">
+          <mat-form-field
+            appearance="fill"
+            style="width: 200px; margin-bottom: 20px"
           >
-            Logout
-          </button>
+            <mat-label
+              style="
+                color: white;
+                font-weight: 300;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 25px;
+              "
+            >
+              <mat-icon style="margin-right: 10px">settings</mat-icon>
+              Configurations
+            </mat-label>
+            <mat-select>
+              <mat-option value="addApplication" (click)="editApplication()">
+                <mat-icon style="margin-right: 10px">apps</mat-icon>
+                Applications
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-      </nav>
+
+        <button
+          mat-flat-button
+          color="accent"
+          (click)="logout()"
+          style="
+            width: 100px;
+            height: 30px;
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            border: 1.2px solid black;
+            font-size: 14px;
+            font-weight: 300;
+            color: white;
+          "
+          matTooltip="Click here to Logout"
+        >
+          <mat-icon>exit_to_app</mat-icon>
+          Logout
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <div class="slider-container" style="margin-top: 20px">
+      <swiper-container
+        navigation="true"
+        loop="true"
+        [autoplay]="{ delay: 3000, disableOnInteraction: false }"
+        [speed]="700"
+      >
+        @for(slide of slides(); track slide.title) {
+        <swiper-slide>
+          <div class="showcase">
+            <div class="showcase-content">
+              <h1 style="font-weight: 600">{{ slide.title }}</h1>
+              <h1 style="font-weight: 500">{{ slide.stream }}</h1>
+              <p style="font-weight: 500">{{ slide.desc }}</p>
+            </div>
+            <div>
+              <img
+                [src]="slide.img"
+                alt="Showcase Image"
+                class="showcase-image"
+              />
+            </div>
+          </div>
+        </swiper-slide>
+        }
+      </swiper-container>
     </div>
 
-    <swiper-container
-      navigation="true"
-      loop="true"
-      [autoplay]="{ delay: 3000, disableOnInteraction: false }"
-      [speed]="700"
+    <div
+      style="
+        display: flex;
+        justify-content: flex-start;
+        margin: 20px 0;
+        margin-top: 100px !important;
+        margin-left: 20px !important;
+      "
     >
-      @for(slide of slides(); track slide.title) {
-      <swiper-slide>
-        <div class="showcase">
-          <div class="showcase-content">
-            <h1 style="font-weight: 600">{{ slide.title }}</h1>
-            <h1 style="font-weight: 500">{{ slide.stream }}</h1>
-            <p style="font-weight: 500">{{ slide.desc }}</p>
-          </div>
-          <div>
-            <img
-              [src]="slide.img"
-              alt="Showcase Image"
-              class="showcase-image"
-            />
-          </div>
-        </div>
-      </swiper-slide>
-      }
-    </swiper-container>
-
-    <div style="display: flex; justify-content: center; margin: 20px 0">
-      <mat-form-field appearance="outline" class="custom-search">
+      <mat-form-field appearance="outline" style="width: 550px !important">
         <mat-icon matPrefix>search</mat-icon>
         <input
           matInput
@@ -123,94 +156,144 @@
       </mat-form-field>
     </div>
 
+    <div style="margin-top: 20px; max-width: 50%; margin-left: 20px">
+      <p style="font-size: 16px; font-weight: bold; margin-bottom: 10px">
+        Click below to filter based on categories:
+      </p>
+      <div
+        style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px"
+      >
+        <mat-chip
+          *ngFor="let category of categories"
+          (click)="toggleCategory(category)"
+          [selected]="isCategorySelected(category)"
+          style="
+            background: transparent
+              linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%) 0%
+              0% no-repeat padding-box;
+            color: white;
+            border-radius: 0;
+            padding: 8px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 12px;
+          "
+        >
+          {{ category }}
+        </mat-chip>
+      </div>
+      <div style="margin-top: 10px">
+        <mat-chip-listbox>
+          @for (category of selectedCategories; track category) {
+          <mat-chip-option (removed)="removeCategory(category)">
+            {{ category }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-option>
+          }
+        </mat-chip-listbox>
+      </div>
+    </div>
+
     @if(isLoading()) {
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-top: 20px;
-        "
-      >
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      "
+    >
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
     } @else if(filteredItems().length === 0) {
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-          margin-top: 20px;
-        "
-      >
-        <p>No applications matching🙂🙂</p>
-      </div>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        margin-top: 20px;
+      "
+    >
+      <p>No applications matching</p>
+    </div>
     }
+
     <section id="cards1" class="cards1">
       @for (item of filteredItems(); track item.title) {
-        <div class="box" style="background-color: #eafaff; padding: 10px">
-          <img
-            [src]="item.image"
-            [alt]="item.title"
-            style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 1.2)"
-          />
-          <h3 style="font-weight: 700">{{ item.title }}</h3>
-          <h3 style="font-weight: 300; font-size: 8;">
-            <span style="font-weight: 500">Department:</span>{{ item.department }}
-          </h3>
-          <p>{{ item.description }}</p>
-          <a [href]="item.link" target="_blank" class="btn">
-            <div style="display: flex; gap: 10px">
-              <button
-                mat-raised-button
-                color="warn"
-                style="
-                  height: auto;
-                  width: auto;
-                  margin: 20px 0;
-                  padding: 10px;
-                  border-radius: 7px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <p style="font-size: 11px; margin: 0; padding: 0">
-                  Navigate to App
-                </p>
-              </button>
-              <button
-                mat-raised-button
-                color="warn"
-                style="
-                  height: auto;
-                  width: auto;
-                  margin: 20px 0;
-                  padding: 10px;
-                  border-radius: 7px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <p style="font-size: 11px; margin: 0; padding: 0">
-                  Request Access
-                </p>
-              </button>
-            </div>
-          </a>
-        </div>
+      <div
+        class="box"
+        style="background-color: #b9e5e8; padding: 10px; border-radius: 22px"
+      >
+        <img
+          [src]="item.image"
+          [alt]="item.title"
+          style="border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 1.2)"
+        />
+        <h3 style="font-weight: 700">{{ item.title }}</h3>
+        <h3 style="font-weight: 300; font-size: 8">
+          <span style="font-weight: 500">Department:</span>{{ item.department }}
+        </h3>
+        <p>{{ item.description }}</p>
+        <a [href]="item.link" target="_blank" class="btn">
+          <div style="display: flex; gap: 10px">
+            <button
+              mat-raised-button
+              color="warn"
+              style="
+                height: auto;
+                width: 120px;
+                margin: 20px 0;
+                padding: 10px;
+                border-radius: 7px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <p style="font-size: 11px; margin: 0; padding: 0">
+                Navigate to App
+              </p>
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              style="
+                height: auto;
+                width: 120px;
+                margin: 20px 0;
+                padding: 10px;
+                border-radius: 7px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <p style="font-size: 11px; margin: 0; padding: 0">Demo</p>
+            </button>
+          </div>
+        </a>
+      </div>
       }
     </section>
-        <!-- Notification Modal -->
+
     <ng-template matDialogContainer>
       <app-notifications-dialog></app-notifications-dialog>
     </ng-template>
   </div>
+
   <mat-toolbar
     color="primary"
-    style="justify-content: flex-end; height: 30px; padding: 0 16px"
+    style="
+      justify-content: flex-end;
+      height: 30px;
+      padding: 0 16px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    "
   >
     <span style="font-size: 14px; color: white">
       &copy; {{ currentYear }} Indium Software. All rights reserved.

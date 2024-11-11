@@ -34,7 +34,6 @@ export class AuthComponent implements OnInit {
       this.router.navigate(['/get-token'], { queryParams: { token } });
     }
 
-    // Regular login flow
     const accounts = this.authService.instance.getAllAccounts();
     if (accounts.length > 0) {
       this.isLoggedIn = true;

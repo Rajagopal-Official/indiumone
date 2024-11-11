@@ -1,0 +1,54 @@
+.mat-mdc-text-field-wrapper.mdc-text-field--filled {
+    background-color: #687ae8 !important;
+    border: 1px solid black;
+  }
+  
+  .mat-mdc-select-value {
+    color: black !important;
+  }
+  
+  .mat-mdc-option {
+    color: black !important;
+  }
+  
+  .mat-mdc-option.mat-selected {
+    color: black !important;
+  }
+  
+  .mat-mdc-select-panel {
+    background-color: #687ae8 !important;
+  }
+  
+  .mat-mdc-option.mat-selected:not(.mat-option-disabled) {
+    color: black !important;
+  }
+  
+  .mat-mdc-select-trigger {
+    color: black;
+  }
+  
+  .mat-mdc-select-placeholder {
+    color: black !important;
+  }
+  ::-webkit-file-upload-button{
+    background-color:'#687ae8' ;
+  }
+/* Target the mat-select element directly */
+mat-select {
+    height: 5px !important;
+  }
+  
+  /* If the above doesn't work, try targeting it more specifically */
+  .mat-mdc-select {
+    height: 5px !important;
+  }
+  
+  /* If the above still doesn't work, try targeting it within the form field */
+  .mat-mdc-form-field .mat-mdc-select {
+    height: 5px !important;
+  }
+  
+  /* If the above still doesn't work, try targeting it within the form field flex container */
+  .mat-mdc-form-field-flex .mat-mdc-select {
+    height: 5px !important;
+  }

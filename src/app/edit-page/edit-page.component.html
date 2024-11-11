@@ -1,0 +1,325 @@
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke !important;
+    border-radius: 8px;
+    padding: 10px;
+  "
+>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    style="
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    "
+  >
+    <h2 style="text-align: center; margin-bottom: 20px">
+      Editing a Application
+    </h2>
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationName"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Application Name</label
+      >
+      <input
+        id="applicationName"
+        type="text"
+        formControlName="applicationName"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+        readonly
+      />
+    </div>
+    <div style="margin-bottom: 9px">
+      <label
+        for="applicationDescription"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >App Description</label
+      >
+      <input
+        id="applicationDescription"
+        type="text"
+        formControlName="applicationDescription"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+        readonly
+      />
+    </div>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="imageUrl"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Image Url</label
+      >
+      <div style="display: flex; gap: 20px; align-items: center"> <!-- Added align-items: center -->
+        <input
+          id="imageUrl"
+          type="text"
+          formControlName="imageUrl"
+          style="
+            width: 80%;
+            padding: 8px;
+            border: 1px solid black;
+            border-radius: 4px;
+            height: 35px;
+            background-color: #687ae8;
+            color: black;
+            height: 25px;
+          "
+        />
+        <button
+          type="submit"
+          style="
+            width: 100px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #538392;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            border: 2px solid black;
+            cursor: pointer;
+          "
+        >
+          Save
+        </button>
+      </div>
+      @if(form.get('imageUrl')?.invalid && (form.get('imageUrl')?.dirty ||
+      form.get('imageUrl')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        Image Url field is required.
+      </div>
+      }
+    </div>
+    <div style="margin-bottom: 9px">
+      <label
+        for="demoUrl"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Demo Url</label
+      >
+      <input
+        id="demoUrl"
+        type="text"
+        formControlName="demoUrl"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+        readonly
+      />
+      @if(form.get('demoUrl')?.invalid && (form.get('demoUrl')?.dirty ||
+      form.get('demoUrl')?.touched)){
+      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      }
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 9px">
+      <div style="flex: 1">
+        <label
+          for="accessibleDivisions"
+          style="display: block; margin-bottom: 5px; font-weight: 400"
+          >Accessible Divisions</label
+        >
+        <mat-form-field
+          appearance="fill"
+          style="width: 100%"
+          class="mat-select-container"
+        >
+          <mat-select
+            [formControl]="form.controls.accessibleDivisions"
+            multiple
+            (selectionChange)="onDivisionChange($event)"
+            style="width: 100%"
+          >
+            @for (division of divisions; track division) {
+            <mat-option
+              [value]="division"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ division }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div style="flex: 1">
+        <label
+          for="applicationDescription"
+          style="display: block; margin-bottom: 5px; font-weight: 400"
+          >Accessible Category/Group</label
+        >
+        <input
+          id="applicationDescription"
+          type="text"
+          formControlName="applicationDescription"
+          style="
+            width: 96%;
+            padding: 8px;
+            border: 1px solid black;
+            border-radius: 4px;
+            height: 40px !important;
+            background-color: #687ae8;
+            color: black;
+            height: 35px;
+          "
+        />
+      </div>
+    </div>
+
+    <!-- Band Level Dropdown -->
+    <div style="margin-bottom: 9px">
+      <label
+        for="bandLevel"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Band Level</label
+      >
+      <mat-form-field
+        appearance="fill"
+        style="width: 100%"
+        class="mat-select-container"
+      >
+        <mat-select [formControl]="form.controls.bandLevel" style="width: 100%">
+          <mat-option value="b1">B1</mat-option>
+          <mat-option value="b2">B2</mat-option>
+          <mat-option value="b3">B3</mat-option>
+          <mat-option value="b4">B4</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div style="margin-bottom: 9px">
+      <label
+        for="documentationUrl"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Documentation URL</label
+      >
+      <input
+        id="documentationUrl"
+        type="text"
+        formControlName="documentationUrl"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 25px;
+          background-color: #687ae8;
+          color: black;
+        "
+      />
+      @if(form.get('documentationUrl')?.invalid &&
+      (form.get('documentationUrl')?.dirty ||
+      form.get('documentationUrl')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        Documentation URL Link field is required.
+      </div>
+      }
+    </div>
+
+    <div
+      style="
+        margin-bottom: 9px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+      "
+    >
+      <label
+        for="applicationStatus"
+        style="display: block; margin-bottom: 5px; font-weight: 400"
+        >Status of Application</label
+      >
+      <mat-slide-toggle
+        [formControl]="form.controls.applicationStatus"
+        (change)="onStatusChange($event)"
+        style="margin-left: 10px"
+      >
+        {{ form.controls.applicationStatus.value ? "Active" : "Inactive" }}
+      </mat-slide-toggle>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      "
+    >
+      <button
+        type="submit"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #538392;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          border-radius: 20px;
+          border: 2px solid black;
+          cursor: pointer;
+        "
+      >
+        Save All
+      </button>
+      <button
+        type="submit"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #538392;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          border-radius: 20px;
+          border: 2px solid black;
+          cursor: pointer;
+        "
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
