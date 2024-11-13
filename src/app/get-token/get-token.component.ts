@@ -8,18 +8,21 @@ import { HomeComponent } from '../home/home.component';
   standalone: true,
   imports: [HomeComponent],
   templateUrl: './get-token.component.html',
-  styleUrl: './get-token.component.css'
+  styleUrl: './get-token.component.css',
 })
 export class GetTokenComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute ,private router:Router) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const token = params['token'];
       if (token) {
         this.storeTokenInLocalStorage(token);
-            }
+      }
+      const role = params['admin_user'];
+      if (role) {
+        localStorage.setItem('Role', role);
+      }
     });
   }
 

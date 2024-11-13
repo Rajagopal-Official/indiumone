@@ -10,7 +10,6 @@
 >
   <form
     [formGroup]="form"
-    (ngSubmit)="onSubmit()"
     style="
       max-width: 800px;
       width: 100%;
@@ -26,7 +25,7 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationName"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >Application Name</label
       >
       <input
@@ -49,7 +48,7 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >App Description</label
       >
       <input
@@ -73,14 +72,14 @@
     <div style="margin-bottom: 9px">
       <label
         for="imageUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
-        >Image Url</label
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        >Image Url(Upload a Image of Size within 1mb)</label
       >
-      <div style="display: flex; gap: 20px; align-items: center"> <!-- Added align-items: center -->
+      <div style="display: flex; gap: 20px; align-items: center"> 
         <input
           id="imageUrl"
-          type="text"
-          formControlName="imageUrl"
+          type="file"
+          (change)="onFileSelected($event)"
           style="
             width: 80%;
             padding: 8px;
@@ -93,34 +92,62 @@
           "
         />
         <button
-          type="submit"
+          type="button"
+          (click)="onImageUpload()"
           style="
             width: 100px;
-            height: 50px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #538392;
+            background-color: #3795BD;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 20px;
-            border: 2px solid black;
+            border-radius: 8px;
+            border: 1px solid black;
             cursor: pointer;
+            color: white;
+            font-weight: 500;
           "
         >
           Save
         </button>
       </div>
-      @if(form.get('imageUrl')?.invalid && (form.get('imageUrl')?.dirty ||
-      form.get('imageUrl')?.touched)){
+      @if(fileSizeError){
       <div style="color: red; margin-top: 5px">
-        Image Url field is required.
+        File size should be within 1MB.
       </div>
       }
     </div>
     <div style="margin-bottom: 9px">
       <label
+        for="appUrl"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        >App Url</label
+      >
+      <input
+        id="appUrl"
+        type="text"
+        formControlName="appUrl"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+      />
+      @if(form.get('appUrl')?.invalid && (form.get('appUrl')?.dirty ||
+      form.get('appUrl')?.touched)){
+      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      }
+    </div>
+    <div style="margin-bottom: 9px">
+      <label
         for="demoUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >Demo Url</label
       >
       <input
@@ -137,7 +164,6 @@
           color: black;
           height: 25px;
         "
-        readonly
       />
       @if(form.get('demoUrl')?.invalid && (form.get('demoUrl')?.dirty ||
       form.get('demoUrl')?.touched)){
@@ -149,7 +175,7 @@
       <div style="flex: 1">
         <label
           for="accessibleDivisions"
-          style="display: block; margin-bottom: 5px; font-weight: 400"
+          style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
           >Accessible Divisions</label
         >
         <mat-form-field
@@ -159,7 +185,6 @@
         >
           <mat-select
             [formControl]="form.controls.accessibleDivisions"
-            multiple
             (selectionChange)="onDivisionChange($event)"
             style="width: 100%"
           >
@@ -181,14 +206,14 @@
 
       <div style="flex: 1">
         <label
-          for="applicationDescription"
-          style="display: block; margin-bottom: 5px; font-weight: 400"
+          for="accessibleDepartments"
+          style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
           >Accessible Category/Group</label
         >
         <input
-          id="applicationDescription"
+          id="accessibleDepartments"
           type="text"
-          formControlName="applicationDescription"
+          formControlName="accessibleDepartments"
           style="
             width: 96%;
             padding: 8px;
@@ -202,12 +227,63 @@
         />
       </div>
     </div>
+    <div style="margin-bottom: 9px">
+      <label
+        for="appSecret"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        >App Secret</label
+      >
+      <input
+        id="appSecret"
+        type="text"
+        formControlName="appSecret"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+      />
+      @if(form.get('appSecret')?.invalid && (form.get('appSecret')?.dirty ||
+      form.get('appSecret')?.touched)){
+      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      }
+    </div>
+    <div style="margin-bottom: 9px">
+      <label
+        for="appDevTeam"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        >App Developers Team</label
+      >
+      <input
+        id="appDevTeam"
+        type="text"
+        formControlName="appDevTeam"
+        style="
+          width: 98%;
+          padding: 8px;
+          border: 1px solid black;
+          border-radius: 4px;
+          height: 35px;
+          background-color: #687ae8;
+          color: black;
+          height: 25px;
+        "
+      />
+      @if(form.get('appDevTeam')?.invalid && (form.get('appDevTeam')?.dirty ||
+      form.get('appDevTeam')?.touched)){
+      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      }
+    </div>
 
-    <!-- Band Level Dropdown -->
     <div style="margin-bottom: 9px">
       <label
         for="bandLevel"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >Band Level</label
       >
       <mat-form-field
@@ -216,10 +292,10 @@
         class="mat-select-container"
       >
         <mat-select [formControl]="form.controls.bandLevel" style="width: 100%">
-          <mat-option value="b1">B1</mat-option>
-          <mat-option value="b2">B2</mat-option>
-          <mat-option value="b3">B3</mat-option>
-          <mat-option value="b4">B4</mat-option>
+          <mat-option value="1">1</mat-option>
+          <mat-option value="2">2</mat-option>
+          <mat-option value="3">3</mat-option>
+          <mat-option value="4">4</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -227,7 +303,7 @@
     <div style="margin-bottom: 9px">
       <label
         for="documentationUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >Documentation URL</label
       >
       <input
@@ -264,7 +340,7 @@
     >
       <label
         for="applicationStatus"
-        style="display: block; margin-bottom: 5px; font-weight: 400"
+        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
         >Status of Application</label
       >
       <mat-slide-toggle
@@ -293,11 +369,13 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #538392;
+          background-color: #3795BD;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 20px;
-          border: 2px solid black;
+          border-radius: 8px;
+          border: 1px solid black;
           cursor: pointer;
+          color: white;
+          font-weight: 500;
         "
       >
         Save All
@@ -310,11 +388,13 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #538392;
+          background-color: #3795BD;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 20px;
-          border: 2px solid black;
+          border-radius: 8px;
+          border: 1px solid black;
           cursor: pointer;
+          color: white;
+          font-weight: 500;
         "
         (click)="onSubmit()"
       >

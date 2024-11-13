@@ -198,4 +198,8 @@ export class HomeComponent implements OnInit {
     // Implement your filtering logic here based on selectedCategories
     // For example, you can filter `filteredItems` based on the selected categories
   }
+  isAdminAccess(): boolean {
+    const adminAccess = localStorage.getItem('Admin Access');
+    return adminAccess === 'no';
+  }
 }

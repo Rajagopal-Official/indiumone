@@ -30,11 +30,11 @@ export const routes: Routes = [
     component: EditApplicationComponent,
   },
   {
-    path: 'edit-app',
+    path: 'edit-app/:id',
     component: EditPageComponent,
   },
   {
-    path: 'view-application',
+    path: 'view-application/:id',
     component: EditPageComponent,
   },
   { path: '**', redirectTo: '' },

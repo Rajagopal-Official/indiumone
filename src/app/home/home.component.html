@@ -11,7 +11,7 @@
         align-items: center;
         padding: 0 20px;
         z-index: 1000;
-        background-color: white;
+        background-color: #000000;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         z-index: 1000;
       "
@@ -20,7 +20,7 @@
         <img
           src="../../assets/IndiumLogo.png"
           alt="Indium Logo"
-          style="height: 50px; width: auto"
+          style="height: 60px;border-radius: 10px;"
         />
       </div>
 
@@ -34,7 +34,8 @@
           font-style: italic;
           font-weight: 600;
           flex-grow: 1;
-          color: black;
+          color: white;
+          font-weight: 500;
         "
       >
         Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
@@ -43,25 +44,26 @@
       <div style="display: flex; align-items: center; gap: 10px">
         <button
           mat-flat-button
-          color="accent"
           class="notification-btn"
           matTooltip="Click here to see notifications"
           (click)="toggleModal()"
+          style="background-color: #47f3d0;"
         >
-          <mat-icon style="font-size: 24px; width: 24px; height: 24px"
+          <mat-icon style="font-size: 18px; width: 18px; height: 18px"
             >notifications_active</mat-icon
           >
         </button>
 
-        <div style="margin-top: 15px; padding: 8px; border-radius: 20px">
+        <div style="margin-top: 15px; padding: 8px; border-radius: 20px;"
+        @if(isAdminAccess())>
           <mat-form-field
             appearance="fill"
-            style="width: 200px; margin-bottom: 20px"
+            style="width: 200px; margin-bottom: 20px;"
           >
             <mat-label
               style="
-                color: white;
-                font-weight: 300;
+                color: black;
+                font-weight: 500;
                 font-size: 14px;
                 display: flex;
                 align-items: center;
@@ -72,7 +74,7 @@
               <mat-icon style="margin-right: 10px">settings</mat-icon>
               Configurations
             </mat-label>
-            <mat-select>
+            <mat-select matTooltip="Click here to set up configurations">
               <mat-option value="addApplication" (click)="editApplication()">
                 <mat-icon style="margin-right: 10px">apps</mat-icon>
                 Applications
@@ -83,10 +85,9 @@
 
         <button
           mat-flat-button
-          color="accent"
           (click)="logout()"
           style="
-            width: 100px;
+            width: 120px;
             height: 30px;
             cursor: pointer;
             padding: 10px;
@@ -96,8 +97,10 @@
             margin-top: 10px;
             border: 1.2px solid black;
             font-size: 14px;
-            font-weight: 300;
-            color: white;
+            font-weight: 500;
+            color: black;
+            background-color: #47f3d0;
+
           "
           matTooltip="Click here to Logout"
         >
@@ -118,9 +121,9 @@
         <swiper-slide>
           <div class="showcase">
             <div class="showcase-content">
-              <h1 style="font-weight: 600">{{ slide.title }}</h1>
+              <h1 style="font-weight: 750">{{ slide.title }}</h1>
               <h1 style="font-weight: 500">{{ slide.stream }}</h1>
-              <p style="font-weight: 500">{{ slide.desc }}</p>
+              <p style="font-weight: 300">{{ slide.desc }}</p>
             </div>
             <div>
               <img
@@ -144,14 +147,14 @@
         margin-left: 20px !important;
       "
     >
-      <mat-form-field appearance="outline" style="width: 550px !important">
+      <mat-form-field appearance="outline" style="width: 550px !important ; padding: 20px !important;">
         <mat-icon matPrefix>search</mat-icon>
         <input
           matInput
           [(ngModel)]="searchTerm"
           (ngModelChange)="searchApps()"
           placeholder="Search applications..."
-          style="padding-left: 15px; color: black"
+          style="padding-left: 15px; color: black;"
         />
       </mat-form-field>
     </div>

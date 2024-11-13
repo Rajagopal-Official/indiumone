@@ -34,7 +34,6 @@ export class AuthService {
       sourceUrl
     )}`;
     console.log('Redirecting to:', ssoUrl);
-    // Redirect to SSO login URL
     window.location.href = ssoUrl;
   }
   

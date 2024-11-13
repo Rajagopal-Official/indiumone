@@ -12,7 +12,6 @@
 >
   <form
     [formGroup]="form"
-    (ngSubmit)="onSubmit()"
     style="
       max-width: 600px;
       width: 100%;
@@ -29,7 +28,7 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationName"
-        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
         >Application Name</label
       >
       <input
@@ -131,7 +130,7 @@
      <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
-        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
         >Application Description</label
       >
       <input
@@ -224,7 +223,7 @@
     <div style="margin-bottom: 9px">
       <label
         for="accessibleDepartments"
-        style="display: block; margin-bottom: 5px; font-weight: 400;"
+        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
         >Accessible Departments</label
       >
       <mat-form-field appearance="fill" style="width: 100%" class="mat-select-container">
@@ -267,11 +266,13 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #538392;
+          background-color: #3795BD;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 20px;
-          border: 2px solid black;
+          border-radius: 8px;
+          border: 1px solid black;
           cursor: pointer;
+          color: white;
+          font-weight: 500;
         "
         (click)="onSubmit()"
       >

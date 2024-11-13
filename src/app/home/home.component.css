@@ -571,7 +571,7 @@ mat-list-item {
   opacity: 0.7 !important;
 }
 .mat-mdc-text-field-wrapper.mdc-text-field--filled {
-  background-color: #ff4081!important;
+  background-color: #47f3d0!important;
   border: 1px solid black;
   /* height: auto; */
 }
@@ -585,15 +585,15 @@ mat-list-item {
 }
 
 .mat-mdc-option {
-  color: white !important;
+  color: black !important;
 }
 
 .mat-mdc-option.mat-selected {
-  color: white !important;
+  color: black !important;
 }
 
 .mat-mdc-select-panel {
-  background-color: #ff4081 !important;
+  background-color: #47f3d0 !important;
 }
 
 .mat-mdc-option.mat-selected:not(.mat-option-disabled) {

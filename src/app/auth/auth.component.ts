@@ -28,7 +28,12 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams, 'URL');
     const token = urlParams.get('token');
+    const role = urlParams.get('admin_user')!; 
+    localStorage.setItem('Admin Access', role);
+    console.log(role, 'Role');
+    
 
     if (token) {
       this.router.navigate(['/get-token'], { queryParams: { token } });
