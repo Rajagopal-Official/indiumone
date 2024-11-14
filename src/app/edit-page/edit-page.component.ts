@@ -38,14 +38,14 @@ export class EditPageComponent implements OnInit {
     applicationStatus: new FormControl(true),
     appUrl: new FormControl(''),
     appSecret: new FormControl(''),
-    appDevTeam: new FormControl('')
+    appDevTeam: new FormControl(''),
   });
   appId: number | null = null;
   bandLevels = [
     { value: 1, label: '1' },
     { value: 2, label: '2' },
     { value: 3, label: '3' },
-    { value: 4, label: '4' }
+    { value: 4, label: '4' },
   ];
   divisions: string[] = [
     'All',
@@ -70,8 +70,13 @@ export class EditPageComponent implements OnInit {
   selectedDepartments: string[] = [];
   selectedFile: File | null = null;
   fileSizeError: boolean = false;
+  imagePreviewUrl: string | null = null;
 
-  constructor(private route: ActivatedRoute, private httpClient: HttpClient, private sharedService: SharedService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private httpClient: HttpClient,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     this.appId = Number(this.route.snapshot.paramMap.get('id'));
@@ -113,15 +118,16 @@ export class EditPageComponent implements OnInit {
             applicationDescription: response.data.app_description,
             accessibleDepartments: response.data.app_group,
             appUrl: response.data.app_url,
-              appSecret: response.data.app_secret,
-              appDevTeam: response.data.app_dev_team,
-              documentationUrl: response.data.app_documentation_url,
-              demoUrl: response.data.app_demo_url,
-              bandLevel: response.data.level_access_restriction,
-              applicationStatus: response.data.app_status === 1,
-              accessibleDivisions: response.data.division_access_restriction,
-
+            imageUrl: response.data.app_image_url,
+            appSecret: response.data.app_secret,
+            appDevTeam: response.data.app_dev_team,
+            documentationUrl: response.data.app_documentation_url,
+            demoUrl: response.data.app_demo_url,
+            bandLevel: response.data.level_access_restriction,
+            applicationStatus: response.data.app_status === 1,
+            accessibleDivisions: response.data.division_access_restriction,
           });
+          this.imagePreviewUrl = response.data.app_image_url;
           console.log('Form Values after patchValue:', this.form.value);
         },
         (error) => {
@@ -152,7 +158,7 @@ export class EditPageComponent implements OnInit {
       app_documentation_url: formData.documentationUrl,
       app_secret: formData.appSecret,
       app_demo_url: formData.demoUrl,
-      app_dev_team: formData.appDevTeam
+      app_dev_team: formData.appDevTeam,
     };
 
     const token = localStorage.getItem('token');
@@ -164,7 +170,11 @@ export class EditPageComponent implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     this.httpClient
-      .post('https://indiumssoauth.azurewebsites.net/update_application', postData, { headers })
+      .post(
+        'https://indiumssoauth.azurewebsites.net/update_application',
+        postData,
+        { headers }
+      )
       .subscribe(
         (response) => {
           console.log('Application updated successfully', response);
@@ -177,12 +187,18 @@ export class EditPageComponent implements OnInit {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file && file.size > 1048576) { 
+    if (file && file.size > 1048576) {
       this.fileSizeError = true;
       this.selectedFile = null;
-    } else {
+      // this.imagePreviewUrl = null;
+    } else if (file) {
       this.fileSizeError = false;
       this.selectedFile = file;
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //   this.imagePreviewUrl = reader.result as string;
+      // };
+      // reader.readAsDataURL(file);
     }
   }
 
@@ -191,31 +207,37 @@ export class EditPageComponent implements OnInit {
       console.error('No file selected');
       return;
     }
-  
+
     if (!this.appId) {
       console.error('No appId found in route parameters');
       return;
     }
-  
+
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-  
+
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedFile);
     reader.onload = () => {
       const base64Image = reader.result as string;
       const postData = {
         id: this.appId,
-        imagefile: base64Image.split(',')[1] 
+        imagefile: base64Image.split(',')[1],
       };
-  
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Content-Type', 'application/json');
-  
+
+      const headers = new HttpHeaders()
+        .set('Authorization', `Bearer ${token}`)
+        .set('Content-Type', 'application/json');
+
       this.httpClient
-        .post('https://indiumssoauth.azurewebsites.net/upload_image_base64', postData, { headers })
+        .post(
+          'https://indiumssoauth.azurewebsites.net/upload_image_base64',
+          postData,
+          { headers }
+        )
         .subscribe(
           (response) => {
             console.log('Image uploaded successfully', response);

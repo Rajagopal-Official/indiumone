@@ -25,7 +25,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationName"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Application Name</label
       >
       <input
@@ -48,7 +53,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >App Description</label
       >
       <input
@@ -72,10 +82,15 @@
     <div style="margin-bottom: 9px">
       <label
         for="imageUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Image Url(Upload a Image of Size within 1mb)</label
       >
-      <div style="display: flex; gap: 20px; align-items: center"> 
+      <div style="display: flex; gap: 20px; align-items: center">
         <input
           id="imageUrl"
           type="file"
@@ -100,7 +115,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #3795BD;
+            background-color: #3795bd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             border: 1px solid black;
@@ -116,12 +131,57 @@
       <div style="color: red; margin-top: 5px">
         File size should be within 1MB.
       </div>
+      } @if(imagePreviewUrl){
+      <div
+        style="
+          height: 200px;
+          width: 95%;
+          background-color: #f4f7fa;
+          margin-top: 20px;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          padding: 20px;
+        "
+      >
+        <p
+          style="
+            font-size: 16px;
+            font-weight: 500;
+            color: #5a5a5a;
+            margin-bottom: 15px;
+          "
+        >
+          Image Preview
+        </p>
+        <img
+          [src]="imagePreviewUrl"
+          alt="Please choose the image"
+          style="
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            object-fit: contain;
+          "
+        />
+      </div>
+
       }
     </div>
     <div style="margin-bottom: 9px">
       <label
         for="appUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >App Url</label
       >
       <input
@@ -147,7 +207,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="demoUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Demo Url</label
       >
       <input
@@ -175,7 +240,12 @@
       <div style="flex: 1">
         <label
           for="accessibleDivisions"
-          style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+          style="
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            font-size: 15px;
+          "
           >Accessible Divisions</label
         >
         <mat-form-field
@@ -207,7 +277,12 @@
       <div style="flex: 1">
         <label
           for="accessibleDepartments"
-          style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+          style="
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            font-size: 15px;
+          "
           >Accessible Category/Group</label
         >
         <input
@@ -230,7 +305,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="appSecret"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >App Secret</label
       >
       <input
@@ -256,7 +336,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="appDevTeam"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >App Developers Team</label
       >
       <input
@@ -283,7 +368,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="bandLevel"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Band Level</label
       >
       <mat-form-field
@@ -303,7 +393,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="documentationUrl"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Documentation URL</label
       >
       <input
@@ -340,7 +435,12 @@
     >
       <label
         for="applicationStatus"
-        style="display: block; margin-bottom: 5px; font-weight: 400;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Status of Application</label
       >
       <mat-slide-toggle
@@ -369,7 +469,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #3795BD;
+          background-color: #3795bd;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-radius: 8px;
           border: 1px solid black;
@@ -388,7 +488,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #3795BD;
+          background-color: #3795bd;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-radius: 8px;
           border: 1px solid black;
