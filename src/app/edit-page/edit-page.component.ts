@@ -32,7 +32,7 @@ export class EditPageComponent implements OnInit {
     demoUrl: new FormControl(''),
     documentationUrl: new FormControl(''),
     applicationName: new FormControl({ value: '', disabled: true }),
-    applicationDescription: new FormControl({ value: '', disabled: true }),
+    applicationDescription: new FormControl(''),
     accessibleDepartments: new FormControl<string>(''),
     accessibleDivisions: new FormControl<string>(''),
     bandLevel: new FormControl<string>(''),

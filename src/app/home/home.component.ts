@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeModule } from '@angular/material/tree';
 import { AuthService } from '../auth/auth.service';
 import { ApplicationsService } from '../applications.service';
@@ -148,6 +148,7 @@ export class HomeComponent {
   showSearchField = signal<boolean>(false);
   ratings = signal<{ [key: string]: number }>({});
   usernameSignal = this.authService.getUsernameSignal();
+  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   getDisplayName(): string {
     const username = this.usernameSignal();
     console.log(username,'user')
@@ -161,6 +162,9 @@ export class HomeComponent {
   searchApps() {
     const searchTerm = this.searchTerm().toLowerCase();
     this.filterApps(this.selectedDepartment(), searchTerm);
+  }
+  closeMenu() {
+    this.menuTrigger.closeMenu();
   }
 
   filterApps(department: string, searchTerm: string = '') {

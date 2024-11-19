@@ -31,8 +31,8 @@ mat-sidenav-container {
   border-bottom: 1px solid #e2e8f0;
 }
 .sidebar-title {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.r75rem;
+  font-weight: 500;
   color: var(--text-secondary);
   margin: 0;
   text-transform: capitalize;
@@ -40,8 +40,8 @@ mat-sidenav-container {
   text-align: center;
 }
 .mat-sidenav {
-  height: 100%;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow-y: hidden;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
 }
@@ -320,6 +320,15 @@ mat-sidenav-container {
 :host {
   display: block;
 }
+.close-btn {
+  margin-left: -8px;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #1e293b;
+}
 ::ng-deep .apps-menu {
   max-width: none !important;
   width: auto !important;
@@ -581,6 +590,7 @@ mat-form-field.small {
 .department-icon {
   margin-right: 8px;
   color: black;
+  margin-right: 8px; 
 }
 
 .department-name {
@@ -608,13 +618,30 @@ mat-form-field.small {
 
 .mat-tree-node {
   min-height: 48px;
+  margin-left: 10%;
   color: black;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 0 12px !important;
 }
 
 .mat-tree-node:hover {
   background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }
+.mat-tree-node button[mattreenodeToggle] {
+  order: 3; 
+}
+
+.mat-tree-node .department-icon {
+  order: 1; 
+}
+
+.mat-tree-node .department-name {
+  order: 2; 
+}
+
 
 .tree-invisible {
   display: none;

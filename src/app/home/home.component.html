@@ -5,21 +5,39 @@
   <span class="logo">
     <div style="margin-right: 20px">
       <img
-        src="../../assets/IndiumLogo.png"
+        src="../../assets/logo.png"
         alt="Indium Logo"
-        style="height: 65px; width: 70px"
+        style="height: 33px; width: 60px; margin-top: 10px"
       />
     </div>
     Indium One
   </span>
   <button
-    mat-icon-button
+    mat-button
     [matMenuTriggerFor]="appsMenu"
     class="apps-menu-btn"
-    matTooltip="Click here to see the top applications"
+    matTooltip="Click here to see the top-rated applications"
     #menuTrigger="matMenuTrigger"
+    style="
+      margin-left: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      height: 40px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      &:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-1px);
+      }
+    "
   >
-    <mat-icon>apps</mat-icon>
+    <mat-icon style="font-size: 24px; height: 24px; width: 24px">apps</mat-icon>
+    Top Rated Apps
   </button>
   <mat-menu #appsMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
     <div class="apps-grid">
@@ -63,7 +81,12 @@
   </button>
   <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
     <div class="notification-header">
-      <h3>Notifications</h3>
+      <div class="header-content">
+        <button mat-icon-button class="close-btn" (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <h3>Notifications</h3>
+      </div>
       <button mat-button color="primary">Mark all as read</button>
     </div>
     @for (notification of notifications; track notification.id) {
@@ -84,7 +107,7 @@
             Mark as Read
           </button>
         </div>
-      </div>      
+      </div>
     </div>
     }
   </mat-menu>
@@ -125,12 +148,15 @@
 <mat-sidenav-container>
   <mat-sidenav [opened]="sidenavOpen()" mode="side" class="sidebar">
     <div class="sidebar-header">
-      <h2 class="sidebar-title">Departments</h2>
+      <h2 class="sidebar-title">Departments by Categories</h2>
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <!-- Parent nodes -->
       <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
         <div class="mat-tree-node" (click)="selectDepartment(node.name)">
+          <mat-icon *ngIf="node.icon" class="department-icon">{{
+            node.icon
+          }}</mat-icon>
+          <span class="department-name">{{ node.name }}</span>
           <button mat-icon-button matTreeNodeToggle>
             <mat-icon>
               {{
@@ -138,10 +164,6 @@
               }}
             </mat-icon>
           </button>
-          <mat-icon *ngIf="node.icon" class="department-icon">{{
-            node.icon
-          }}</mat-icon>
-          <span class="department-name">{{ node.name }}</span>
         </div>
         <div
           class="mat-tree-children"
@@ -170,7 +192,20 @@
     <div style="padding: 12px">
       <div class="page-header">
         <h1>Appstore built for us and built by us</h1>
-        <p class="subtitle">Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.</p>
+        <p class="subtitle">
+          Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
+        </p>
+        <div style="display: flex; justify-content: flex-end; width: 100%;">
+          <p style="
+            margin-top: 17px;
+            font-size: 18px;
+            font-weight: 450;
+            font-style: italic;
+            margin-right: 20px; 
+          ">
+            Apps that power your productivity journey! ⚡
+          </p>
+        </div>
       </div>
 
       <section
@@ -201,46 +236,49 @@
         <div class="grid-item">
           <div class="image-container">
             <img [src]="item.image" [alt]="item.title" />
-            <span class="department-badge">{{ item.department }}</span>
-            <span class="description-badge">Short Description</span>
+            <span class="department-badge">
+              Accessible-Department :{{ item.department }}</span
+            >
           </div>
           <div class="content">
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
             <div class="actions">
-              <div style="display: flex; gap: 10px;">
+              <div style="display: flex; gap: 10px">
                 <a
                   [href]="item.link"
                   target="_blank"
                   class="action-button primary"
-                  style="display: flex; align-items: center; gap: 5px;"
+                  style="display: flex; align-items: center; gap: 5px"
                 >
                   Access
-                  <mat-icon style="font-size: 20px;">security</mat-icon>
+                  <mat-icon style="font-size: 20px">security</mat-icon>
                 </a>
               </div>
-              <div style="display: flex; gap: 10px;">
+              <div style="display: flex; gap: 10px">
                 <a
                   [href]="item.demoUrl"
                   target="_blank"
                   class="action-button secondary"
                   [class.disabled]="!item.demoUrl"
                   [attr.title]="!item.demoUrl ? 'Demo not available' : ''"
-                  style="display: flex; align-items: center; gap: 5px;"
+                  style="display: flex; align-items: center; gap: 5px"
                 >
                   Demo
-                  <mat-icon style="font-size: 20px;">play_circle_filled</mat-icon>
+                  <mat-icon style="font-size: 20px"
+                    >play_circle_filled</mat-icon
+                  >
                 </a>
               </div>
             </div>
             <div class="dev-team">
-              Developed by: {{ item.devTeam || "Organization" }}
+              Developed by: {{ item.devTeam || "Organization Dev Team" }}
             </div>
             <div class="rating">
               @for (i of [1, 2, 3, 4, 5]; track i) {
               <mat-icon
                 (click)="rateApplication(item, i)"
-                [ngClass]="{ 'filled': ratings()[item.title] >= i }"
+                [ngClass]="{ filled: ratings()[item.title] >= i }"
               >
                 star
               </mat-icon>
