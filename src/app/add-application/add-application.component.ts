@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, signal, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -35,6 +35,7 @@ export class AddApplicationComponent {
     bandComparison: new FormControl(''),
     bandLevel: new FormControl(''),
   });
+  errorMessage = signal('');
 
   departments: string[] = [
     'All',
@@ -57,6 +58,9 @@ export class AddApplicationComponent {
 
   onSubmit() {
     if (this.form.invalid) {
+      this.errorMessage.set(
+        'All fields are required and mandatory to proceed.'
+      );
       return;
     }
     const formData = this.form.value;
@@ -74,16 +78,22 @@ export class AddApplicationComponent {
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    this.httpClient.post('https://indiumssoauth.azurewebsites.net/add_application', postData, { headers }).subscribe(
-      (response: any) => {
-        console.log('Application added successfully', response);
-        this.sharedService.setRecid(response.recid); 
-        this.router.navigate(['/applications']);
-      },
-      (error) => {
-        console.error('Error Adding Application', error);
-      }
-    );
+    this.httpClient
+      .post(
+        'https://indiumssoauth.azurewebsites.net/add_application',
+        postData,
+        { headers }
+      )
+      .subscribe(
+        (response: any) => {
+          console.log('Application added successfully', response);
+          this.sharedService.setRecid(response.recid);
+          this.router.navigate(['/applications']);
+        },
+        (error) => {
+          console.error('Error Adding Application', error);
+        }
+      );
   }
 
   onFileChange(event: any) {

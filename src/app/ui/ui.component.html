@@ -17,8 +17,8 @@
     [matMenuTriggerFor]="appsMenu"
     class="apps-menu-btn"
     matTooltip="Click here to see the top applications"
-    #menuTrigger="matMenuTrigger"
   >
+    <!--  matMenuTriggerFor Binds a button to a menu. -->
     <mat-icon>apps</mat-icon>
   </button>
   <mat-menu #appsMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
@@ -53,6 +53,9 @@
   <button mat-icon-button matTooltip="Search" (click)="toggleSearchField()">
     <mat-icon>search</mat-icon>
   </button>
+  <button mat-icon-button matTooltip="Toggle Theme">
+    <mat-icon>dark_mode</mat-icon>
+  </button>
   <button
     mat-icon-button
     [matMenuTriggerFor]="notificationsMenu"
@@ -74,17 +77,7 @@
       <div class="notification-content">
         <p class="notification-text">{{ notification.text }}</p>
         <span class="notification-time">{{ notification.time }}</span>
-        <div class="notification-actions">
-          <button class="notification-btn-action btn-take-action">
-            <mat-icon style="font-size: 16px">launch</mat-icon>
-            Take Action
-          </button>
-          <button class="notification-btn-action btn-mark-read">
-            <mat-icon style="font-size: 16px">check_circle</mat-icon>
-            Mark as Read
-          </button>
-        </div>
-      </div>      
+      </div>
     </div>
     }
   </mat-menu>
@@ -98,24 +91,8 @@
   <mat-menu #logout="matMenu" class="apps-menu" [overlapTrigger]="false">
     <button
       mat-icon-button
-      style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 160px;
-        height: 50px;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 16px;
-        cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-      "
-      (click)="handleLogout()"
+      style="display: flex; gap: 8px; width: 150px; height: 50px"
+      (click)="logout"
     >
       <mat-icon>logout</mat-icon> Logout
     </button>
@@ -125,12 +102,24 @@
 <mat-sidenav-container>
   <mat-sidenav [opened]="sidenavOpen()" mode="side" class="sidebar">
     <div class="sidebar-header">
-      <h2 class="sidebar-title">Departments</h2>
+      <h2 class="sidebar-title">Navigation</h2>
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <!-- Parent nodes -->
+      <mat-tree-node
+        *matTreeNodeDef="let node"
+        matTreeNodePadding
+        style="background-color: black"
+      >
+        <mat-icon *ngIf="node.icon">{{ node.icon }}</mat-icon>
+        <span
+          (click)="applicationsList()"
+          style="cursor: pointer; color: white"
+          >{{ node.name }}</span
+        >
+      </mat-tree-node>
+
       <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-        <div class="mat-tree-node" (click)="selectDepartment(node.name)">
+        <div class="mat-tree-node">
           <button mat-icon-button matTreeNodeToggle>
             <mat-icon>
               {{
@@ -138,39 +127,38 @@
               }}
             </mat-icon>
           </button>
-          <mat-icon *ngIf="node.icon" class="department-icon">{{
-            node.icon
-          }}</mat-icon>
-          <span class="department-name">{{ node.name }}</span>
+          <mat-icon *ngIf="node.icon">{{ node.icon }}</mat-icon>
+          <span>{{ node.name }}</span>
         </div>
         <div
-          class="mat-tree-children"
           [class.tree-invisible]="!treeControl.isExpanded(node)"
           role="group"
         >
           <ng-container matTreeNodeOutlet></ng-container>
         </div>
       </mat-nested-tree-node>
-
-      <mat-tree-node
-        *matTreeNodeDef="let node"
-        matTreeNodePadding
-        class="submenu-item"
-        (click)="node.name === 'Applications' ? applicationsList() : null"
-      >
-        <mat-icon *ngIf="node.icon" class="submenu-icon">{{
-          node.icon
-        }}</mat-icon>
-        <span class="submenu-name">{{ node.name }}</span>
-      </mat-tree-node>
     </mat-tree>
+
+    <mat-nav-list>
+      @for (item of menuItems(); track item.text) {
+      <a mat-list-item matRipple [matTooltip]="item.text">
+        <mat-icon matListItemIcon [class]="item.color">{{
+          item.icon
+        }}</mat-icon>
+        <span matListItemTitle>{{ item.text }}</span>
+        @if (item.badge) {
+        <span class="menu-badge">{{ item.badge }}</span>
+        }
+      </a>
+      }
+    </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <div style="padding: 12px">
       <div class="page-header">
-        <h1>Appstore built for us and built by us</h1>
-        <p class="subtitle">Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.</p>
+        <h1>Dashboard Overview</h1>
+        <p class="subtitle">Welcome back! Here's what's happening today.</p>
       </div>
 
       <section
@@ -180,24 +168,19 @@
         <div
           style="
             display: flex;
-            flex-direction: column;
+            gap: 10px;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            text-align: center;
+            flex-direction: column;
           "
         >
           <mat-spinner></mat-spinner>
-          <p style="font-weight: bold; margin-top: 16px">
+          <p style="font-weight: bold">
             Loading the list of Authorized Applications
           </p>
         </div>
-        } @else { @if(filteredItems().length === 0) {
-        <div class="no-apps-message">
-          <mat-icon>info</mat-icon>
-          <p>No applications available in this category</p>
-        </div>
-        } @else { @for (item of filteredItems(); track item.title) {
+        } @else{ @for (item of filteredItems(); track item.title) {
         <div class="grid-item">
           <div class="image-container">
             <img [src]="item.image" [alt]="item.title" />
@@ -208,47 +191,18 @@
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
             <div class="actions">
-              <div style="display: flex; gap: 10px;">
-                <a
-                  [href]="item.link"
-                  target="_blank"
-                  class="action-button primary"
-                  style="display: flex; align-items: center; gap: 5px;"
-                >
-                  Access
-                  <mat-icon style="font-size: 20px;">security</mat-icon>
-                </a>
-              </div>
-              <div style="display: flex; gap: 10px;">
-                <a
-                  [href]="item.demoUrl"
-                  target="_blank"
-                  class="action-button secondary"
-                  [class.disabled]="!item.demoUrl"
-                  [attr.title]="!item.demoUrl ? 'Demo not available' : ''"
-                  style="display: flex; align-items: center; gap: 5px;"
-                >
-                  Demo
-                  <mat-icon style="font-size: 20px;">play_circle_filled</mat-icon>
-                </a>
-              </div>
-            </div>
-            <div class="dev-team">
-              Developed by: {{ item.devTeam || "Organization" }}
-            </div>
-            <div class="rating">
-              @for (i of [1, 2, 3, 4, 5]; track i) {
-              <mat-icon
-                (click)="rateApplication(item, i)"
-                [ngClass]="{ 'filled': ratings()[item.title] >= i }"
+              <a
+                [href]="item.link"
+                target="_blank"
+                class="action-button primary"
               >
-                star
-              </mat-icon>
-              }
+                Access
+              </a>
+              <a target="_blank" class="action-button secondary"> Demo </a>
             </div>
           </div>
         </div>
-        } } }
+        } }
       </section>
     </div>
   </mat-sidenav-content>

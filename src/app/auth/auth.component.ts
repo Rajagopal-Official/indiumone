@@ -43,6 +43,7 @@ export class AuthComponent implements OnInit {
     if (accounts.length > 0) {
       this.isLoggedIn = true;
       this.username = accounts[0].username;
+      console.log(this.username,'uss')
       this.AuthService.setUsername(this.username);
       Swal.fire({
         icon: 'success',

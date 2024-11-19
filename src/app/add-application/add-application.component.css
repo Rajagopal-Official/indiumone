@@ -1,5 +1,5 @@
 .mat-mdc-text-field-wrapper.mdc-text-field--filled {
-    background-color: #687ae8 !important;
+    background-color: #CEDEBD !important;
     border: 1px solid black;
   }
   
@@ -16,7 +16,7 @@
   }
   
   .mat-mdc-select-panel {
-    background-color: #687ae8 !important;
+    background-color: #CEDEBD !important;
   }
   
   .mat-mdc-option.mat-selected:not(.mat-option-disabled) {
@@ -31,5 +31,5 @@
     color: black !important;
   }
   ::-webkit-file-upload-button{
-    background-color:'#687ae8' ;
+    background-color:'#CEDEBD' ;
   }

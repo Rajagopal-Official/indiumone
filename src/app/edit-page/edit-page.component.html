@@ -19,9 +19,13 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     "
   >
+  @if (isEditMode) {
     <h2 style="text-align: center; margin-bottom: 20px">
       Editing a Application
     </h2>
+    }@else {
+    <h2 style="text-align: center; margin-bottom: 20px">Application View</h2>
+    }
     <div style="margin-bottom: 9px">
       <label
         for="applicationName"
@@ -37,13 +41,14 @@
         id="applicationName"
         type="text"
         formControlName="applicationName"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
@@ -65,22 +70,22 @@
         id="applicationDescription"
         type="text"
         formControlName="applicationDescription"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
-        readonly
       />
     </div>
 
     <div style="margin-bottom: 9px">
-      <label
+      @if (isEditMode) { <label
         for="imageUrl"
         style="
           display: block;
@@ -89,9 +94,19 @@
           font-size: 15px;
         "
         >Image Url(Upload a Image of Size within 1mb)</label
-      >
+      >}@else { <label
+        for="imageUrl"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
+        >Image Preview</label
+      >}
+     
       <div style="display: flex; gap: 20px; align-items: center">
-        <input
+        @if (isEditMode) {<input
           id="imageUrl"
           type="file"
           (change)="onFileSelected($event)"
@@ -101,7 +116,7 @@
             border: 1px solid black;
             border-radius: 4px;
             height: 35px;
-            background-color: #687ae8;
+            background-color: #CEDEBD;
             color: black;
             height: 25px;
           "
@@ -115,17 +130,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #3795bd;
+            background-color: #FAF1E4;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             border: 1px solid black;
             cursor: pointer;
-            color: white;
-            font-weight: 500;
+            color: black;
+            font-weight: 700;
           "
         >
           Save
-        </button>
+        </button>}
       </div>
       @if(fileSizeError){
       <div style="color: red; margin-top: 5px">
@@ -188,13 +203,14 @@
         id="appUrl"
         type="text"
         formControlName="appUrl"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
@@ -219,13 +235,14 @@
         id="demoUrl"
         type="text"
         formControlName="demoUrl"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
@@ -285,22 +302,32 @@
           "
           >Accessible Category/Group</label
         >
-        <input
-          id="accessibleDepartments"
-          type="text"
-          formControlName="accessibleDepartments"
-          style="
-            width: 96%;
-            padding: 8px;
-            border: 1px solid black;
-            border-radius: 4px;
-            height: 40px !important;
-            background-color: #687ae8;
-            color: black;
-            height: 35px;
-          "
-        />
-      </div>
+        <mat-form-field
+        appearance="fill"
+        style="width: 100%"
+        class="mat-select-container"
+      >
+        <mat-select
+          [formControl]="form.controls.accessibleDepartments"
+          (selectionChange)="onDepartmentsChange($event)"
+          style="width: 100%"
+        >
+          @for (dept of departments; track dept) {
+          <mat-option
+            [value]="dept"
+            style="
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            {{ dept }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     </div>
     <div style="margin-bottom: 9px">
       <label
@@ -317,13 +344,14 @@
         id="appSecret"
         type="text"
         formControlName="appSecret"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
@@ -348,13 +376,14 @@
         id="appDevTeam"
         type="text"
         formControlName="appDevTeam"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
           height: 25px;
         "
@@ -405,13 +434,14 @@
         id="documentationUrl"
         type="text"
         formControlName="documentationUrl"
+        autocomplete="off"
         style="
           width: 98%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 25px;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
         "
       />
@@ -451,55 +481,55 @@
         {{ form.controls.applicationStatus.value ? "Active" : "Inactive" }}
       </mat-slide-toggle>
     </div>
-
-    <div
-      style="
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 20px;
-      "
-    >
-      <button
-        type="submit"
-        style="
-          width: 150px;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #3795bd;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
-          border: 1px solid black;
-          cursor: pointer;
-          color: white;
-          font-weight: 500;
-        "
-      >
-        Save All
-      </button>
-      <button
-        type="submit"
-        style="
-          width: 150px;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #3795bd;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
-          border: 1px solid black;
-          cursor: pointer;
-          color: white;
-          font-weight: 500;
-        "
-        (click)="onSubmit()"
-      >
-        Submit
-      </button>
-    </div>
+@if (isEditMode) {<div
+  style="
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+  "
+>
+  <button
+    type="submit"
+    style="
+      width: 150px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FAF1E4;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border: 1px solid black;
+      cursor: pointer;
+      color: black;
+      font-weight: 700;
+    "
+  >
+    Save All
+  </button>
+  <button
+    type="submit"
+    style="
+      width: 150px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #FAF1E4;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      border: 1px solid black;
+      cursor: pointer;
+      color: black;
+      font-weight: 700;
+    "
+    (click)="onSubmit()"
+  >
+    Submit
+  </button>
+</div>}
+    
   </form>
 </div>

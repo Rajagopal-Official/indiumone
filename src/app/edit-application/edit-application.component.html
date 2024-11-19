@@ -1,89 +1,296 @@
 <div *ngIf="isLoading(); else content">
-  <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <mat-spinner diameter="40"></mat-spinner>
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background:white;
+    "
+  >
+    <mat-spinner diameter="50" style="color: #cb5edc"></mat-spinner>
   </div>
 </div>
 
 <ng-template #content>
-  <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px; margin-right: 10px; padding: 10px !important;">
-    <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px;">
-      <h2>List of Applications</h2>
-      <button
-        mat-flat-button
-        color="accent"
-        style="display: flex; align-items: center; gap: 8px;"
-        matTooltip="Click here to add a new application"
-        (click)="toggleApplicationModal()"
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 1200px;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    "
+  >
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #278ef1;
+        padding-bottom: 10px;
+      "
+    >
+      <h2
+        style="font-size: 1.8rem; font-weight: 600; color: #444c4c; margin: 0"
       >
-        <mat-icon>add</mat-icon>
-        <span>Add Application</span>
-      </button>
-    </div>
+        List of Applications
+      </h2>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <mat-form-field
+          appearance="outline"
+          class="small"
+          style="margin-top: 20px"
+        >
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="filterApplications()"
+            placeholder="Search applications..."
+          />
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #6da4aa;
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease-in-out;
+            height: 35px;
+          "
+          matTooltip="Click here to add a new application"
+          (click)="toggleApplicationModal()"
+        >
+          <mat-icon>add</mat-icon>
+          <span>Add Application</span>
+        </button>
+      </div>
+    </div>
+    @if(filteredDataSource.length===0){
+    <p
+      style="
+        text-align: center;
+        font-weight: 600;
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+      "
+    >
+      No Applications Matching the Search Term Entered😳
+    </p>
+    } @else {
+    <table
+      mat-table
+      [dataSource]="filteredDataSource"
+      class="mat-elevation-z8"
+      style="
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      "
+    >
       <!-- Application Name Column -->
       <ng-container matColumnDef="appName">
-        <th mat-header-cell *matHeaderCellDef>App Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="
+            background-color: #47f3d0;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+          "
+        >
+          App Name
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          style="
+            padding: 10px;
+            color: #444c4c;
+            text-align: left;
+            font-size: 1rem;
+          "
+        >
+          {{ element.title }}
+        </td>
       </ng-container>
 
       <!-- Application Description Column -->
       <ng-container matColumnDef="appDescription">
-        <th mat-header-cell *matHeaderCellDef>App Description</th>
-        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="
+            background-color: #278ef1;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+          "
+        >
+          App Description
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          style="
+            padding: 10px;
+            color: #444c4c;
+            text-align: left;
+            font-size: 1rem;
+          "
+        >
+          {{ element.description }}
+        </td>
       </ng-container>
 
       <!-- Application URL Column -->
       <ng-container matColumnDef="appUrl">
-        <th mat-header-cell *matHeaderCellDef>App URL</th>
-        <td mat-cell *matCellDef="let element">{{ element.link }}</td>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="
+            background-color: #cb5edc;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+          "
+        >
+          App URL
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          style="
+            padding: 10px;
+            color: #444c4c;
+            text-align: left;
+            font-size: 1rem;
+          "
+        >
+          {{ element.link }}
+        </td>
       </ng-container>
 
       <!-- Status Column -->
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.app_status === 1 ? "Active" : "Inactive" }}
-          <span class="status-icon" [ngClass]="{'active': element.app_status === 1, 'inactive': element.app_status !== 1}">
-            {{ element.app_status === 1 ? '✔' : '✖' }}
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="
+            background-color: #97a0a9;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+          "
+        >
+          Status
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          style="
+            padding: 10px;
+            color: #444c4c;
+            text-align: left;
+            font-size: 1rem;
+          "
+        >
+          <span
+            [ngStyle]="{
+              color: element.app_status === 1 ? '#347928' : '#E53E3E',
+              fontWeight: '600'
+            }"
+          >
+            {{ element.app_status === 1 ? "Active ✔" : "Inactive ✖" }}
           </span>
         </td>
       </ng-container>
 
       <!-- Action Column -->
       <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef style="vertical-align: middle;">Action</th>
-        <td mat-cell *matCellDef="let element">
-          <div style="display: flex; justify-content: center; gap: 10px;">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          style="
+            background-color: #000000;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+          "
+        >
+          Action
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          style="padding: 10px; text-align: center; font-size: 1rem"
+        >
+          <div style="display: flex; justify-content: center; gap: 12px">
             <button
               mat-flat-button
-              color="accent"
-              style="display: flex; align-items: center; gap: 8px;"
-              matTooltip="Click here to edit the application"
+              style="
+                background-color: #FAF1E4;
+                color: black;
+                font-weight: 600;
+                border-radius: 5px;
+              "
+              matTooltip="Edit this application"
               (click)="editApplication(element.id)"
             >
               <mat-icon>edit</mat-icon>
-              <span>Edit</span>
+              Edit
             </button>
             <button
               mat-flat-button
-              color="accent"
-              style="display: flex; align-items: center; gap: 8px;"
-              matTooltip="Click here to view the application"
+              style="
+                background-color: #FAF1E4;
+                color: black;
+                font-weight: 600;
+                border-radius: 5px;
+              "
+              matTooltip="View this application"
               (click)="viewApplication(element.id)"
             >
               <mat-icon>visibility</mat-icon>
-              <span>View</span>
+              View
             </button>
             <button
               mat-flat-button
-              color="accent"
-              style="display: flex; align-items: center; gap: 8px;"
-              matTooltip="Click here to delete the application"
-              (click)="deleteApplication()"
+              style="
+                background-color: #FAF1E4;
+                color: black;
+                font-weight: 600;
+                border-radius: 5px;
+              "
+              matTooltip="Delete this application"
+              (click)="deleteApplication(element.id)"
             >
               <mat-icon>delete</mat-icon>
-              <span>Delete</span>
+              Delete
             </button>
           </div>
         </td>
@@ -92,5 +299,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+    }
   </div>
 </ng-template>

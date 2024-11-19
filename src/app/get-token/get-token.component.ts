@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthComponent } from '../auth/auth.component';
 import { HomeComponent } from '../home/home.component';
-
 @Component({
   selector: 'app-get-token',
   standalone: true,

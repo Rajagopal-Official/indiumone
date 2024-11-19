@@ -9,6 +9,7 @@ import { ApplicationsService } from '../applications.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService } from '../shared.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-new-application',
@@ -34,19 +35,13 @@ export class EditPageComponent implements OnInit {
     applicationDescription: new FormControl({ value: '', disabled: true }),
     accessibleDepartments: new FormControl<string>(''),
     accessibleDivisions: new FormControl<string>(''),
-    bandLevel: new FormControl<number | null>(null),
+    bandLevel: new FormControl<string>(''),
     applicationStatus: new FormControl(true),
     appUrl: new FormControl(''),
     appSecret: new FormControl(''),
     appDevTeam: new FormControl(''),
   });
   appId: number | null = null;
-  bandLevels = [
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-    { value: 4, label: '4' },
-  ];
   divisions: string[] = [
     'All',
     'App Engineering',
@@ -71,18 +66,35 @@ export class EditPageComponent implements OnInit {
   selectedFile: File | null = null;
   fileSizeError: boolean = false;
   imagePreviewUrl: string | null = null;
+  isEditMode:boolean=false;
+  private routeParamsSubscription: Subscription | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private httpClient: HttpClient,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.appId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(this.appId, 'AppID');
-    if (this.appId) {
-      this.fetchApplicationDetails();
+    this.routeParamsSubscription = this.route.params.subscribe((params) => {
+      this.appId = Number(params['id']);
+      console.log(this.appId, 'AppID');
+      this.isEditMode =
+      this.route.snapshot.routeConfig?.path?.includes('edit-app') || false;
+ 
+    if (!this.isEditMode) {
+      this.form.disable();
+    }
+      if (this.appId) {
+        this.fetchApplicationDetails();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.routeParamsSubscription) {
+      this.routeParamsSubscription.unsubscribe();
     }
   }
 
@@ -116,14 +128,14 @@ export class EditPageComponent implements OnInit {
           this.form.patchValue({
             applicationName: response.data.app_name,
             applicationDescription: response.data.app_description,
-            accessibleDepartments: response.data.app_group,
+            accessibleDepartments: response.data.app_group.toString(),
             appUrl: response.data.app_url,
             imageUrl: response.data.app_image_url,
             appSecret: response.data.app_secret,
             appDevTeam: response.data.app_dev_team,
             documentationUrl: response.data.app_documentation_url,
             demoUrl: response.data.app_demo_url,
-            bandLevel: response.data.level_access_restriction,
+            bandLevel: response.data.level_access_restriction.toString(),
             applicationStatus: response.data.app_status === 1,
             accessibleDivisions: response.data.division_access_restriction,
           });
@@ -177,6 +189,7 @@ export class EditPageComponent implements OnInit {
       )
       .subscribe(
         (response) => {
+          this.router.navigate(['/applications']);
           console.log('Application updated successfully', response);
         },
         (error) => {

@@ -28,7 +28,12 @@
     <div style="margin-bottom: 9px">
       <label
         for="applicationName"
-        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Application Name</label
       >
       <input
@@ -36,13 +41,14 @@
         type="text"
         formControlName="applicationName"
         required
+        autocomplete="off"
         style="
           width: 97%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #cedebd !important;
           color: black;
         "
         value=""
@@ -127,10 +133,15 @@
         </div>
       </div> -->
 
-     <div style="margin-bottom: 9px">
+    <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
-        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Application Description</label
       >
       <input
@@ -138,13 +149,14 @@
         type="text"
         formControlName="applicationDescription"
         required
+        autocomplete="off"
         style="
           width: 97%;
           padding: 8px;
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #687ae8;
+          background-color: #cedebd;
           color: black;
         "
       />
@@ -174,7 +186,7 @@
             border: 1px solid black;
             border-radius: 4px;
             height: 35px;
-            background-color: #687ae8;
+            background-color: #CEDEBD;
             color: black;
             text-align: center;
             display: flex;
@@ -190,7 +202,6 @@
         </div>
         }
       </div> -->
-      
 
     <!-- <div style="margin-bottom: 9px">
       <label
@@ -207,7 +218,7 @@
           border: 1px solid black;
           border-radius: 4px;
           resize: vertical;
-          background-color: #687ae8;
+          background-color: #CEDEBD;
           color: black;
         "
       ></textarea>
@@ -223,10 +234,19 @@
     <div style="margin-bottom: 9px">
       <label
         for="accessibleDepartments"
-        style="display: block; margin-bottom: 5px; font-weight: 400;;font-size: 15px;"
+        style="
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 400;
+          font-size: 15px;
+        "
         >Accessible Departments</label
       >
-      <mat-form-field appearance="fill" style="width: 100%" class="mat-select-container">
+      <mat-form-field
+        appearance="fill"
+        style="width: 100%"
+        class="mat-select-container"
+      >
         <mat-select
           [formControl]="form.controls.accessibleDepartments"
           (selectionChange)="onDepartmentsChange($event)"
@@ -266,18 +286,25 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #3795BD;
+          background-color: #FAF1E4;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-radius: 8px;
           border: 1px solid black;
           cursor: pointer;
-          color: white;
-          font-weight: 500;
+          color: black;
+          font-weight: 700;
         "
         (click)="onSubmit()"
       >
         Submit
       </button>
     </div>
+    @if(errorMessage()){
+    <div
+      style="margin-top: 10px; text-align: center; color: red; font-size: 14px"
+    >
+      {{ errorMessage }}
+    </div>
+    }
   </form>
 </div>

@@ -7,8 +7,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApplicationsService {
-  private apiUrl =
-    'https://indiumssoauth.azurewebsites.net/get_authorized_apps';
+  private apiUrl = 'https://indiumssoauth.azurewebsites.net/get_authorized_apps';
   applications = signal<Home[]>([]);
 
   constructor(private http: HttpClient) {}
@@ -31,6 +30,8 @@ export class ApplicationsService {
           link: app.app_url,
           department: app.department_access_restriction,
           app_status: app.app_status,
+          devTeam: app.app_dev_team,
+          demoUrl: app.app_demo_url
         }));
         this.applications.set(mappedData);
         console.log('Applications signal after setting:', this.applications());

@@ -9,10 +9,11 @@ import { NewApplicationComponent } from './new-application/new-application.compo
 import { AddApplicationComponent } from './add-application/add-application.component';
 import { EditApplicationComponent } from './edit-application/edit-application.component';
 import { EditPageComponent } from './edit-page/edit-page.component';
+import { UiComponent } from './ui/ui.component';
 
 export const routes: Routes = [
   { path: '', component: AuthComponent },
-  { path: 'home', component: HomeComponent,canActivate:[authGuard] },
+  { path: 'home', component: HomeComponent},
   {
     path: 'grant-access',
     component: GrantAccessComponent,
@@ -32,6 +33,10 @@ export const routes: Routes = [
   {
     path: 'edit-app/:id',
     component: EditPageComponent,
+  },
+  {
+    path: 'ui',
+    component: UiComponent,
   },
   {
     path: 'view-application/:id',

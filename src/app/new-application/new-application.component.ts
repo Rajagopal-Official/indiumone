@@ -34,18 +34,18 @@ export class NewApplicationComponent {
   constructor(public dialogRef: MatDialogRef<NewApplicationComponent>, private applicationsService: ApplicationsService) {}
 
   onSubmit() {
-    const newApplication: Home = {
-      image: this.form.value.applicationImage || '',
-      title: this.form.value.applicationName || '',
-      description: this.form.value.applicationDescription || '',
-      link: this.form.value.applicationRedirectLink || '',
-      department: this.form.value.accessibleDepartments || [],
-      bandComparison: this.form.value.bandComparison || '', // Include band comparison
-      bandLevel: this.form.value.bandLevel || '', // Include band level
-      app_status:1
-    };
-    this.applicationsService.addApplication(newApplication);
-    this.close();
+    // const newApplication: Home = {
+    //   image: this.form.value.applicationImage || '',
+    //   title: this.form.value.applicationName || '',
+    //   description: this.form.value.applicationDescription || '',
+    //   link: this.form.value.applicationRedirectLink || '',
+    //   // department: this.form.value.accessibleDepartments || [],
+    //   // bandComparison: this.form.value.bandComparison || '', // Include band comparison
+    //   // bandLevel: this.form.value.bandLevel || '', // Include band level
+    //   app_status:1
+    // };
+    // this.applicationsService.addApplication(newApplication);
+    // this.close();
   }
 
   onFileChange(event: any) {
