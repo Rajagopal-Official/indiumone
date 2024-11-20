@@ -19,7 +19,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     "
   >
-  @if (isEditMode) {
+    @if (isEditMode) {
     <h2 style="text-align: center; margin-bottom: 20px">
       Editing a Application
     </h2>
@@ -48,7 +48,7 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
@@ -77,7 +77,7 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
@@ -85,7 +85,8 @@
     </div>
 
     <div style="margin-bottom: 9px">
-      @if (isEditMode) { <label
+      @if (isEditMode) {
+      <label
         for="imageUrl"
         style="
           display: block;
@@ -94,7 +95,8 @@
           font-size: 15px;
         "
         >Image Url(Upload a Image of Size within 1mb)</label
-      >}@else { <label
+      >}@else {
+      <label
         for="imageUrl"
         style="
           display: block;
@@ -104,7 +106,7 @@
         "
         >Image Preview</label
       >}
-     
+
       <div style="display: flex; gap: 20px; align-items: center">
         @if (isEditMode) {<input
           id="imageUrl"
@@ -116,7 +118,7 @@
             border: 1px solid black;
             border-radius: 4px;
             height: 35px;
-            background-color: #CEDEBD;
+            background-color: #cedebd;
             color: black;
             height: 25px;
           "
@@ -130,7 +132,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #FAF1E4;
+            background-color: #faf1e4;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             border: 1px solid black;
@@ -139,8 +141,8 @@
             font-weight: 700;
           "
         >
-          Save
-        </button>}
+          Save</button
+        >}
       </div>
       @if(fileSizeError){
       <div style="color: red; margin-top: 5px">
@@ -210,14 +212,18 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
       />
       @if(form.get('appUrl')?.invalid && (form.get('appUrl')?.dirty ||
       form.get('appUrl')?.touched)){
-      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      <div style="color: red; margin-top: 5px">
+        @if(form.get('appUrl')?.errors?.['required']){ App Url field is
+        required. } @else if(form.get('appUrl')?.errors?.['invalidUrl']){ Please
+        enter a valid URL. }
+      </div>
       }
     </div>
     <div style="margin-bottom: 9px">
@@ -242,14 +248,18 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
       />
       @if(form.get('demoUrl')?.invalid && (form.get('demoUrl')?.dirty ||
       form.get('demoUrl')?.touched)){
-      <div style="color: red; margin-top: 5px">Demo Url field is required.</div>
+      <div style="color: red; margin-top: 5px">
+        @if(form.get('demoUrl')?.errors?.['required']){ Demo Url field is
+        required. } @else if(form.get('demoUrl')?.errors?.['invalidUrl']){
+        Please enter a valid URL. }
+      </div>
       }
     </div>
 
@@ -303,31 +313,30 @@
           >Accessible Category/Group</label
         >
         <mat-form-field
-        appearance="fill"
-        style="width: 100%"
-        class="mat-select-container"
-      >
-        <mat-select
-          [formControl]="form.controls.accessibleDepartments"
-          (selectionChange)="onDepartmentsChange($event)"
+          appearance="fill"
           style="width: 100%"
+          class="mat-select-container"
         >
-          @for (dept of departments; track dept) {
-          <mat-option
-            [value]="dept"
-            style="
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
+          <mat-select
+            [formControl]="form.controls.accessibleDepartments"
+            (selectionChange)="onDepartmentsChange($event)"
+            style="width: 100%"
           >
-            {{ dept }}
-          </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-
+            @for (dept of departments; track dept) {
+            <mat-option
+              [value]="dept"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ dept }}
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
     <div style="margin-bottom: 9px">
       <label
@@ -351,7 +360,7 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
@@ -383,7 +392,7 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 35px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
           height: 25px;
         "
@@ -441,17 +450,26 @@
           border: 1px solid black;
           border-radius: 4px;
           height: 25px;
-          background-color: #CEDEBD;
+          background-color: #cedebd;
           color: black;
         "
       />
-      @if(form.get('documentationUrl')?.invalid &&
-      (form.get('documentationUrl')?.dirty ||
-      form.get('documentationUrl')?.touched)){
-      <div style="color: red; margin-top: 5px">
-        Documentation URL Link field is required.
+      <div
+        *ngIf="
+          form.get('documentationUrl')?.invalid &&
+          (form.get('documentationUrl')?.dirty ||
+            form.get('documentationUrl')?.touched)
+        "
+        class="error-message"
+      >
+        <div *ngIf="form.get('documentationUrl')?.errors?.['required']">
+          Documentation URL field is required.
+        </div>
+
+        <div *ngIf="form.get('documentationUrl')?.errors?.['invalidUrl']">
+          Please enter a valid URL.
+        </div>
       </div>
-      }
     </div>
 
     <div
@@ -481,55 +499,56 @@
         {{ form.controls.applicationStatus.value ? "Active" : "Inactive" }}
       </mat-slide-toggle>
     </div>
-@if (isEditMode) {<div
-  style="
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-  "
->
-  <button
-    type="submit"
-    style="
-      width: 150px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #FAF1E4;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      border: 1px solid black;
-      cursor: pointer;
-      color: black;
-      font-weight: 700;
-    "
-  >
-    Save All
-  </button>
-  <button
-    type="submit"
-    style="
-      width: 150px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #FAF1E4;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      border: 1px solid black;
-      cursor: pointer;
-      color: black;
-      font-weight: 700;
-    "
-    (click)="onSubmit()"
-  >
-    Submit
-  </button>
-</div>}
-    
+    @if (isEditMode) {
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      "
+    >
+      <button
+        type="submit"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #faf1e4;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          border-radius: 8px;
+          border: 1px solid black;
+          cursor: pointer;
+          color: black;
+          font-weight: 700;
+        "
+      >
+        Save All
+      </button>
+      <button
+        type="submit"
+        style="
+          width: 150px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #faf1e4;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          border-radius: 8px;
+          border: 1px solid black;
+          cursor: pointer;
+          color: black;
+          font-weight: 700;
+        "
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+    </div>
+    }
   </form>
 </div>

@@ -7,7 +7,7 @@
       <img
         src="../../assets/logo.png"
         alt="Indium Logo"
-        style="height: 33px; width: 60px; margin-top: 10px"
+        style="height: 42px; width: 70px; margin-top: 10px"
       />
     </div>
     Indium One
@@ -20,6 +20,7 @@
     #menuTrigger="matMenuTrigger"
     style="
       margin-left: 10px;
+      background-color: #dae2b6;
       font-size: 16px;
       font-weight: 500;
       height: 40px;
@@ -30,6 +31,7 @@
       background-color: #f5f5f5;
       border-radius: 8px;
       transition: all 0.2s ease;
+      letter-spacing: 0px !important;
       &:hover {
         background-color: #e0e0e0;
         transform: translateY(-1px);
@@ -37,7 +39,7 @@
     "
   >
     <mat-icon style="font-size: 24px; height: 24px; width: 24px">apps</mat-icon>
-    Top Rated Apps
+    Frequently Visited/Used Applications
   </button>
   <mat-menu #appsMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
     <div class="apps-grid">
@@ -150,6 +152,13 @@
     <div class="sidebar-header">
       <h2 class="sidebar-title">Departments by Categories</h2>
     </div>
+    <div class="mat-tree-node" (click)="selectDepartment(allDepartment.name)">
+      <span class="department-name">
+        <mat-icon>{{ allDepartment.icon }}</mat-icon>
+        {{ allDepartment.name }}</span
+      >
+    </div>
+
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
         <div class="mat-tree-node" (click)="selectDepartment(node.name)">
@@ -191,18 +200,20 @@
   <mat-sidenav-content>
     <div style="padding: 12px">
       <div class="page-header">
-        <h1>Appstore built for us and built by us</h1>
+        <h1>Appstore built for us and built by us!!</h1>
         <p class="subtitle">
           Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
         </p>
-        <div style="display: flex; justify-content: flex-end; width: 100%;">
-          <p style="
-            margin-top: 17px;
-            font-size: 18px;
-            font-weight: 450;
-            font-style: italic;
-            margin-right: 20px; 
-          ">
+        <div style="display: flex; justify-content: flex-end; width: 100%">
+          <p
+            style="
+              margin-top: 17px;
+              font-size: 18px;
+              font-weight: 450;
+              font-style: italic;
+              margin-right: 20px;
+            "
+          >
             Apps that power your productivity journey! ⚡
           </p>
         </div>
@@ -236,9 +247,6 @@
         <div class="grid-item">
           <div class="image-container">
             <img [src]="item.image" [alt]="item.title" />
-            <span class="department-badge">
-              Accessible-Department :{{ item.department }}</span
-            >
           </div>
           <div class="content">
             <h3>{{ item.title }}</h3>
@@ -249,10 +257,15 @@
                   [href]="item.link"
                   target="_blank"
                   class="action-button primary"
-                  style="display: flex; align-items: center; gap: 5px"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    color: #555843;
+                  "
                 >
                   Access
-                  <mat-icon style="font-size: 20px">security</mat-icon>
+                  <mat-icon style="font-size: 20px">send</mat-icon>
                 </a>
               </div>
               <div style="display: flex; gap: 10px">
@@ -262,7 +275,12 @@
                   class="action-button secondary"
                   [class.disabled]="!item.demoUrl"
                   [attr.title]="!item.demoUrl ? 'Demo not available' : ''"
-                  style="display: flex; align-items: center; gap: 5px"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    color: #555843;
+                  "
                 >
                   Demo
                   <mat-icon style="font-size: 20px"

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
@@ -10,7 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService } from '../shared.service';
 import { Subscription } from 'rxjs';
-
+import { CommonModule } from '@angular/common';
+function urlValidator(control: FormControl): { [key: string]: any } | null {
+  const urlPattern = /^(http|https):\/\/[^\s$.?#].[^\s]*$/;
+  return urlPattern.test(control.value) ? null : { invalidUrl: true };
+}
 @Component({
   selector: 'app-new-application',
   standalone: true,
@@ -21,23 +25,25 @@ import { Subscription } from 'rxjs';
     MatChipsModule,
     MatIconModule,
     MatSlideToggleModule,
+    CommonModule
   ],
   templateUrl: './edit-page.component.html',
   styleUrl: './edit-page.component.css',
   encapsulation: ViewEncapsulation.None,
 })
+
 export class EditPageComponent implements OnInit {
   form = new FormGroup({
     imageUrl: new FormControl(''),
-    demoUrl: new FormControl(''),
-    documentationUrl: new FormControl(''),
+    demoUrl: new FormControl('',[Validators.required, urlValidator]),
+    documentationUrl: new FormControl('',[Validators.required, urlValidator]),
     applicationName: new FormControl({ value: '', disabled: true }),
     applicationDescription: new FormControl(''),
     accessibleDepartments: new FormControl<string>(''),
     accessibleDivisions: new FormControl<string>(''),
     bandLevel: new FormControl<string>(''),
     applicationStatus: new FormControl(true),
-    appUrl: new FormControl(''),
+    appUrl: new FormControl('',[Validators.required, urlValidator]),
     appSecret: new FormControl(''),
     appDevTeam: new FormControl(''),
   });

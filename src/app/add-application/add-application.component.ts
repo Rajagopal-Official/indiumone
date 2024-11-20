@@ -9,6 +9,7 @@ import { ApplicationsService } from '../applications.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService } from '../shared.service'; // Import SharedService
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-application',
@@ -19,6 +20,7 @@ import { SharedService } from '../shared.service'; // Import SharedService
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
+    CommonModule
   ],
   templateUrl: './add-application.component.html',
   styleUrl: './add-application.component.css',

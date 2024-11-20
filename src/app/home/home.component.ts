@@ -61,16 +61,10 @@ export class HomeComponent {
     private authService: AuthService,
     private applicationsService: ApplicationsService,
     private router: Router
-  ) {
+  )
+  
+   {
     this.dataSource.data = [
-      {
-        name: 'All',
-        icon: 'category',
-        children: [
-          { name: 'General Apps', icon: 'apps' },
-          { name: 'System Apps', icon: 'settings_applications' }
-        ]
-      },
       {
         name: 'Admin',
         icon: 'admin_panel_settings',
@@ -136,6 +130,7 @@ export class HomeComponent {
       }
     ];
   }
+  allDepartment = { name: 'All', icon: 'category' };
 
   hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length > 0;
   // Checks if a node has children by verifying if children is defined and has a length greater than 0.

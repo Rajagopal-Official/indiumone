@@ -35,21 +35,21 @@
     </div>
   </mat-menu>
   <span class="spacer"></span>
-  @if(showSearchField()){
-  <mat-form-field
-    appearance="outline"
-    style="width: 250px !important ; padding: 5px !important; margin-top: 30px"
-    class="small"
-  >
-    <input
-      matInput
-      [(ngModel)]="searchTerm"
-      (ngModelChange)="searchApps()"
-      placeholder="Search applications..."
-      style="padding-left: 15px; color: black"
-    />
-  </mat-form-field>
-  }
+  <ng-container *ngIf="showSearchField()">
+    <mat-form-field
+      appearance="outline"
+      style="width: 250px !important ; padding: 5px !important; margin-top: 30px"
+      class="small"
+    >
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="searchApps()"
+        placeholder="Search applications..."
+        style="padding-left: 15px; color: black"
+      />
+    </mat-form-field>
+  </ng-container>
   <button mat-icon-button matTooltip="Search" (click)="toggleSearchField()">
     <mat-icon>search</mat-icon>
   </button>
@@ -146,9 +146,7 @@
           item.icon
         }}</mat-icon>
         <span matListItemTitle>{{ item.text }}</span>
-        @if (item.badge) {
-        <span class="menu-badge">{{ item.badge }}</span>
-        }
+        <span class="menu-badge" *ngIf="item.badge">{{ item.badge }}</span>
       </a>
       }
     </mat-nav-list>

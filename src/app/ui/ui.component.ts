@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 interface TreeNode {
   name: string;
@@ -55,7 +56,8 @@ interface Home {
     MatButtonModule,
     MatBadgeModule,
     MatTreeModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    CommonModule
   ],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.css'

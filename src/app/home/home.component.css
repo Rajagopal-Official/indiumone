@@ -40,8 +40,8 @@ mat-sidenav-container {
   text-align: center;
 }
 .mat-sidenav {
-  min-height: 100vh;
-  overflow-y: hidden;
+  min-height: 100%;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
 }
@@ -501,19 +501,19 @@ mat-form-field.small {
 }
 
 .action-button.primary {
-  background-color: blue;
+  background-color: #A7D397;
 }
 
 .action-button.primary:hover {
-  background-color: blue;
+  background-color: #A7D397;
 }
 
 .action-button.secondary {
-  background-color: blue !important;
+  background-color: #A7D397 !important;
 }
 
 .action-button.secondary:hover {
-  background-color: blue !important;
+  background-color: #A7D397 !important;
 }
 
 .tree-invisible {
@@ -596,6 +596,7 @@ mat-form-field.small {
 .department-name {
   font-weight: 500;
   color: black;
+  align-items: center;
 }
 
 .submenu-item {
@@ -624,6 +625,7 @@ mat-form-field.small {
   flex-direction: row !important;
   align-items: center !important;
   padding: 0 12px !important;
+  justify-content: space-between;
 }
 
 .mat-tree-node:hover {
@@ -632,6 +634,7 @@ mat-form-field.small {
 }
 .mat-tree-node button[mattreenodeToggle] {
   order: 3; 
+  margin-left: auto;
 }
 
 .mat-tree-node .department-icon {
@@ -641,7 +644,6 @@ mat-form-field.small {
 .mat-tree-node .department-name {
   order: 2; 
 }
-
 
 .tree-invisible {
   display: none;
@@ -689,6 +691,12 @@ mat-form-field.small {
   color: #666;
   max-height: 100vh;
   text-align: center;
+}
+.all-department {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
 }
 
 .no-apps-message mat-icon {

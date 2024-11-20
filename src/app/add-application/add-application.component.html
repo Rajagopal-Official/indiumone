@@ -53,13 +53,11 @@
         "
         value=""
       />
-      @if(form.get('applicationName')?.invalid &&
+      <div *ngIf="form.get('applicationName')?.invalid &&
       (form.get('applicationName')?.dirty ||
-      form.get('applicationName')?.touched)){
-      <div style="color: red; margin-top: 5px">
+      form.get('applicationName')?.touched)" style="color: red; margin-top: 5px">
         Application Name field is required.
       </div>
-      }
     </div>
 
     <!-- <div style="margin-bottom: 9px">
@@ -160,13 +158,11 @@
           color: black;
         "
       />
-      @if(form.get('applicationDescription')?.invalid &&
+      <div *ngIf="form.get('applicationDescription')?.invalid &&
       (form.get('applicationDescription')?.dirty ||
-      form.get('applicationDescription')?.touched)){
-      <div style="color: red; margin-top: 5px">
+      form.get('applicationDescription')?.touched)" style="color: red; margin-top: 5px">
         Application Description field is required.
       </div>
-      }
     </div>
 
     <!-- <div style="margin-bottom: 9px;display: flex;flex-direction: column;">
@@ -286,7 +282,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #FAF1E4;
+          background-color: #faf1e4;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-radius: 8px;
           border: 1px solid black;
@@ -299,12 +295,10 @@
         Submit
       </button>
     </div>
-    @if(errorMessage()){
-    <div
-      style="margin-top: 10px; text-align: center; color: red; font-size: 14px"
-    >
-      {{ errorMessage }}
-    </div>
-    }
+    <div *ngIf="errorMessage()"
+    style="margin-top: 10px; text-align: center; color: red; font-size: 14px"
+  >
+    {{ errorMessage() }}
+  </div>
   </form>
 </div>
