@@ -8,7 +8,7 @@ import { Home } from '../home/home.model';
 import { ApplicationsService } from '../applications.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SharedService } from '../shared.service'; // Import SharedService
+import { SharedService } from '../shared.service'; 
 import { CommonModule } from '@angular/common';
 
 @Component({

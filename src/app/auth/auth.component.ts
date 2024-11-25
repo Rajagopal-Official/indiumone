@@ -1,12 +1,10 @@
-// auth.component.ts
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MsalService } from '@azure/msal-angular';
 import { Router, RouterOutlet } from '@angular/router';
-import { loginRequest } from './auth-config';
-import { AuthService } from './auth.service';
 import Swal from 'sweetalert2';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -28,53 +26,65 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams, 'URL');
     const token = urlParams.get('token');
-    const role = urlParams.get('admin_user')!; 
+    const role = urlParams.get('admin_user')!;
     localStorage.setItem('Admin Access', role);
-    console.log(role, 'Role');
-    
 
     if (token) {
+      localStorage.setItem('authToken', token); 
+      localStorage.setItem('loginTimestamp', Date.now().toString()); 
       this.router.navigate(['/get-token'], { queryParams: { token } });
     }
 
-    const accounts = this.authService.instance.getAllAccounts();
-    if (accounts.length > 0) {
-      this.isLoggedIn = true;
-      this.username = accounts[0].username;
-      console.log(this.username,'uss')
-      this.AuthService.setUsername(this.username);
-      Swal.fire({
-        icon: 'success',
-        title: 'Logged in successfully',
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-        this.router.navigate(['/home']);
-      });
-      this.AuthService.startSessionTimer();
+    const storedToken = localStorage.getItem('authToken');
+    const loginTimestamp = parseInt(localStorage.getItem('loginTimestamp') || '0', 10);
+
+    if (storedToken && Date.now() - loginTimestamp < this.AuthService.getSessionDuration()) {
+      this.autoLogin(storedToken);
     } else {
-      this.authService.handleRedirectObservable().subscribe({
-        next: (result) => {
-          if (result) {
-            this.isLoggedIn = true;
-            this.username = result.account.username;
-            this.AuthService.setUsername(this.username);
-            Swal.fire({
-              icon: 'success',
-              title: 'Logged in successfully, Explore the Applications...',
-              showConfirmButton: false,
-              timer: 1500,
-            }).then(() => {
-              this.router.navigate(['/home']);
-            });
-            this.AuthService.startSessionTimer(); // Start session timer after login
-          }
-        },
-        error: (error) => console.error(error),
-      });
+      const accounts = this.authService.instance.getAllAccounts();
+      if (accounts.length > 0) {
+        this.processLogin(accounts[0].username);
+      } else {
+        this.authService.handleRedirectObservable().subscribe({
+          next: (result) => {
+            if (result) {
+              this.processLogin(result.account.username);
+            }
+          },
+          error: (error) => console.error(error),
+        });
+      }
     }
+  }
+
+  private autoLogin(token: string) {
+    this.isLoggedIn = true;
+    this.username = localStorage.getItem('username')!;
+    Swal.fire({
+      icon: 'success',
+      title: 'Logged in successfully',
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      this.router.navigate(['/home']);
+    });
+    this.AuthService.startSessionTimer();
+  }
+
+  private processLogin(username: string) {
+    this.isLoggedIn = true;
+    this.username = username;
+    localStorage.setItem('username', username);
+    Swal.fire({
+      icon: 'success',
+      title: 'Logged in successfully, Explore the Applications...',
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      this.router.navigate(['/home']);
+    });
+    this.AuthService.startSessionTimer();
   }
 
   login() {

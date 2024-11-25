@@ -245,9 +245,13 @@
         </div>
         } @else { @for (item of filteredItems(); track item.title) {
         <div class="grid-item">
+          @if(isLoading()){
+          <mat-spinner diameter="40"></mat-spinner>
+          } @else{
           <div class="image-container">
             <img [src]="item.image" [alt]="item.title" />
           </div>
+          }
           <div class="content">
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>

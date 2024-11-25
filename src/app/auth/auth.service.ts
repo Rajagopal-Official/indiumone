@@ -10,10 +10,8 @@ import Swal from 'sweetalert2';
 export class AuthService {
   private authToken: string | null = null;
   private timeoutId: any;
-  private sessionDuration = 60 * 60 * 1000;
-  private usernameSignal: WritableSignal<string | undefined> = signal<
-    string | undefined
-  >(undefined);
+  private sessionDuration = 0.3 * 60 * 1000; 
+  private usernameSignal: WritableSignal<string | undefined> = signal< string | undefined >(undefined);
 
   constructor(
     private authService: MsalService,
@@ -21,6 +19,7 @@ export class AuthService {
     private router: Router,
     private httpClient: HttpClient
   ) {}
+
   getUsernameSignal() {
     return this.usernameSignal;
   }
@@ -28,15 +27,17 @@ export class AuthService {
   setUsername(username: string | undefined) {
     this.usernameSignal.set(username);
   }
+
+  getSessionDuration(): number {
+    return this.sessionDuration;
+  }
+
   login() {
     const sourceUrl = 'http://localhost:4200/get-token';
-    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${encodeURIComponent(
-      sourceUrl
-    )}`;
+    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${encodeURIComponent(sourceUrl)}`;
     console.log('Redirecting to:', ssoUrl);
     window.location.href = ssoUrl;
   }
-  
 
   getToken(): string | null {
     if (!this.authToken) {
@@ -46,7 +47,7 @@ export class AuthService {
   }
 
   getAuthorizedApps() {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -59,26 +60,14 @@ export class AuthService {
   }
 
   logout() {
-    // this.authService.logout().subscribe(() => {
-    //   this.clearSessionTimer();
-    //   localStorage.clear();
-    //   sessionStorage.clear();
-    //   Swal.fire({
-    //     icon: 'success',
-    //     title: 'Logged out successfully',
-    //     showConfirmButton: false,
-    //     timer: 1500,
-    //   });
-    //   this.router.navigate(['/']);
-    // });
-    localStorage.clear()
+    localStorage.clear();
     Swal.fire({
-          icon: 'success',
-          title: 'Logged out successfully',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        this.router.navigate(['/']);
+      icon: 'success',
+      title: 'Logged out successfully',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    this.router.navigate(['/']);
   }
 
   startSessionTimer() {

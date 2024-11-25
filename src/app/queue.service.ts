@@ -9,7 +9,7 @@ export class LoggingService {
   private queueServiceClient: QueueServiceClient;
 
   constructor() {
-    const connectionString = 'YOUR_AZURE_STORAGE_CONNECTION_STRING';
+    const connectionString = 'YOUR_AZURE_STORAGE_CONNECTION_STRING';//Replace Actual String 
     this.queueServiceClient = QueueServiceClient.fromConnectionString(connectionString);
   }
 

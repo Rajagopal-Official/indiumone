@@ -618,14 +618,12 @@ mat-form-field.small {
 }
 
 .mat-tree-node {
-  min-height: 48px;
-  margin-left: 10%;
+  min-height: 32px !important; 
   color: black;
   display: flex !important;
-  flex-direction: row !important;
   align-items: center !important;
-  padding: 0 12px !important;
-  justify-content: space-between;
+  padding: 4px 12px !important;
+  justify-content: flex-start !important; 
 }
 
 .mat-tree-node:hover {
@@ -681,6 +679,15 @@ mat-form-field.small {
 
 .mat-nested-tree-node .mat-tree-node {
   padding-left: 40px;
+}
+.mat-nested-tree-node > .mat-tree-node {
+  gap: 8px;
+}
+
+.mat-tree-children .submenu-item {
+  border-left: none !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 .no-apps-message {
   display: flex;
