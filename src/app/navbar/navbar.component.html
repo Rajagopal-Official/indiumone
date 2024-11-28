@@ -1,7 +1,15 @@
 <mat-toolbar>
+  @if (isHomePage) {
   <button mat-icon-button (click)="toggleSidenav()" matTooltip="Toggle Menu">
     <mat-icon>menu</mat-icon>
   </button>
+  }@else {
+  <mat-icon
+    style="font-size: 1.8rem; color: #444c4c; cursor: pointer"
+    (click)="backToHomePage()"
+    >home</mat-icon
+  >
+  }
   <span class="logo">
     <div style="margin-right: 20px">
       <img
@@ -12,6 +20,7 @@
     </div>
     Indium One
   </span>
+  @if (isHomePage) {
   <button
     mat-button
     [matMenuTriggerFor]="appsMenu"
@@ -41,6 +50,7 @@
     <mat-icon style="font-size: 24px; height: 24px; width: 24px">apps</mat-icon>
     Frequently Visited/Used Applications
   </button>
+  }
   <mat-menu #appsMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
     <div class="apps-grid">
       @for (app of apps; track app.name) {
@@ -69,10 +79,11 @@
       style="padding-left: 15px; color: black"
     />
   </mat-form-field>
-  }
+  } @if (isHomePage) {
   <button mat-icon-button matTooltip="Search" (click)="toggleSearchField()">
     <mat-icon>search</mat-icon>
   </button>
+  }
   <button
     mat-icon-button
     [matMenuTriggerFor]="notificationsMenu"

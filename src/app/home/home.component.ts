@@ -202,6 +202,9 @@ export class HomeComponent {
   toggleSearchField() {
     this.showSearchField.set(true);
   }
+  toggleSidenav() {
+    this.sidenavOpen.update((value) => !value);
+  }
 
   notifications = [
     {

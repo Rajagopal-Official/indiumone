@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { Home } from '../home/home.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -49,7 +50,12 @@ export class NavbarComponent {
   selectedDepartment = signal<string>('All');
   items = signal<Home[]>([]);
   filteredItems = signal<Home[]>([]);
-  constructor(private authService: AuthService) {}
+  isHomePage: boolean = false;
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   usernameSignal = this.authService.getUsernameSignal();
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
@@ -175,5 +181,13 @@ export class NavbarComponent {
   }
   handleLogout(): void {
     this.authService.logout();
+  }
+
+  ngOnInit() {
+    this.isHomePage =
+      this.route.snapshot.routeConfig?.path?.includes('home') || false;
+  }
+  backToHomePage() {
+    this.router.navigate(['/home']);
   }
 }
