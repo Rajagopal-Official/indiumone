@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div
   style="
     display: flex;
@@ -53,9 +54,14 @@
         "
         value=""
       />
-      <div *ngIf="form.get('applicationName')?.invalid &&
-      (form.get('applicationName')?.dirty ||
-      form.get('applicationName')?.touched)" style="color: red; margin-top: 5px">
+      <div
+        *ngIf="
+          form.get('applicationName')?.invalid &&
+          (form.get('applicationName')?.dirty ||
+            form.get('applicationName')?.touched)
+        "
+        style="color: red; margin-top: 5px"
+      >
         Application Name field is required.
       </div>
     </div>
@@ -158,9 +164,14 @@
           color: black;
         "
       />
-      <div *ngIf="form.get('applicationDescription')?.invalid &&
-      (form.get('applicationDescription')?.dirty ||
-      form.get('applicationDescription')?.touched)" style="color: red; margin-top: 5px">
+      <div
+        *ngIf="
+          form.get('applicationDescription')?.invalid &&
+          (form.get('applicationDescription')?.dirty ||
+            form.get('applicationDescription')?.touched)
+        "
+        style="color: red; margin-top: 5px"
+      >
         Application Description field is required.
       </div>
     </div>
@@ -295,10 +306,11 @@
         Submit
       </button>
     </div>
-    <div *ngIf="errorMessage()"
-    style="margin-top: 10px; text-align: center; color: red; font-size: 14px"
-  >
-    {{ errorMessage() }}
-  </div>
+    <div
+      *ngIf="errorMessage()"
+      style="margin-top: 10px; text-align: center; color: red; font-size: 14px"
+    >
+      {{ errorMessage() }}
+    </div>
   </form>
 </div>

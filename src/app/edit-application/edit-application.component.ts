@@ -13,6 +13,8 @@ import Swal from 'sweetalert2';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { ApplicationService } from './application.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-edit-application',
@@ -26,6 +28,7 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    NavbarComponent,
   ],
   templateUrl: './edit-application.component.html',
   styleUrl: './edit-application.component.css',
@@ -47,7 +50,8 @@ export class EditApplicationComponent implements OnInit {
     private applicationsService: ApplicationsService,
     private router: Router,
     private httpClient: HttpClient,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private applicationService: ApplicationsService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +83,9 @@ export class EditApplicationComponent implements OnInit {
           }));
           this.filteredDataSource = this.dataSource;
           this.isLoading.set(false);
+
+          const titles = this.dataSource.map((app) => app.title);
+          this.applicationService.setTitles(titles);
         },
         (error) => {
           console.error('Error fetching applications', error);
@@ -140,9 +147,8 @@ export class EditApplicationComponent implements OnInit {
 
   filterApplications() {
     const term = this.searchTerm().toLowerCase();
-    this.filteredDataSource = this.dataSource.filter(
-      (app) =>
-        app.title.toLowerCase().includes(term)
+    this.filteredDataSource = this.dataSource.filter((app) =>
+      app.title.toLowerCase().includes(term)
     );
   }
 }

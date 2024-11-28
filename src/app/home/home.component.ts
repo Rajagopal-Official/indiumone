@@ -20,6 +20,7 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Home } from './home.model';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 interface TreeNode {
   name: string; // parent node
@@ -47,13 +48,14 @@ interface TreeNode {
     MatBadgeModule,
     MatTreeModule,
     MatProgressSpinnerModule,
-    CommonModule
+    CommonModule,
+    NavbarComponent,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  treeControl = new NestedTreeControl<TreeNode>(node => node.children); // Nested tree control is responsible for managing hierarchial structure
+  treeControl = new NestedTreeControl<TreeNode>((node) => node.children); // Nested tree control is responsible for managing hierarchial structure
   dataSource = new MatTreeNestedDataSource<TreeNode>();
   selectedDepartment = signal<string>('All');
 
@@ -61,78 +63,75 @@ export class HomeComponent {
     private authService: AuthService,
     private applicationsService: ApplicationsService,
     private router: Router
-  )
-  
-   {
+  ) {
     this.dataSource.data = [
       {
         name: 'Admin',
         icon: 'admin_panel_settings',
         children: [
           { name: 'User Management', icon: 'manage_accounts' },
-          { name: 'System Settings', icon: 'settings' }
-        ]
+          { name: 'System Settings', icon: 'settings' },
+        ],
       },
       {
         name: 'HR',
         icon: 'people',
         children: [
           { name: 'Employee Portal', icon: 'person' },
-          { name: 'Recruitment', icon: 'person_add' }
-        ]
+          { name: 'Recruitment', icon: 'person_add' },
+        ],
       },
       {
         name: 'Finance',
         icon: 'attach_money',
         children: [
           { name: 'Accounting', icon: 'account_balance' },
-          { name: 'Payroll', icon: 'payments' }
-        ]
+          { name: 'Payroll', icon: 'payments' },
+        ],
       },
       {
         name: 'IT',
         icon: 'computer',
         children: [
           { name: 'Help Desk', icon: 'help' },
-          { name: 'Infrastructure', icon: 'dns' }
-        ]
+          { name: 'Infrastructure', icon: 'dns' },
+        ],
       },
       {
         name: 'Marketing',
         icon: 'campaign',
         children: [
           { name: 'Campaigns', icon: 'trending_up' },
-          { name: 'Analytics', icon: 'analytics' }
-        ]
+          { name: 'Analytics', icon: 'analytics' },
+        ],
       },
       {
         name: 'Data & AI',
         icon: 'psychology',
         children: [
           { name: 'ML Models', icon: 'model_training' },
-          { name: 'Data Analytics', icon: 'data_usage' }
-        ]
+          { name: 'Data Analytics', icon: 'data_usage' },
+        ],
       },
       {
         name: 'App Engineering',
         icon: 'engineering',
         children: [
           { name: 'Development', icon: 'code' },
-          { name: 'DevOps', icon: 'build' }
-        ]
+          { name: 'DevOps', icon: 'build' },
+        ],
       },
       {
         name: 'App Configuration',
         icon: 'settings',
-        children: [
-          { name: 'Applications', icon: 'apps' }
-        ]
-      }
+        children: [{ name: 'Applications', icon: 'apps' }],
+      },
     ];
   }
   allDepartment = { name: 'All', icon: 'category' };
 
-  hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: TreeNode) =>
+    !!node.children && node.children.length > 0;
   // Checks if a node has children by verifying if children is defined and has a length greater than 0.
   // This logic is used in the template to show expand/collapse options only for nodes with children.
   isLoading = signal<boolean>(true);
@@ -146,7 +145,7 @@ export class HomeComponent {
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   getDisplayName(): string {
     const username = this.usernameSignal();
-    console.log(username,'user')
+    console.log(username, 'user');
     if (username) {
       const namePart = username.split('@')[0];
       return namePart.charAt(0).toUpperCase() + namePart.slice(1);
@@ -163,11 +162,12 @@ export class HomeComponent {
   }
 
   filterApps(department: string, searchTerm: string = '') {
-    const filtered = this.items().filter(item => {
-      const matchesDepartment = department === 'All' || item.department === department;
-      const matchesSearch = searchTerm ?
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) :
-        true;
+    const filtered = this.items().filter((item) => {
+      const matchesDepartment =
+        department === 'All' || item.department === department;
+      const matchesSearch = searchTerm
+        ? item.title.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
       const isAppConfiguration = item.department === 'App Configuration';
       return !isAppConfiguration && matchesDepartment && matchesSearch;
     });
@@ -179,7 +179,9 @@ export class HomeComponent {
     if (department !== 'App Configuration') {
       this.filterApps(department, this.searchTerm());
     } else {
-      this.filteredItems.set(this.items().filter(item => item.department === 'App Configuration'));
+      this.filteredItems.set(
+        this.items().filter((item) => item.department === 'App Configuration')
+      );
     }
   }
 
@@ -197,10 +199,6 @@ export class HomeComponent {
     });
   }
 
-  toggleSidenav() {
-    this.sidenavOpen.update(value => !value);
-  }
-
   toggleSearchField() {
     this.showSearchField.set(true);
   }
@@ -212,7 +210,7 @@ export class HomeComponent {
       time: '5 mins ago',
       icon: 'folder_shared',
       iconClass: 'icon-info',
-      unread: true
+      unread: true,
     },
     {
       id: 2,
@@ -220,7 +218,7 @@ export class HomeComponent {
       time: '2 hours ago',
       icon: 'check_circle',
       iconClass: 'icon-success',
-      unread: true
+      unread: true,
     },
     {
       id: 3,
@@ -228,7 +226,7 @@ export class HomeComponent {
       time: '1 day ago',
       icon: 'warning',
       iconClass: 'icon-warning',
-      unread: false
+      unread: false,
     },
     {
       id: 4,
@@ -236,9 +234,8 @@ export class HomeComponent {
       time: '2 hours ago',
       icon: 'info',
       iconClass: 'icon-info',
-      unread: true
-    }
-    
+      unread: true,
+    },
   ];
 
   apps = [
@@ -246,38 +243,38 @@ export class HomeComponent {
       name: 'Chat',
       description: 'Messages & Emails',
       icon: 'chat',
-      bgColor: '#818cf8'
+      bgColor: '#818cf8',
     },
     {
       name: 'Todo',
       description: 'Completed task',
       icon: 'check_circle',
-      bgColor: '#6ee7b7'
+      bgColor: '#6ee7b7',
     },
     {
       name: 'Invoice',
       description: 'Get latest invoice',
       icon: 'receipt',
-      bgColor: '#93c5fd'
+      bgColor: '#93c5fd',
     },
     {
       name: 'Calendar',
       description: 'Get Dates',
       icon: 'calendar_today',
-      bgColor: '#fca5a5'
+      bgColor: '#fca5a5',
     },
     {
       name: 'Tickets',
       description: 'Create new ticket',
       icon: 'confirmation_number',
-      bgColor: '#c4b5fd'
+      bgColor: '#c4b5fd',
     },
     {
       name: 'Courses',
       description: 'Create new course',
       icon: 'school',
-      bgColor: '#fcd34d'
-    }
+      bgColor: '#fcd34d',
+    },
   ];
 
   applicationsList(): void {
@@ -289,9 +286,9 @@ export class HomeComponent {
   }
 
   rateApplication(item: Home, rating: number) {
-    this.ratings.update(currentRatings => ({
+    this.ratings.update((currentRatings) => ({
       ...currentRatings,
-      [item.title]: rating
+      [item.title]: rating,
     }));
     console.log(`Rated ${item.title} with ${rating} stars`);
   }

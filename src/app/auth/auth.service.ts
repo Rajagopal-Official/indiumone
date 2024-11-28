@@ -10,8 +10,10 @@ import Swal from 'sweetalert2';
 export class AuthService {
   private authToken: string | null = null;
   private timeoutId: any;
-  private sessionDuration = 0.3 * 60 * 1000; 
-  private usernameSignal: WritableSignal<string | undefined> = signal< string | undefined >(undefined);
+  private sessionDuration = 60 * 60 * 1000;
+  private usernameSignal: WritableSignal<string | undefined> = signal<
+    string | undefined
+  >(undefined);
 
   constructor(
     private authService: MsalService,
@@ -34,7 +36,9 @@ export class AuthService {
 
   login() {
     const sourceUrl = 'http://localhost:4200/get-token';
-    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${encodeURIComponent(sourceUrl)}`;
+    const ssoUrl = `https://indiumssoauth.azurewebsites.net/login?sourceurl=${encodeURIComponent(
+      sourceUrl
+    )}`;
     console.log('Redirecting to:', ssoUrl);
     window.location.href = ssoUrl;
   }

@@ -8,8 +8,10 @@ import { Home } from '../home/home.model';
 import { ApplicationsService } from '../applications.service';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SharedService } from '../shared.service'; 
+import { SharedService } from '../shared.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-new-application',
@@ -20,7 +22,8 @@ import { CommonModule } from '@angular/common';
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    NavbarComponent,
   ],
   templateUrl: './add-application.component.html',
   styleUrl: './add-application.component.css',
@@ -28,7 +31,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AddApplicationComponent {
   form = new FormGroup({
-    applicationName: new FormControl(''),
+    applicationName: new FormControl<string>(''),
     applicationCategory: new FormControl(''),
     applicationRedirectLink: new FormControl(''),
     applicationImage: new FormControl(''),
@@ -80,6 +83,23 @@ export class AddApplicationComponent {
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
+    const existingTitles: string[] = this.applicationsService.getTitles();
+
+    if (postData.app_name && existingTitles.includes(postData.app_name)) {
+      console.error(
+        'Application with this title already exists:',
+        postData.app_name
+      );
+      // alert(
+      //   'An application with this title already exists. Please choose a different title.'
+      // );
+      Swal.fire({
+        icon: 'warning',
+        text: 'An application with this title already exists. Please choose a different title.',
+      });
+
+      return;
+    }
     this.httpClient
       .post(
         'https://indiumssoauth.azurewebsites.net/add_application',

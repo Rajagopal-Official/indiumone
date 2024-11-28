@@ -1,5 +1,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
@@ -11,6 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService } from '../shared.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
 function urlValidator(control: FormControl): { [key: string]: any } | null {
   const urlPattern = /^(http|https):\/\/[^\s$.?#].[^\s]*$/;
   return urlPattern.test(control.value) ? null : { invalidUrl: true };
@@ -25,25 +31,25 @@ function urlValidator(control: FormControl): { [key: string]: any } | null {
     MatChipsModule,
     MatIconModule,
     MatSlideToggleModule,
-    CommonModule
+    CommonModule,
+    NavbarComponent,
   ],
   templateUrl: './edit-page.component.html',
   styleUrl: './edit-page.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-
 export class EditPageComponent implements OnInit {
   form = new FormGroup({
     imageUrl: new FormControl(''),
-    demoUrl: new FormControl('',[Validators.required, urlValidator]),
-    documentationUrl: new FormControl('',[Validators.required, urlValidator]),
+    demoUrl: new FormControl('', [Validators.required, urlValidator]),
+    documentationUrl: new FormControl('', [Validators.required, urlValidator]),
     applicationName: new FormControl({ value: '', disabled: true }),
     applicationDescription: new FormControl(''),
     accessibleDepartments: new FormControl<string>(''),
     accessibleDivisions: new FormControl<string>(''),
     bandLevel: new FormControl<string>(''),
     applicationStatus: new FormControl(true),
-    appUrl: new FormControl('',[Validators.required, urlValidator]),
+    appUrl: new FormControl('', [Validators.required, urlValidator]),
     appSecret: new FormControl(''),
     appDevTeam: new FormControl(''),
   });
@@ -72,7 +78,7 @@ export class EditPageComponent implements OnInit {
   selectedFile: File | null = null;
   fileSizeError: boolean = false;
   imagePreviewUrl: string | null = null;
-  isEditMode:boolean=false;
+  isEditMode: boolean = false;
   private routeParamsSubscription: Subscription | null = null;
 
   constructor(
@@ -87,11 +93,11 @@ export class EditPageComponent implements OnInit {
       this.appId = Number(params['id']);
       console.log(this.appId, 'AppID');
       this.isEditMode =
-      this.route.snapshot.routeConfig?.path?.includes('edit-app') || false;
- 
-    if (!this.isEditMode) {
-      this.form.disable();
-    }
+        this.route.snapshot.routeConfig?.path?.includes('edit-app') || false;
+
+      if (!this.isEditMode) {
+        this.form.disable();
+      }
       if (this.appId) {
         this.fetchApplicationDetails();
       }
