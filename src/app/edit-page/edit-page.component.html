@@ -27,35 +27,38 @@
     }@else {
     <h2 style="text-align: center; margin-bottom: 20px">Application View</h2>
     }
-    <div style="margin-bottom: 9px">
-      <label
-        for="applicationName"
-        style="
-          display: block;
-          margin-bottom: 5px;
-          font-weight: 400;
-          font-size: 15px;
-        "
-        >Application Name</label
-      >
-      <input
-        id="applicationName"
-        type="text"
-        formControlName="applicationName"
-        autocomplete="off"
-        style="
-          width: 98%;
-          padding: 8px;
-          border: 1px solid black;
-          border-radius: 4px;
-          height: 35px;
-          background-color: #cedebd;
-          color: black;
-          height: 25px;
-        "
-        readonly
-      />
-    </div>
+  <div style="margin-bottom: 9px">
+  <label
+    for="applicationName"
+    style="
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 400;
+      font-size: 15px;
+    "
+  >
+    Application Name *
+  </label>
+  <input
+    id="applicationName"
+    type="text"
+    formControlName="applicationName"
+    autocomplete="off"
+    style="
+      width: 98%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      height: 35px;
+      background-color: #f5f5f5;
+      color: #999;
+      height: 25px;
+      cursor: not-allowed;
+    "
+    readonly
+  />
+</div>
+
     <div style="margin-bottom: 9px">
       <label
         for="applicationDescription"
@@ -65,7 +68,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >App Description</label
+        >App Description *</label
       >
       <input
         id="applicationDescription"
@@ -95,7 +98,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Image Url(Upload a Image of Size within 1mb)</label
+        >Image Url (Upload an Image of Size within 1MB) *</label
       >}@else {
       <label
         for="imageUrl"
@@ -107,9 +110,10 @@
         "
         >Image Preview</label
       >}
-
+    
       <div style="display: flex; gap: 20px; align-items: center">
-        @if (isEditMode) {<input
+        @if (isEditMode) {
+        <input
           id="imageUrl"
           type="file"
           (change)="onFileSelected($event)"
@@ -118,7 +122,6 @@
             padding: 8px;
             border: 1px solid black;
             border-radius: 4px;
-            height: 35px;
             background-color: #cedebd;
             color: black;
             height: 25px;
@@ -126,30 +129,35 @@
         />
         <button
           type="button"
+          [disabled]="!isSaveEnabled"
           (click)="onImageUpload()"
+          [ngStyle]="{
+            backgroundColor: isSaveEnabled ? '#278EF1' : '#d3d3d3',
+            cursor: isSaveEnabled ? 'pointer' : 'not-allowed',
+            color: isSaveEnabled ? 'black' : '#a9a9a9'
+          }"
           style="
             width: 100px;
             height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #faf1e4;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             border: 1px solid black;
-            cursor: pointer;
-            color: black;
             font-weight: 700;
           "
         >
-          Save</button
-        >}
+          Save
+        </button>
+        }
       </div>
-      @if(fileSizeError){
+      @if (fileSizeError) {
       <div style="color: red; margin-top: 5px">
         File size should be within 1MB.
       </div>
-      } @if(imagePreviewUrl){
+      }
+      @if (imagePreviewUrl) {
       <div
         style="
           height: 200px;
@@ -188,9 +196,9 @@
           "
         />
       </div>
-
       }
     </div>
+    
     <div style="margin-bottom: 9px">
       <label
         for="appUrl"
@@ -200,7 +208,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >App Url</label
+        >App Url *</label
       >
       <input
         id="appUrl"
@@ -221,9 +229,8 @@
       @if(form.get('appUrl')?.invalid && (form.get('appUrl')?.dirty ||
       form.get('appUrl')?.touched)){
       <div style="color: red; margin-top: 5px">
-        @if(form.get('appUrl')?.errors?.['required']){ App Url field is
-        required. } @else if(form.get('appUrl')?.errors?.['invalidUrl']){ Please
-        enter a valid URL. }
+        @if(form.get('appUrl')?.errors?.['invalidUrl']){ Please enter a valid
+        URL. }
       </div>
       }
     </div>
@@ -236,7 +243,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Demo Url</label
+        >Demo Url *</label
       >
       <input
         id="demoUrl"
@@ -257,9 +264,8 @@
       @if(form.get('demoUrl')?.invalid && (form.get('demoUrl')?.dirty ||
       form.get('demoUrl')?.touched)){
       <div style="color: red; margin-top: 5px">
-        @if(form.get('demoUrl')?.errors?.['required']){ Demo Url field is
-        required. } @else if(form.get('demoUrl')?.errors?.['invalidUrl']){
-        Please enter a valid URL. }
+        @if(form.get('demoUrl')?.errors?.['invalidUrl']){ Please enter a valid
+        URL. }
       </div>
       }
     </div>
@@ -274,7 +280,7 @@
             font-weight: 400;
             font-size: 15px;
           "
-          >Accessible Divisions</label
+          >Accessible Divisions *</label
         >
         <mat-form-field
           appearance="fill"
@@ -282,6 +288,8 @@
           class="mat-select-container"
         >
           <mat-select
+          panelClass="custom-dropdown-panel"
+
             [formControl]="form.controls.accessibleDivisions"
             (selectionChange)="onDivisionChange($event)"
             style="width: 100%"
@@ -311,7 +319,7 @@
             font-weight: 400;
             font-size: 15px;
           "
-          >Accessible Category/Group</label
+          >Accessible Departments *</label
         >
         <mat-form-field
           appearance="fill"
@@ -319,6 +327,8 @@
           class="mat-select-container"
         >
           <mat-select
+          panelClass="custom-dropdown-panel"
+
             [formControl]="form.controls.accessibleDepartments"
             (selectionChange)="onDepartmentsChange($event)"
             style="width: 100%"
@@ -348,7 +358,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >App Secret</label
+        >App Secret *</label
       >
       <input
         id="appSecret"
@@ -380,7 +390,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >App Developers Team</label
+        >App Developers Team *</label
       >
       <input
         id="appDevTeam"
@@ -413,7 +423,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Band Level</label
+        >Band Level *</label
       >
       <mat-form-field
         appearance="fill"
@@ -438,7 +448,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Documentation URL</label
+        >Documentation URL *</label
       >
       <input
         id="documentationUrl"
@@ -455,22 +465,14 @@
           color: black;
         "
       />
-      <div
-        *ngIf="
-          form.get('documentationUrl')?.invalid &&
-          (form.get('documentationUrl')?.dirty ||
-            form.get('documentationUrl')?.touched)
-        "
-        class="error-message"
-      >
-        <div *ngIf="form.get('documentationUrl')?.errors?.['required']">
-          Documentation URL field is required.
-        </div>
-
-        <div *ngIf="form.get('documentationUrl')?.errors?.['invalidUrl']">
-          Please enter a valid URL.
-        </div>
+      @if(form.get('documentationUrl')?.invalid &&
+      (form.get('documentationUrl')?.dirty ||
+      form.get('documentationUrl')?.touched)){
+      <div style="color: red; margin-top: 5px">
+        @if(form.get('documentationUrl')?.errors?.['invalidUrl']){ Please enter
+        a valid URL. }
       </div>
+      }
     </div>
 
     <div
@@ -490,7 +492,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Status of Application</label
+        >Status of Application *</label
       >
       <mat-slide-toggle
         [formControl]="form.controls.applicationStatus"
@@ -510,7 +512,7 @@
         margin-top: 20px;
       "
     >
-      <button
+      <!-- <button
         type="submit"
         style="
           width: 150px;
@@ -528,27 +530,31 @@
         "
       >
         Save All
-      </button>
+      </button> -->
       <button
-        type="submit"
-        style="
-          width: 150px;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #faf1e4;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
-          border: 1px solid black;
-          cursor: pointer;
-          color: black;
-          font-weight: 700;
-        "
-        (click)="onSubmit()"
-      >
-        Submit
-      </button>
+      type="submit"
+      [disabled]="form.invalid"
+      [ngStyle]="{
+        backgroundColor: form.invalid ? '#d3d3d3' : '#278EF1',
+        cursor: form.invalid ? 'not-allowed' : 'pointer',
+        color: form.invalid ? '#a9a9a9' : 'black'
+      }"
+      style="
+        width: 150px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        border: 1px solid black;
+        font-weight: 700;
+      "
+      (click)="onSubmit()"
+    >
+      Submit
+    </button>
+    
     </div>
     }
   </form>

@@ -33,3 +33,10 @@
 ::-webkit-file-upload-button {
   background-color: "#CEDEBD";
 }
+.custom-dropdown-panel {
+  position: absolute !important;
+  top: 100% !important; 
+  margin-top: 4px; 
+  transform: none !important;
+  width: 100% !important; 
+}

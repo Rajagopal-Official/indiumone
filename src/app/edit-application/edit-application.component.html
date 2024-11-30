@@ -25,6 +25,7 @@
       border-radius: 10px;
       background: #ffffff;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      width: 95%;
     "
   >
     <div
@@ -43,7 +44,6 @@
       >
         List of Applications
       </h2>
-
       <div style="display: flex; align-items: center; gap: 10px">
         <mat-form-field
           appearance="outline"
@@ -65,14 +65,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background-color: #6da4aa;
-            color: #ffffff;
+            background-color: #278EF1;
+            color: black;
             font-weight: 600;
             text-transform: uppercase;
             padding: 10px 20px;
             border-radius: 6px;
             transition: all 0.3s ease-in-out;
             height: 35px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
           "
           matTooltip="Click here to add a new application"
           (click)="toggleApplicationModal()"
@@ -246,55 +247,65 @@
           Action
         </th>
         <td
-          mat-cell
-          *matCellDef="let element"
-          style="padding: 10px; text-align: center; font-size: 1rem"
-        >
-          <div style="display: flex; justify-content: center; gap: 12px">
-            <button
-              mat-flat-button
-              style="
-                background-color: #faf1e4;
-                color: black;
-                font-weight: 600;
-                border-radius: 5px;
-              "
-              matTooltip="Edit this application"
-              (click)="editApplication(element.id)"
-            >
-              <mat-icon>edit</mat-icon>
-              Edit
-            </button>
-            <button
-              mat-flat-button
-              style="
-                background-color: #faf1e4;
-                color: black;
-                font-weight: 600;
-                border-radius: 5px;
-              "
-              matTooltip="View this application"
-              (click)="viewApplication(element.id)"
-            >
-              <mat-icon>visibility</mat-icon>
-              View
-            </button>
-            <button
-              mat-flat-button
-              style="
-                background-color: #faf1e4;
-                color: black;
-                font-weight: 600;
-                border-radius: 5px;
-              "
-              matTooltip="Delete this application"
-              (click)="deleteApplication(element.id)"
-            >
-              <mat-icon>delete</mat-icon>
-              Delete
-            </button>
-          </div>
-        </td>
+        mat-cell
+        *matCellDef="let element"
+        style="padding: 10px; text-align: center; font-size: 1rem"
+      >
+        <div style="display: flex; justify-content: center; gap: 12px">
+          <button
+  mat-flat-button
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #278EF1;
+    color: black;
+    font-weight: 500;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    transition: background-color 0.3s ease;
+    height: 40px; /* Optional: Set a specific height */
+  "
+  matTooltip="Edit this application"
+  (click)="editApplication(element.id)"
+>
+  <mat-icon>edit</mat-icon>
+  Edit
+</button>
+          <button
+            mat-flat-button
+            style="
+              background-color: #278EF1; /* Changed background color */
+              color: black; /* Changed text color */
+              font-weight: 500; /* Lighter font weight */
+              border-radius: 20px; /* Increased border radius */
+              box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* Adjusted box shadow */
+              transition: background-color 0.3s ease; /* Added transition */
+            "
+            matTooltip="View this application"
+            (click)="viewApplication(element.id)"
+          >
+            <mat-icon>visibility</mat-icon>
+            View
+          </button>
+          <button
+            mat-flat-button
+            style="
+              background-color: #278EF1; /* Changed background color */
+              color: black; /* Changed text color */
+              font-weight: 500; /* Lighter font weight */
+              border-radius: 20px; /* Increased border radius */
+              box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* Adjusted box shadow */
+              transition: background-color 0.3s ease; /* Added transition */
+            "
+            matTooltip="Delete this application"
+            (click)="deleteApplication(element.id)"
+          >
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        </div>
+      </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

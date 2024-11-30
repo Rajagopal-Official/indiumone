@@ -7,11 +7,14 @@ export const msalConfig: Configuration = {
     redirectUri: 'http://localhost:4200',
   },
   cache: {
-    cacheLocation: 'localStorage', 
+    cacheLocation:BrowserCacheLocation.SessionStorage,
     storeAuthStateInCookie: false,
   },
 };
 
 export const loginRequest = {
   scopes: ['user.read'],
+  extraQueryParameters: {
+    prompt: 'login'
+  },
 };

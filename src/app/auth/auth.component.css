@@ -1,27 +1,178 @@
+/* Base styles */
 @keyframes backgroundAnimation {
-    from {
-      background-position: 0% 50%;
-    }
-    to {
-      background-position: 100% 50%;
-    }
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%);
+  animation: backgroundAnimation 5s ease-in-out infinite alternate;
+  overflow: hidden;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  background: linear-gradient(257deg, #47f3d0 0%, #278ef1 52%, #cb5edc 100%);
+}
+
+.left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 30px;
+  color: white;
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f7f7;
+  animation: fadeIn 2s ease-in;
+  padding: 20px;
+}
+
+.app-title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+}
+
+.app-description {
+  font-size: 16px;
+  color: #e0e0e0;
+  font-family: 'Open Sans', sans-serif;
+  max-width: 500px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-right: 60px;
+  border-radius: 15px;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.logo-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.logo {
+  width: 110px;
+  height: 45px;
+}
+
+.login-box-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+  background: white;
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid black;
+}
+
+.login-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.login-button {
+  width: 100%;
+  background-color: #0078d4;
+  color: white;
+  font-weight: bolder;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.login-button:hover {
+  background-color: #005fa3;
+  transform: scale(1.05);
+}
+
+.microsoft-icon {
+  width: 24px;
+  margin-right: 10px;
+  border: black;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  .left-section, .right-section {
+    padding: 15px;
   }
 
-  .login-box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  .app-title {
+    font-size: 28px;
+    text-align: center;
   }
 
-  button.loading {
-    cursor: not-allowed;
-    opacity: 0.7;
+  .app-description {
+    text-align: center;
+    margin: 0 auto;
   }
+
+  .image-container {
+    margin: 20px 0;
+  }
+
+  .login-box {
+    max-width: 100%;
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 24px;
+  }
+
+  .login-box {
+    padding: 20px;
+  }
+}

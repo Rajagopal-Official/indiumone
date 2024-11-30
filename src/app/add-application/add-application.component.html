@@ -11,6 +11,7 @@
     overflow-y: auto;
   "
 >
+
   <form
     [formGroup]="form"
     style="
@@ -35,7 +36,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Application Name</label
+        >Application Name*</label
       >
       <input
         id="applicationName"
@@ -146,7 +147,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Application Description</label
+        >Application Description*</label
       >
       <input
         id="applicationDescription"
@@ -247,7 +248,7 @@
           font-weight: 400;
           font-size: 15px;
         "
-        >Accessible Departments</label
+        >Accessible Departments*</label
       >
       <mat-form-field
         appearance="fill"
@@ -255,6 +256,7 @@
         class="mat-select-container"
       >
         <mat-select
+        panelClass="custom-dropdown-panel"
           [formControl]="form.controls.accessibleDepartments"
           (selectionChange)="onDepartmentsChange($event)"
           style="width: 100%"
@@ -293,7 +295,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #faf1e4;
+          background-color: #278EF1;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           border-radius: 8px;
           border: 1px solid black;

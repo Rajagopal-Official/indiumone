@@ -753,3 +753,100 @@ mat-form-field.small {
 .rating mat-icon.filled {
   color: #ffc107;
 }
+.app-badge {
+  display: flex;
+  align-items: center;
+  background-color: #e3f2fd;
+  color: black;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  min-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.app-name {
+  flex-grow: 1;
+}
+
+.notification-item {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+  background-color: #f5f5f5;
+}
+
+.notification-item.unread {
+  background-color: #f0f7ff;
+}
+
+.notification-content {
+  margin-left: 8px;
+}
+
+.notification-text {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #666;
+  display: block;
+  margin-top: 4px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notification-btn-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-take-action {
+  background-color: #1976d2;
+  color: white;
+}
+
+.btn-take-action:hover {
+  background-color: #1565c0;
+}
+
+.btn-mark-read {
+  background-color: #e0e0e0;
+  color: #424242;
+}
+
+.btn-mark-read:hover {
+  background-color: #bdbdbd;
+}
+
+.notifications-menu {
+  min-width: 360px;
+  max-width: 400px;
+}

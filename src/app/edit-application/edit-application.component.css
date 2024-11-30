@@ -1,3 +1,5 @@
+/* Add application styles & imports to this file! */
+
 .container {
   padding: 20px;
   background-color: #f3f6f9; 
@@ -6,7 +8,7 @@
 }
 
 h2 {
-  color: #2c3e50; /* Dark text color */
+  color: #2c3e50;
   margin-bottom: 20px;
 }
 
@@ -17,11 +19,43 @@ table {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+}
+
+/* Column width adjustments */
+.mat-column-appName {
+  width: 20%;
+  min-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-appDescription {
+  width: 30%;
+  min-width: 200px;
+}
+
+.mat-column-appUrl {
+  width: 20%;
+  min-width: 150px;
+  word-break: break-all;
+}
+
+.mat-column-status {
+  width: 10%;
+  min-width: 100px;
+}
+
+.mat-column-action {
+  width: 20%;
+  min-width: 250px;
 }
 
 th, td {
   padding: 12px 15px;
   text-align: left;
+  word-wrap: break-word;
 }
 
 th {
@@ -71,7 +105,32 @@ button {
   background-color: #e74c3c; 
   color: #ffffff;
 }
+
 mat-form-field.small {
   --mat-form-field-container-height: 35px;
   --mat-form-field-container-vertical-padding: 8px;
+}
+
+/* Action buttons container */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1024px) {
+  .mat-column-action {
+    width: auto;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  button {
+    width: 100%;
+  }
 }

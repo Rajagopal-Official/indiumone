@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,17 +10,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ApplicationsService } from '../applications.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService } from '../shared.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
+import Swal from 'sweetalert2';
+
 function urlValidator(control: FormControl): { [key: string]: any } | null {
   const urlPattern = /^(http|https):\/\/[^\s$.?#].[^\s]*$/;
   return urlPattern.test(control.value) ? null : { invalidUrl: true };
 }
+
 @Component({
   selector: 'app-new-application',
   standalone: true,
@@ -35,44 +37,46 @@ function urlValidator(control: FormControl): { [key: string]: any } | null {
     NavbarComponent,
   ],
   templateUrl: './edit-page.component.html',
-  styleUrl: './edit-page.component.css',
+  styleUrls: ['./edit-page.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EditPageComponent implements OnInit {
+export class EditPageComponent implements OnInit, OnDestroy {
+  isSaveEnabled = false;
   form = new FormGroup({
     imageUrl: new FormControl(''),
     demoUrl: new FormControl('', [Validators.required, urlValidator]),
     documentationUrl: new FormControl('', [Validators.required, urlValidator]),
-    applicationName: new FormControl({ value: '', disabled: true }),
-    applicationDescription: new FormControl(''),
-    accessibleDepartments: new FormControl<string>(''),
-    accessibleDivisions: new FormControl<string>(''),
-    bandLevel: new FormControl<string>(''),
+    applicationName: new FormControl({ value: '', disabled: true }, Validators.required),
+    applicationDescription: new FormControl('', Validators.required),
+    accessibleDepartments: new FormControl<string>('', Validators.required),
+    accessibleDivisions: new FormControl<string>('', Validators.required),
+    bandLevel: new FormControl<string>('', Validators.required),
     applicationStatus: new FormControl(true),
     appUrl: new FormControl('', [Validators.required, urlValidator]),
-    appSecret: new FormControl(''),
-    appDevTeam: new FormControl(''),
+    appSecret: new FormControl('', Validators.required),
+    appDevTeam: new FormControl('', Validators.required),
   });
+
   appId: number | null = null;
   divisions: string[] = [
-    'All',
-    'App Engineering',
-    'Data and AI',
-    'Microsoft',
-    'Lowcode',
-    'Tetsing',
+    // 'All',
+    // 'App Engineering',
+    // 'Data and AI',
+    // 'Microsoft',
+    // 'Lowcode',
+    // 'Tetsing',
   ];
   selectedDivision: string[] = [];
   departments: string[] = [
-    'All',
-    'Admin',
-    'HR',
-    'Finance',
-    'IT',
-    'Marketing',
-    'Data & AI',
-    'Application Engineering',
-    'Digital Assurance',
+    // 'All',
+    // 'Admin',
+    // 'HR',
+    // 'Finance',
+    // 'IT',
+    // 'Marketing',
+    // 'Data & AI',
+    // 'Application Engineering',
+    // 'Digital Assurance',
   ];
   selectedDepartments: string[] = [];
   selectedFile: File | null = null;
@@ -101,6 +105,8 @@ export class EditPageComponent implements OnInit {
       if (this.appId) {
         this.fetchApplicationDetails();
       }
+      this.fetchDepartments();
+      this.fetchDivisions();
     });
   }
 
@@ -115,19 +121,19 @@ export class EditPageComponent implements OnInit {
       console.error('No appId found in route parameters');
       return;
     }
-
+  
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-
+  
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
+  
     const postData = {
       id: this.appId,
     };
-
+  
     this.httpClient
       .post(
         'https://indiumssoauth.azurewebsites.net/get_application',
@@ -137,6 +143,13 @@ export class EditPageComponent implements OnInit {
       .subscribe(
         (response: any) => {
           console.log('API Response', response);
+  
+          // Update imagePreviewUrl with the latest image URL from the response and append a timestamp
+          this.imagePreviewUrl = response.data.app_image_url + '?' + new Date().getTime();
+  
+          // Reset isSaveEnabled after successful image upload and preview update
+          this.isSaveEnabled = false;
+  
           this.form.patchValue({
             applicationName: response.data.app_name,
             applicationDescription: response.data.app_description,
@@ -151,7 +164,6 @@ export class EditPageComponent implements OnInit {
             applicationStatus: response.data.app_status === 1,
             accessibleDivisions: response.data.division_access_restriction,
           });
-          this.imagePreviewUrl = response.data.app_image_url;
           console.log('Form Values after patchValue:', this.form.value);
         },
         (error) => {
@@ -183,6 +195,7 @@ export class EditPageComponent implements OnInit {
       app_secret: formData.appSecret,
       app_demo_url: formData.demoUrl,
       app_dev_team: formData.appDevTeam,
+      app_description: formData.applicationDescription,
     };
 
     const token = localStorage.getItem('token');
@@ -201,6 +214,12 @@ export class EditPageComponent implements OnInit {
       )
       .subscribe(
         (response) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Application Updated Successfully',
+            showConfirmButton: true,
+            timer: 1500,
+          });
           this.router.navigate(['/applications']);
           console.log('Application updated successfully', response);
         },
@@ -215,15 +234,10 @@ export class EditPageComponent implements OnInit {
     if (file && file.size > 1048576) {
       this.fileSizeError = true;
       this.selectedFile = null;
-      // this.imagePreviewUrl = null;
     } else if (file) {
       this.fileSizeError = false;
       this.selectedFile = file;
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   this.imagePreviewUrl = reader.result as string;
-      // };
-      // reader.readAsDataURL(file);
+      this.isSaveEnabled = true;
     }
   }
 
@@ -258,7 +272,7 @@ export class EditPageComponent implements OnInit {
         .set('Content-Type', 'application/json');
 
       this.httpClient
-        .post(
+        .post<{ recid: number, success: string }>(
           'https://indiumssoauth.azurewebsites.net/upload_image_base64',
           postData,
           { headers }
@@ -266,9 +280,25 @@ export class EditPageComponent implements OnInit {
         .subscribe(
           (response) => {
             console.log('Image uploaded successfully', response);
+
+            // After successful upload, fetch the updated application details
+            this.fetchApplicationDetails();
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Image Uploaded Successfully',
+              showConfirmButton: true,
+              timer: 1500,
+            });
           },
           (error) => {
             console.error('Error uploading image', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error Uploading Image',
+              text: 'Please try again.',
+              showConfirmButton: true,
+            });
           }
         );
     };
@@ -286,6 +316,60 @@ export class EditPageComponent implements OnInit {
   }
 
   onStatusChange(event: any): void {
-    this.form.controls.applicationStatus.setValue(event.checked);
+    if (event.checked && this.form.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please fill all mandatory fields before activating the application.',
+        showConfirmButton: true,
+      });
+      this.form.controls.applicationStatus.setValue(false);
+    } else {
+      this.form.controls.applicationStatus.setValue(event.checked);
+    }
+  }
+  fetchDepartments() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const fetchDepartmentApi =
+      'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
+
+    this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
+      next: (response) => {
+        this.departments = response
+          .map((item) => item.department)
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .sort((a, b) => a.localeCompare(b));
+        console.log('department--->', this.departments);
+        // this.form.controls['accessibleDepartments'].setValue(
+        //   this.departments[0]
+        // );
+      },
+      error: (error) => {
+        console.error('Error fetching departments:', error);
+      },
+    });
+  }
+
+  fetchDivisions() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const fetchDepartmentApi =
+      'https://indiumssoauth.azurewebsites.net/get_zoho_divisions';
+
+    this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
+      next: (response) => {
+        this.divisions = response
+          .map((item) => item.division)
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .sort((a, b) => a.localeCompare(b));
+        console.log('department--->', this.divisions);
+        // this.form.controls['accessibleDepartments'].setValue(
+        //   this.departments[0]
+        // );
+      },
+      error: (error) => {
+        console.error('Error fetching divisions:', error);
+      },
+    });
   }
 }

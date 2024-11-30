@@ -1,0 +1,50 @@
+<div class="container">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    style="display: flex; flex-direction: column; gap: 15px"
+  >
+    <h2>Time Slot Booking for Conference Rooms</h2>
+
+    <mat-form-field appearance="outline" class="small">
+      <mat-label>Room Name</mat-label>
+      <input matInput formControlName="roomName" autocomplete="off" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="small">
+      <mat-label>Slot Starting Time</mat-label>
+      <mat-select
+        formControlName="startTime"
+        panelClass="custom-dropdown-panel"
+      >
+        <mat-option value="">Select start time</mat-option>
+        <mat-option *ngFor="let time of availableStartTimes" [value]="time">
+          {{ time }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="small">
+      <mat-label>Slot Ending Time</mat-label>
+      <mat-select
+        formControlName="endTime"
+        [disabled]="!form.get('startTime')?.value"
+        panelClass="custom-dropdown-panel"
+      >
+        <mat-option value="">Select end time</mat-option>
+        <mat-option *ngFor="let time of availableEndTimes" [value]="time">
+          {{ time }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!form.valid"
+    >
+      Book Room
+    </button>
+  </form>
+</div>

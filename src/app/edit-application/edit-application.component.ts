@@ -59,7 +59,6 @@ export class EditApplicationComponent implements OnInit {
   }
 
   fetchApplications() {
-    const recid = this.sharedService.getRecid();
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
@@ -92,6 +91,9 @@ export class EditApplicationComponent implements OnInit {
           this.isLoading.set(false);
         }
       );
+  }
+  backToHomePage() {
+    this.router.navigate(['/home']);
   }
 
   editApplication(appId: number) {
@@ -140,7 +142,7 @@ export class EditApplicationComponent implements OnInit {
     Swal.fire({
       icon: 'success',
       title: 'Deleted the Application Successfully',
-      showConfirmButton: false,
+      showConfirmButton: true,
       timer: 1500,
     });
   }

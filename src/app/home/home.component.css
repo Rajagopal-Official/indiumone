@@ -501,19 +501,19 @@ mat-form-field.small {
 }
 
 .action-button.primary {
-  background-color: #A7D397;
+  background-color: #278EF1;
 }
 
 .action-button.primary:hover {
-  background-color: #A7D397;
+  background-color: #278EF1;
 }
 
 .action-button.secondary {
-  background-color: #A7D397 !important;
+  background-color: #278EF1 !important;
 }
 
 .action-button.secondary:hover {
-  background-color: #A7D397 !important;
+  background-color: #278EF1 !important;
 }
 
 .tree-invisible {
@@ -731,3 +731,16 @@ mat-form-field.small {
 .rating mat-icon.filled {
   color: #ffc107;
 }
+/* Add media queries for responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px !important;
+  }
+  /* Add other mobile-specific styles */
+}
+
+.sidenav-container {
+  height: 100vh;
+}
+
+/* Other styles remain the same */

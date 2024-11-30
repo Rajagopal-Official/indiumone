@@ -52,3 +52,10 @@ mat-select {
   .mat-mdc-form-field-flex .mat-mdc-select {
     height: 5px !important;
   }
+  .custom-dropdown-panel {
+    position: absolute !important;
+    top: 100% !important; 
+    margin-top: 4px; 
+    transform: none !important;
+    width: 100% !important; 
+  }

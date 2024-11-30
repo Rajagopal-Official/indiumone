@@ -1,12 +1,11 @@
-import { AuthService } from './../auth/auth.service';
+import { Component, signal, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -15,12 +14,16 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
-import { Home } from '../home/home.model';
+import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from './../auth/auth.service';
+import { NotificationService, Notification } from '../../../src/app/notifications.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
+    CommonModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
@@ -30,26 +33,107 @@ import { Home } from '../home/home.model';
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule,
     FormsModule,
     MatMenuModule,
-    MatButtonModule,
     MatBadgeModule,
     MatTreeModule,
     MatProgressSpinnerModule,
-    CommonModule,
+    HttpClientModule
   ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css',
+  styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   sidenavOpen = signal(true);
   showSearchField = signal<boolean>(false);
   searchTerm = signal<string>('');
   selectedDepartment = signal<string>('All');
-  items = signal<Home[]>([]);
-  filteredItems = signal<Home[]>([]);
-  constructor(private authService: AuthService) {}
+  items = signal<any[]>([]);
+  filteredItems = signal<any[]>([]);
+  isHomePage: boolean = false;
+  notifications = signal<Notification[]>([]);
+  unreadCount = signal<number>(0);
+
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
+
+  ngOnInit() {
+    this.isHomePage = this.route.snapshot.routeConfig?.path?.includes('home') || false;
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.notificationService.getNotifications().subscribe({
+      next: (data) => {
+        this.notifications.set(data);
+        this.updateUnreadCount();
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+      }
+    });
+  }
+
+  updateUnreadCount() {
+    const unreadNotifications = this.notifications().filter(n => n.read_status === 0);
+    this.unreadCount.set(unreadNotifications.length);
+  }
+
+  markAsRead(notification: Notification) {
+    if (notification.read_status === 0) {
+      this.notificationService.markAsRead(notification.id).subscribe({
+        next: () => {
+          const updatedNotifications = this.notifications().map(n => 
+            n.id === notification.id ? { ...n, read_status: 1 } : n
+          );
+          this.notifications.set(updatedNotifications);
+          this.updateUnreadCount();
+        },
+        error: (error) => {
+          console.error('Error marking notification as read:', error);
+        }
+      });
+    }
+  }
+
+  markAllAsRead() {
+    const unreadIds = this.notifications()
+      .filter(n => n.read_status === 0)
+      .map(n => n.id);
+
+    if (unreadIds.length > 0) {
+      this.notificationService.markAllAsRead(unreadIds).subscribe({
+        next: () => {
+          const updatedNotifications = this.notifications().map(n => ({ ...n, read_status: 1 }));
+          this.notifications.set(updatedNotifications);
+          this.updateUnreadCount();
+        },
+        error: (error) => {
+          console.error('Error marking all notifications as read:', error);
+        }
+      });
+    }
+  }
+
+  calculateTimeAgo(timestamp: string): string {
+    const now = new Date().toISOString(); 
+    const updateTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((new Date(now).getTime() - updateTime.getTime()) / 1000);
+    
+
+    if (diffInSeconds < 60) return 'just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  }
+
+  openAppUrl(url: string) {
+    window.open(url, '_blank');
+  }
 
   usernameSignal = this.authService.getUsernameSignal();
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
@@ -63,40 +147,40 @@ export class NavbarComponent {
     return 'User';
   }
 
-  notifications = [
-    {
-      id: 1,
-      text: 'New project invitation received',
-      time: '5 mins ago',
-      icon: 'folder_shared',
-      iconClass: 'icon-info',
-      unread: true,
-    },
-    {
-      id: 2,
-      text: 'Successfully deployed project',
-      time: '2 hours ago',
-      icon: 'check_circle',
-      iconClass: 'icon-success',
-      unread: true,
-    },
-    {
-      id: 3,
-      text: 'Server warning: High CPU usage',
-      time: '1 day ago',
-      icon: 'warning',
-      iconClass: 'icon-warning',
-      unread: false,
-    },
-    {
-      id: 4,
-      text: 'New software update available',
-      time: '2 hours ago',
-      icon: 'info',
-      iconClass: 'icon-info',
-      unread: true,
-    },
-  ];
+  // notifications = [
+  //   {
+  //     id: 1,
+  //     text: 'New project invitation received',
+  //     time: '5 mins ago',
+  //     icon: 'folder_shared',
+  //     iconClass: 'icon-info',
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     text: 'Successfully deployed project',
+  //     time: '2 hours ago',
+  //     icon: 'check_circle',
+  //     iconClass: 'icon-success',
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     text: 'Server warning: High CPU usage',
+  //     time: '1 day ago',
+  //     icon: 'warning',
+  //     iconClass: 'icon-warning',
+  //     unread: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     text: 'New software update available',
+  //     time: '2 hours ago',
+  //     icon: 'info',
+  //     iconClass: 'icon-info',
+  //     unread: true,
+  //   },
+  // ];
 
   apps = [
     {
@@ -175,5 +259,9 @@ export class NavbarComponent {
   }
   handleLogout(): void {
     this.authService.logout();
+  }
+
+  backToHomePage() {
+    this.router.navigate(['/home']);
   }
 }

@@ -1,6 +1,12 @@
-<app-navbar></app-navbar>
-<mat-sidenav-container>
-  <mat-sidenav [opened]="sidenavOpen()" mode="side" class="sidebar">
+<app-navbar/>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+  #sidenav
+  [mode]="isMobile() ? 'over' : 'side'"
+  [opened]="!isMobile() && sidenavOpen()"
+  (openedChange)="sidenavOpen.set($event)"
+  class="sidebar"
+>
     <div class="sidebar-header">
       <h2 class="sidebar-title">Departments by Categories</h2>
     </div>
@@ -52,11 +58,11 @@
   <mat-sidenav-content>
     <div style="padding: 12px">
       <div class="page-header">
-        <h1>Appstore built for us and built by us!!</h1>
+        <h1>Indium One</h1>
         <p class="subtitle">
-          Hello, {{ getDisplayName() }}! Welcome to the Indium App Store.
+          Hello, {{ getDisplayName() }} !! Welcome to the Indium App Store.
         </p>
-        <div style="display: flex; justify-content: flex-end; width: 100%">
+        <!-- <div style="display: flex; justify-content: flex-end; width: 100%">
           <p
             style="
               margin-top: 17px;
@@ -68,7 +74,7 @@
           >
             Apps that power your productivity journey! ⚡
           </p>
-        </div>
+        </div> -->
       </div>
 
       <section
@@ -117,7 +123,7 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
-                    color: #555843;
+                    color: black;
                   "
                 >
                   Access
@@ -135,7 +141,7 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
-                    color: #555843;
+                    color: black;
                   "
                 >
                   Demo

@@ -27,17 +27,18 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-    const role = urlParams.get('admin_user')!;
-    localStorage.setItem('Admin Access', role);
+    const username = urlParams.get('username')!;
+    localStorage.setItem('username', username);
+    this.AuthService.setUsername(username);
 
     if (token) {
-      localStorage.setItem('authToken', token); 
-      localStorage.setItem('loginTimestamp', Date.now().toString()); 
+      sessionStorage.setItem('authToken', token); 
+      sessionStorage.setItem('loginTimestamp', Date.now().toString()); 
       this.router.navigate(['/get-token'], { queryParams: { token } });
     }
 
-    const storedToken = localStorage.getItem('authToken');
-    const loginTimestamp = parseInt(localStorage.getItem('loginTimestamp') || '0', 10);
+    const storedToken = sessionStorage.getItem('authToken');
+    const loginTimestamp = parseInt(sessionStorage.getItem('loginTimestamp') || '0', 10);
 
     if (storedToken && Date.now() - loginTimestamp < this.AuthService.getSessionDuration()) {
       this.autoLogin(storedToken);
@@ -56,11 +57,18 @@ export class AuthComponent implements OnInit {
         });
       }
     }
+
+    // Listen for logout event
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'logout') {
+        this.handleLogoutEvent();
+      }
+    });
   }
 
   private autoLogin(token: string) {
     this.isLoggedIn = true;
-    this.username = localStorage.getItem('username')!;
+    this.username = sessionStorage.getItem('username')!;
     Swal.fire({
       icon: 'success',
       title: 'Logged in successfully',
@@ -75,7 +83,7 @@ export class AuthComponent implements OnInit {
   private processLogin(username: string) {
     this.isLoggedIn = true;
     this.username = username;
-    localStorage.setItem('username', username);
+    sessionStorage.setItem('username', username);
     Swal.fire({
       icon: 'success',
       title: 'Logged in successfully, Explore the Applications...',
@@ -99,5 +107,12 @@ export class AuthComponent implements OnInit {
   @HostListener('window:keypress')
   resetSessionTimer() {
     this.AuthService.resetSessionTimer();
+  }
+
+  private handleLogoutEvent() {
+    sessionStorage.clear();
+    this.isLoggedIn = false;
+    this.username = undefined;
+    this.router.navigate(['/']);
   }
 }

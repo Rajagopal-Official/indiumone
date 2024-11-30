@@ -10,10 +10,8 @@ import Swal from 'sweetalert2';
 export class AuthService {
   private authToken: string | null = null;
   private timeoutId: any;
-  private sessionDuration = 60 * 60 * 1000;
-  private usernameSignal: WritableSignal<string | undefined> = signal<
-    string | undefined
-  >(undefined);
+  private sessionDuration = 60 * 60 * 1000; 
+  private usernameSignal: WritableSignal<string | undefined> = signal< string | undefined >(undefined);
 
   constructor(
     private authService: MsalService,
@@ -45,13 +43,13 @@ export class AuthService {
 
   getToken(): string | null {
     if (!this.authToken) {
-      this.authToken = localStorage.getItem('authToken');
+      this.authToken = sessionStorage.getItem('authToken');
     }
     return this.authToken;
   }
 
   getAuthorizedApps() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -65,6 +63,9 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
+    const logoutUrl = 'https://indiumssoauth.azurewebsites.net/logout';
+    console.log('Redirecting to:', logoutUrl);
+    window.location.href = logoutUrl;
     Swal.fire({
       icon: 'success',
       title: 'Logged out successfully',

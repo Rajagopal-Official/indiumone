@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, HostListener, signal, ViewChild } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -58,6 +58,19 @@ export class HomeComponent {
   treeControl = new NestedTreeControl<TreeNode>((node) => node.children); // Nested tree control is responsible for managing hierarchial structure
   dataSource = new MatTreeNestedDataSource<TreeNode>();
   selectedDepartment = signal<string>('All');
+  isMobile = signal<boolean>(window.innerWidth <= 768);
+  sidenavOpen = signal<boolean>(!this.isMobile());
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isMobile.set(window.innerWidth <= 768);
+    if (this.isMobile()) {
+      this.sidenavOpen.set(false);
+    } else {
+      this.sidenavOpen.set(true);
+    }
+  }
+  
 
   constructor(
     private authService: AuthService,
@@ -135,7 +148,6 @@ export class HomeComponent {
   // Checks if a node has children by verifying if children is defined and has a length greater than 0.
   // This logic is used in the template to show expand/collapse options only for nodes with children.
   isLoading = signal<boolean>(true);
-  sidenavOpen = signal(true);
   searchTerm = signal<string>('');
   items = signal<Home[]>([]);
   filteredItems = signal<Home[]>([]);
@@ -147,7 +159,7 @@ export class HomeComponent {
     const username = this.usernameSignal();
     console.log(username, 'user');
     if (username) {
-      const namePart = username.split('@')[0];
+      const namePart = username.split('.')[0];
       return namePart.charAt(0).toUpperCase() + namePart.slice(1);
     }
     return 'User';
@@ -173,6 +185,9 @@ export class HomeComponent {
     });
     this.filteredItems.set(filtered);
   }
+  toggleSidenav() {
+    this.sidenavOpen.update((value) => !value);
+  }
 
   selectDepartment(department: string) {
     this.selectedDepartment.set(department);
@@ -190,7 +205,7 @@ export class HomeComponent {
     this.applicationsService.fetchApplications().subscribe({
       complete: () => {
         this.items.set(this.applicationsService.applications());
-        this.filterApps('All');
+        this.filterApps('All');//Initially to display the all apps based
         this.isLoading.set(false);
       },
       error: (error) => {
