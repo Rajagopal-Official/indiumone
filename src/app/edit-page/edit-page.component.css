@@ -59,3 +59,74 @@ mat-select {
     transform: none !important;
     width: 100% !important; 
   }
+  /* Add application styles & imports to this file! */
+/* Add application styles & imports to this file! */
+
+/* Active (checked) state styles - Green */
+.mdc-switch.mdc-switch--selected:enabled .mdc-switch__track::after {
+  background: rgb(76, 175, 80) !important;
+}
+
+.mdc-switch.mdc-switch--selected:enabled:hover .mdc-switch__track::after {
+  background: rgb(76, 175, 80) !important;
+}
+
+.mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
+  background: rgb(76, 175, 80) !important;
+}
+
+.mdc-switch.mdc-switch--selected:enabled:hover .mdc-switch__handle::after {
+  background: rgb(76, 175, 80) !important;
+}
+
+.mdc-switch.mdc-switch--selected:enabled:active .mdc-switch__handle::after {
+  background: rgb(76, 175, 80) !important;
+}
+
+/* Inactive (unchecked) state styles - Red */
+.mdc-switch.mdc-switch--unselected:enabled .mdc-switch__track::after {
+  background: rgb(244, 67, 54) !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled:hover .mdc-switch__track::after {
+  background: rgb(244, 67, 54) !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled .mdc-switch__handle::after {
+  background: rgb(244, 67, 54) !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled:hover .mdc-switch__handle::after {
+  background: rgb(244, 67, 54) !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled:active .mdc-switch__handle::after {
+  background: rgb(244, 67, 54) !important;
+}
+
+/* Track colors */
+.mdc-switch.mdc-switch--selected:enabled .mdc-switch__track::before {
+  background: rgba(76, 175, 80, 0.5) !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled .mdc-switch__track::before {
+  background: rgba(244, 67, 54, 0.5) !important;
+}
+
+/* Icon colors */
+.mdc-switch.mdc-switch--selected:enabled .mdc-switch__icon {
+  fill: white !important;
+}
+
+.mdc-switch.mdc-switch--unselected:enabled .mdc-switch__icon {
+  fill: white !important;
+}
+
+/* Ripple colors */
+.mdc-switch.mdc-switch--selected .mat-ripple-element {
+  background-color: rgba(76, 175, 80, 0.12) !important;
+}
+
+.mdc-switch.mdc-switch--unselected .mat-ripple-element {
+  background-color: rgba(244, 67, 54, 0.12) !important;
+}

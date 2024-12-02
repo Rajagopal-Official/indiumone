@@ -1,4 +1,4 @@
-import { Component, signal, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, signal, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -29,7 +29,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   styleUrl: './add-application.component.css',
   encapsulation: ViewEncapsulation.None,
 })
-export class AddApplicationComponent {
+export class AddApplicationComponent implements OnInit {
   form = new FormGroup({
     applicationName: new FormControl<string>(''),
     applicationCategory: new FormControl(''),
@@ -42,16 +42,7 @@ export class AddApplicationComponent {
   });
   errorMessage = signal('');
 
-  departments: string[] = [
-    'All',
-    'Admin',
-    'HR',
-    'Finance',
-    'IT',
-    'Marketing',
-    'Data & AI',
-    'Application Engineering',
-  ];
+  departments: string[] = [];
   selectedDepartments: string[] = [];
 
   constructor(
@@ -60,6 +51,33 @@ export class AddApplicationComponent {
     private httpClient: HttpClient,
     private sharedService: SharedService
   ) {}
+
+  ngOnInit(): void {
+    this.fetchDepartments();
+  }
+
+  fetchDepartments() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const fetchDepartmentApi =
+      'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
+
+    this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
+      next: (response) => {
+        this.departments = response
+          .map((item) => item.department)
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .sort((a, b) => a.localeCompare(b));
+        console.log('department--->', this.departments);
+        // this.form.controls['accessibleDepartments'].setValue(
+        //   this.departments[0]
+        // );
+      },
+      error: (error) => {
+        console.error('Error fetching departments:', error);
+      },
+    });
+  }
 
   onSubmit() {
     if (this.form.invalid) {

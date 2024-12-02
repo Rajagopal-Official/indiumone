@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Home } from './home.model';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { Notification, NotificationService } from '../notifications.service';
 
 interface TreeNode {
   name: string; // parent node
@@ -60,7 +61,8 @@ export class HomeComponent {
   selectedDepartment = signal<string>('All');
   isMobile = signal<boolean>(window.innerWidth <= 768);
   sidenavOpen = signal<boolean>(!this.isMobile());
-
+  notifications = signal<Notification[]>([]);
+  unreadCount = signal<number>(0);
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile.set(window.innerWidth <= 768);
@@ -75,7 +77,8 @@ export class HomeComponent {
   constructor(
     private authService: AuthService,
     private applicationsService: ApplicationsService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     this.dataSource.data = [
       {
@@ -202,6 +205,7 @@ export class HomeComponent {
 
   ngOnInit() {
     this.isLoading.set(true);
+    this.loadNotifications()
     this.applicationsService.fetchApplications().subscribe({
       complete: () => {
         this.items.set(this.applicationsService.applications());
@@ -213,45 +217,114 @@ export class HomeComponent {
       },
     });
   }
+  loadNotifications() {
+    this.notificationService.getNotifications().subscribe({
+      next: (data) => {
+        this.notifications.set(data);
+        this.updateUnreadCount();
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+      }
+    });
+  }
+
+  updateUnreadCount() {
+    const unreadNotifications = this.notifications().filter(n => n.read_status === 0);
+    this.unreadCount.set(unreadNotifications.length);
+  }
+
+  markAsRead(notification: Notification) {
+    if (notification.read_status === 0) {
+      this.notificationService.markAsRead(notification.id).subscribe({
+        next: () => {
+          const updatedNotifications = this.notifications().map(n => 
+            n.id === notification.id ? { ...n, read_status: 1 } : n
+          );
+          this.notifications.set(updatedNotifications);
+          this.updateUnreadCount();
+        },
+        error: (error) => {
+          console.error('Error marking notification as read:', error);
+        }
+      });
+    }
+  }
+
+  markAllAsRead() {
+    const unreadIds = this.notifications()
+      .filter(n => n.read_status === 0)
+      .map(n => n.id);
+
+    if (unreadIds.length > 0) {
+      this.notificationService.markAllAsRead(unreadIds).subscribe({
+        next: () => {
+          const updatedNotifications = this.notifications().map(n => ({ ...n, read_status: 1 }));
+          this.notifications.set(updatedNotifications);
+          this.updateUnreadCount();
+        },
+        error: (error) => {
+          console.error('Error marking all notifications as read:', error);
+        }
+      });
+    }
+  }
+
+  calculateTimeAgo(timestamp: string): string {
+    const now = new Date().toISOString(); 
+    const updateTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((new Date(now).getTime() - updateTime.getTime()) / 1000);
+    
+
+    if (diffInSeconds < 60) return 'just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  }
+
+  openAppUrl(url: string) {
+    window.open(url, '_blank');
+  }
+
 
   toggleSearchField() {
     this.showSearchField.set(true);
   }
 
-  notifications = [
-    {
-      id: 1,
-      text: 'New project invitation received',
-      time: '5 mins ago',
-      icon: 'folder_shared',
-      iconClass: 'icon-info',
-      unread: true,
-    },
-    {
-      id: 2,
-      text: 'Successfully deployed project',
-      time: '2 hours ago',
-      icon: 'check_circle',
-      iconClass: 'icon-success',
-      unread: true,
-    },
-    {
-      id: 3,
-      text: 'Server warning: High CPU usage',
-      time: '1 day ago',
-      icon: 'warning',
-      iconClass: 'icon-warning',
-      unread: false,
-    },
-    {
-      id: 4,
-      text: 'New software update available',
-      time: '2 hours ago',
-      icon: 'info',
-      iconClass: 'icon-info',
-      unread: true,
-    },
-  ];
+  // notifications = [
+  //   {
+  //     id: 1,
+  //     text: 'New project invitation received',
+  //     time: '5 mins ago',
+  //     icon: 'folder_shared',
+  //     iconClass: 'icon-info',
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     text: 'Successfully deployed project',
+  //     time: '2 hours ago',
+  //     icon: 'check_circle',
+  //     iconClass: 'icon-success',
+  //     unread: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     text: 'Server warning: High CPU usage',
+  //     time: '1 day ago',
+  //     icon: 'warning',
+  //     iconClass: 'icon-warning',
+  //     unread: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     text: 'New software update available',
+  //     time: '2 hours ago',
+  //     icon: 'info',
+  //     iconClass: 'icon-info',
+  //     unread: true,
+  //   },
+  // ];
 
   apps = [
     {
