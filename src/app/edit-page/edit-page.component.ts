@@ -144,10 +144,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
         (response: any) => {
           console.log('API Response', response);
   
-          // Update imagePreviewUrl with the latest image URL from the response and append a timestamp
           this.imagePreviewUrl = response.data.app_image_url + '?' + new Date().getTime();
   
-          // Reset isSaveEnabled after successful image upload and preview update
           this.isSaveEnabled = false;
   
           this.form.patchValue({

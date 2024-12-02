@@ -770,83 +770,107 @@ mat-form-field.small {
 }
 
 .app-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-}
-
-.app-name {
-  flex-grow: 1;
+  width: 40px; /* Increased size for the app icon */
+  height: 40px;
+  margin-right: 12px;
+  border-radius: 50%;
 }
 
 .notification-item {
-  padding: 16px;
-  border-bottom: 1px solid #eee;
+  display: flex; /* Aligning content in a row layout */
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.2s;
-}
-
-.notification-item:hover {
-  background-color: #f5f5f5;
-}
-
-.notification-item.unread {
-  background-color: #f0f7ff;
+  gap: 1rem; /* Adding spacing between elements */
+  
+  &:hover {
+    background-color: #f9fafb;
+  }
+  
+  &.unread {
+    background-color: rgba(239, 246, 255, 0.5);
+  }
 }
 
 .notification-content {
-  margin-left: 8px;
+  flex-grow: 1; /* Ensures content fills available space */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.notification-text {
-  margin: 0;
-  font-size: 14px;
-  color: #333;
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-name {
+  font-size: 1rem; /* Slightly larger font size for visibility */
+  font-weight: bold;
+  color: #111827;
 }
 
 .notification-time {
-  font-size: 12px;
-  color: #666;
-  display: block;
-  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.notification-message {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0;
 }
 
 .notification-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 1rem; /* Wider gap between buttons */
+  margin-top: 0.5rem; /* Added spacing above actions */
 }
 
-.notification-btn-action {
-  display: flex;
+.btn-take-action,
+.btn-mark-read {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem; /* Increased padding for buttons */
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: bold; /* Bold for button text */
+  transition: all 0.2s;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  
+  i {
+    font-size: 1rem;
+  }
 }
 
 .btn-take-action {
-  background-color: #1976d2;
+  background-color: #2563eb;
   color: white;
-}
-
-.btn-take-action:hover {
-  background-color: #1565c0;
+  
+  &:hover {
+    background-color: #1d4ed8;
+  }
 }
 
 .btn-mark-read {
-  background-color: #e0e0e0;
-  color: #424242;
-}
-
-.btn-mark-read:hover {
-  background-color: #bdbdbd;
-}
-
-.notifications-menu {
-  min-width: 360px;
-  max-width: 400px;
+  background-color: #f3f4f6;
+  color: #374151;
+  
+  &:hover:not(:disabled) {
+    background-color: #e5e7eb;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }

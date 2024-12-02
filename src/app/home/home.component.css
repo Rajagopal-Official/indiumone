@@ -501,19 +501,19 @@ mat-form-field.small {
 }
 
 .action-button.primary {
-  background-color: #278EF1;
+  background-color: #024CAA;
 }
 
 .action-button.primary:hover {
-  background-color: #278EF1;
+  background-color: #024CAA;
 }
 
 .action-button.secondary {
-  background-color: #278EF1 !important;
+  background-color: #024CAA !important;
 }
 
 .action-button.secondary:hover {
-  background-color: #278EF1 !important;
+  background-color: #024CAA !important;
 }
 
 .tree-invisible {
@@ -744,3 +744,15 @@ mat-form-field.small {
 }
 
 /* Other styles remain the same */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 155, 155, 0.7);
+}

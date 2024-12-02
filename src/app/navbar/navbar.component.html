@@ -64,19 +64,20 @@
   </mat-menu>
   <span class="spacer"></span>
   @if(showSearchField()){
-  <mat-form-field
-    appearance="outline"
-    style="width: 250px !important ; padding: 5px !important; margin-top: 30px"
-    class="small"
-  >
-    <input
-      matInput
-      [(ngModel)]="searchTerm"
-      (ngModelChange)="searchApps()"
-      placeholder="Search applications..."
-      style="padding-left: 15px; color: black"
-    />
-  </mat-form-field>
+ <mat-form-field
+  appearance="outline"
+  style="width: 250px !important ; padding: 5px !important; margin-top: 30px"
+  class="small"
+>
+  <input
+    matInput
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="searchApps()"
+    placeholder="Search applications..."
+    style="padding-left: 15px; color: black"
+  />
+</mat-form-field>
+
   } @if (isHomePage) {
   <button mat-icon-button matTooltip="Search" (click)="toggleSearchField()">
     <mat-icon>search</mat-icon>
@@ -106,33 +107,40 @@
     </div>
     } @else {
     @for (notification of notifications(); track notification.id) {
-    <div class="notification-item" [class.unread]="notification.read_status === 0">
-      <div class="app-badge">
-        <img [src]="notification.icon_url" alt="App Icon" class="app-icon">
-        {{ notification.n_app_name }}
-      </div>
-      <div class="notification-content">
-        <p class="notification-text">{{ notification.n_app_message }}</p>
-        <span class="notification-time">{{ calculateTimeAgo(notification.updatets) }}</span>
-        <div class="notification-actions">
-          <button 
-            class="notification-btn-action btn-take-action"
-            (click)="openAppUrl(notification.n_app_url)"
-          >
-            <mat-icon style="font-size: 16px">launch</mat-icon>
-            Take Action
-          </button>
-          <button 
-            class="notification-btn-action btn-mark-read"
-            (click)="markAsRead(notification)"
-            [disabled]="notification.read_status === 1"
-          >
-            <mat-icon style="font-size: 16px">check_circle</mat-icon>
-            Mark as Read
-          </button>
+      <div class="notification-item" [class.unread]="notification.read_status === 0">
+        <div class="notification-content">
+          <div class="notification-header">
+            <div class="app-info">
+              <img [src]="notification.icon_url" [alt]="notification.n_app_name" class="app-icon">
+              <span class="app-name">{{ notification.n_app_name }}</span>
+            </div>
+            <span 
+              class="notification-time" 
+              [matTooltip]="calculateTimeAgo(notification.updatets)"
+              matTooltipPosition="above">
+              {{ calculateTimeAgo(notification.updatets) }}
+            </span>
+          </div>
+          
+          <p class="notification-message">{{ notification.n_app_message }}</p>
+          
+          <div class="notification-actions">
+            <button class="btn-take-action" (click)="openAppUrl(notification.n_app_url)">
+              <i class="material-icons">launch</i>
+              Take Action
+            </button>
+            
+            <button 
+              class="btn-mark-read" 
+              (click)="markAsRead(notification)"
+              [disabled]="notification.read_status === 1"
+            >
+              <i class="material-icons">check_circle</i>
+              Mark as Read
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     }
     }
   </mat-menu>

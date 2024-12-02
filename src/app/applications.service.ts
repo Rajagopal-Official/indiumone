@@ -54,6 +54,14 @@ export class ApplicationsService {
       })
     );
   }
+  // getFilteredApplications(searchTerm: string) {
+  //   const currentApps = this.applications();
+  //   if (!searchTerm) return currentApps;
+    
+  //   return currentApps.filter(app => 
+  //     app.title.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  // }
 
   addApplication(application: Home) {
     this.applications.update((apps) => [...apps, application]);
