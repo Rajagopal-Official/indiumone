@@ -46,10 +46,13 @@ export class EditPageComponent implements OnInit, OnDestroy {
     imageUrl: new FormControl(''),
     demoUrl: new FormControl('', [Validators.required, urlValidator]),
     documentationUrl: new FormControl('', [Validators.required, urlValidator]),
-    applicationName: new FormControl({ value: '', disabled: true }, Validators.required),
+    applicationName: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
     applicationDescription: new FormControl('', Validators.required),
-    accessibleDepartments: new FormControl<string>('', Validators.required),
-    accessibleDivisions: new FormControl<string>('', Validators.required),
+    accessibleDepartments: new FormControl<string[]>([]), // Initialize as array
+    accessibleDivisions: new FormControl<string[]>([]), // Initialize as array
     bandLevel: new FormControl<string>('', Validators.required),
     applicationStatus: new FormControl(true),
     appUrl: new FormControl('', [Validators.required, urlValidator]),
@@ -58,27 +61,11 @@ export class EditPageComponent implements OnInit, OnDestroy {
   });
 
   appId: number | null = null;
-  divisions: string[] = [
-    // 'All',
-    // 'App Engineering',
-    // 'Data and AI',
-    // 'Microsoft',
-    // 'Lowcode',
-    // 'Tetsing',
-  ];
+  divisions: string[] = [];
   selectedDivision: string[] = [];
-  departments: string[] = [
-    // 'All',
-    // 'Admin',
-    // 'HR',
-    // 'Finance',
-    // 'IT',
-    // 'Marketing',
-    // 'Data & AI',
-    // 'Application Engineering',
-    // 'Digital Assurance',
-  ];
+  departments: string[] = [];
   selectedDepartments: string[] = [];
+  divisionToDepartments: Record<string, string[]> = {};
   selectedFile: File | null = null;
   fileSizeError: boolean = false;
   imagePreviewUrl: string | null = null;
@@ -103,10 +90,10 @@ export class EditPageComponent implements OnInit, OnDestroy {
         this.form.disable();
       }
       if (this.appId) {
-        this.fetchApplicationDetails();
+        this.fetchDepartmentsAndDivisions().then(() => {
+          this.fetchApplicationDetails();
+        });
       }
-      this.fetchDepartments();
-      this.fetchDivisions();
     });
   }
 
@@ -116,24 +103,52 @@ export class EditPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  fetchDepartmentsAndDivisions(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const token = localStorage.getItem('token');
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      const apiUrl =
+        'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
+
+      this.httpClient.get<any[]>(apiUrl, { headers }).subscribe({
+        next: (response) => {
+          // Build the division-to-departments mapping
+          this.divisionToDepartments = response.reduce((acc, item) => {
+            acc[item.division] = acc[item.division] || [];
+            acc[item.division].push(item.department);
+            return acc;
+          }, {} as Record<string, string[]>);
+
+          // Extract and sort unique divisions
+          this.divisions = Object.keys(this.divisionToDepartments).sort();
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error fetching departments and divisions:', error);
+          reject(error);
+        },
+      });
+    });
+  }
+
   fetchApplicationDetails() {
     if (!this.appId) {
       console.error('No appId found in route parameters');
       return;
     }
-  
+
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-  
+
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  
+
     const postData = {
       id: this.appId,
     };
-  
+
     this.httpClient
       .post(
         'https://indiumssoauth.azurewebsites.net/get_application',
@@ -143,17 +158,20 @@ export class EditPageComponent implements OnInit, OnDestroy {
       .subscribe(
         (response: any) => {
           console.log('API Response', response);
-  
+
           // Update imagePreviewUrl with the latest image URL from the response and append a timestamp
-          this.imagePreviewUrl = response.data.app_image_url + '?' + new Date().getTime();
-  
+          this.imagePreviewUrl =
+            response.data.app_image_url + '?' + new Date().getTime();
+
           // Reset isSaveEnabled after successful image upload and preview update
           this.isSaveEnabled = false;
-  
+
           this.form.patchValue({
             applicationName: response.data.app_name,
             applicationDescription: response.data.app_description,
-            accessibleDepartments: response.data.app_group.toString(),
+            accessibleDepartments: response.data.app_group
+              ? response.data.app_group.split(',')
+              : [],
             appUrl: response.data.app_url,
             imageUrl: response.data.app_image_url,
             appSecret: response.data.app_secret,
@@ -162,9 +180,20 @@ export class EditPageComponent implements OnInit, OnDestroy {
             demoUrl: response.data.app_demo_url,
             bandLevel: response.data.level_access_restriction.toString(),
             applicationStatus: response.data.app_status === 1,
-            accessibleDivisions: response.data.division_access_restriction,
+            accessibleDivisions: response.data.division_access_restriction
+              ? response.data.division_access_restriction.split(',')
+              : [],
           });
           console.log('Form Values after patchValue:', this.form.value);
+
+          // Update selected divisions and departments based on the fetched data
+          this.selectedDivision = response.data.division_access_restriction
+            ? response.data.division_access_restriction.split(',')
+            : [];
+          this.selectedDepartments = response.data.app_group
+            ? response.data.app_group.split(',')
+            : [];
+          this.updateDepartments();
         },
         (error) => {
           console.error('Error fetching application details', error);
@@ -188,8 +217,12 @@ export class EditPageComponent implements OnInit, OnDestroy {
       id: this.appId,
       app_status: formData.applicationStatus ? 1 : 0,
       app_url: formData.appUrl,
-      division_access_restriction: formData.accessibleDivisions,
-      department_access_restriction: formData.accessibleDepartments,
+      division_access_restriction: (formData.accessibleDivisions ?? []).join(
+        ','
+      ), // Convert to string
+      department_access_restriction: (
+        formData.accessibleDepartments ?? []
+      ).join(','), // Convert to string
       level_access_restriction: formData.bandLevel,
       app_documentation_url: formData.documentationUrl,
       app_secret: formData.appSecret,
@@ -272,7 +305,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
         .set('Content-Type', 'application/json');
 
       this.httpClient
-        .post<{ recid: number, success: string }>(
+        .post<{ recid: number; success: string }>(
           'https://indiumssoauth.azurewebsites.net/upload_image_base64',
           postData,
           { headers }
@@ -309,67 +342,34 @@ export class EditPageComponent implements OnInit, OnDestroy {
 
   onDepartmentsChange(event: any): void {
     this.selectedDepartments = event.value;
+    this.form.controls.accessibleDepartments.setValue(this.selectedDepartments);
   }
 
   onDivisionChange(event: any): void {
     this.selectedDivision = event.value;
+    console.log('Selected Divisions:', this.selectedDivision);
+    this.updateDepartments();
+  }
+
+  updateDepartments(): void {
+    this.departments = this.selectedDivision.flatMap(
+      (division: string) => this.divisionToDepartments[division] || []
+    );
+    console.log('Updated Departments:', this.departments);
+    this.form.controls.accessibleDepartments.setValue(this.selectedDepartments);
   }
 
   onStatusChange(event: any): void {
     if (event.checked && this.form.invalid) {
       Swal.fire({
         icon: 'warning',
-        title: 'Please fill all mandatory fields before activating the application.',
+        title:
+          'Please fill all mandatory fields before activating the application.',
         showConfirmButton: true,
       });
       this.form.controls.applicationStatus.setValue(false);
     } else {
       this.form.controls.applicationStatus.setValue(event.checked);
     }
-  }
-  fetchDepartments() {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const fetchDepartmentApi =
-      'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
-
-    this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
-      next: (response) => {
-        this.departments = response
-          .map((item) => item.department)
-          .filter((value, index, self) => self.indexOf(value) === index)
-          .sort((a, b) => a.localeCompare(b));
-        console.log('department--->', this.departments);
-        // this.form.controls['accessibleDepartments'].setValue(
-        //   this.departments[0]
-        // );
-      },
-      error: (error) => {
-        console.error('Error fetching departments:', error);
-      },
-    });
-  }
-
-  fetchDivisions() {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const fetchDepartmentApi =
-      'https://indiumssoauth.azurewebsites.net/get_zoho_divisions';
-
-    this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
-      next: (response) => {
-        this.divisions = response
-          .map((item) => item.division)
-          .filter((value, index, self) => self.indexOf(value) === index)
-          .sort((a, b) => a.localeCompare(b));
-        console.log('department--->', this.divisions);
-        // this.form.controls['accessibleDepartments'].setValue(
-        //   this.departments[0]
-        // );
-      },
-      error: (error) => {
-        console.error('Error fetching divisions:', error);
-      },
-    });
   }
 }
