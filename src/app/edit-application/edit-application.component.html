@@ -269,7 +269,7 @@
   matTooltip="Edit this application"
   (click)="editApplication(element.id)"
 >
-  <mat-icon>edit</mat-icon>
+  <!-- <mat-icon>edit</mat-icon> -->
   Edit
 </button>
           <button
@@ -281,11 +281,12 @@
               border-radius: 20px; /* Increased border radius */
               box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* Adjusted box shadow */
               transition: background-color 0.3s ease; /* Added transition */
+              height: 40px;
             "
             matTooltip="View this application"
             (click)="viewApplication(element.id)"
           >
-            <mat-icon>visibility</mat-icon>
+            <!-- <mat-icon>visibility</mat-icon> -->
             View
           </button>
           <button
@@ -297,11 +298,12 @@
               border-radius: 20px; /* Increased border radius */
               box-shadow: 0 3px 8px rgba(0,0,0,0.15); /* Adjusted box shadow */
               transition: background-color 0.3s ease; /* Added transition */
+              height: 40px;
             "
             matTooltip="Delete this application"
             (click)="deleteApplication(element.id)"
           >
-            <mat-icon>delete</mat-icon>
+            <!-- <mat-icon>delete</mat-icon> -->
             Delete
           </button>
         </div>

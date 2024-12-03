@@ -142,6 +142,7 @@ mat-sidenav-container {
 
 .user-profile {
   margin-left: 16px;
+  margin-top: 4px;
 }
 
 .color-primary { color: var(--primary-color); }

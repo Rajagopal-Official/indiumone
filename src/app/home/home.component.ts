@@ -63,8 +63,8 @@ export class HomeComponent {
   sidenavOpen = signal<boolean>(!this.isMobile());
   notifications = signal<Notification[]>([]);
   unreadCount = signal<number>(0);
-  username=localStorage.getItem('username') 
-  useremail=localStorage.getItem('useremail')
+  username = localStorage.getItem('username');
+  useremail = localStorage.getItem('useremail');
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile.set(window.innerWidth <= 768);
@@ -74,7 +74,6 @@ export class HomeComponent {
       this.sidenavOpen.set(true);
     }
   }
-  
 
   constructor(
     private authService: AuthService,
@@ -160,15 +159,16 @@ export class HomeComponent {
   ratings = signal<{ [key: string]: number }>({});
   usernameSignal = this.authService.getUsernameSignal();
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
-  getDisplayName(): string {
+  getDisplayName(): string | undefined {
     const username = this.usernameSignal();
     console.log(username, 'user');
     if (username) {
       const namePart = username.split('.')[0];
       return namePart.charAt(0).toUpperCase() + namePart.slice(1);
     }
-    return 'User';
+    return undefined; 
   }
+  
 
   searchApps() {
     const searchTerm = this.searchTerm().toLowerCase();
@@ -212,11 +212,11 @@ export class HomeComponent {
 
   ngOnInit() {
     this.isLoading.set(true);
-    this.loadNotifications()
+    this.loadNotifications();
     this.applicationsService.fetchApplications().subscribe({
       complete: () => {
         this.items.set(this.applicationsService.applications());
-        this.filterApps('All');//Initially to display the all apps based
+        this.filterApps('All'); //Initially to display the all apps based
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -232,12 +232,14 @@ export class HomeComponent {
       },
       error: (error) => {
         console.error('Error loading notifications:', error);
-      }
+      },
     });
   }
 
   updateUnreadCount() {
-    const unreadNotifications = this.notifications().filter(n => n.read_status === 0);
+    const unreadNotifications = this.notifications().filter(
+      (n) => n.read_status === 0
+    );
     this.unreadCount.set(unreadNotifications.length);
   }
 
@@ -245,7 +247,7 @@ export class HomeComponent {
     if (notification.read_status === 0) {
       this.notificationService.markAsRead(notification.id).subscribe({
         next: () => {
-          const updatedNotifications = this.notifications().map(n => 
+          const updatedNotifications = this.notifications().map((n) =>
             n.id === notification.id ? { ...n, read_status: 1 } : n
           );
           this.notifications.set(updatedNotifications);
@@ -253,46 +255,51 @@ export class HomeComponent {
         },
         error: (error) => {
           console.error('Error marking notification as read:', error);
-        }
+        },
       });
     }
   }
 
   markAllAsRead() {
     const unreadIds = this.notifications()
-      .filter(n => n.read_status === 0)
-      .map(n => n.id);
+      .filter((n) => n.read_status === 0)
+      .map((n) => n.id);
 
     if (unreadIds.length > 0) {
       this.notificationService.markAllAsRead(unreadIds).subscribe({
         next: () => {
-          const updatedNotifications = this.notifications().map(n => ({ ...n, read_status: 1 }));
+          const updatedNotifications = this.notifications().map((n) => ({
+            ...n,
+            read_status: 1,
+          }));
           this.notifications.set(updatedNotifications);
           this.updateUnreadCount();
         },
         error: (error) => {
           console.error('Error marking all notifications as read:', error);
-        }
+        },
       });
     }
   }
 
   calculateTimeAgo(timestamp: string): string {
-    const now = new Date().toISOString(); 
+    const now = new Date().toISOString();
     const updateTime = new Date(timestamp);
-    const diffInSeconds = Math.floor((new Date(now).getTime() - updateTime.getTime()) / 1000);
-    
+    const diffInSeconds = Math.floor(
+      (new Date(now).getTime() - updateTime.getTime()) / 1000
+    );
 
     if (diffInSeconds < 60) return 'just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 3600)
+      return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)} hours ago`;
     return `${Math.floor(diffInSeconds / 86400)} days ago`;
   }
 
   openAppUrl(url: string) {
     window.open(url, '_blank');
   }
-
 
   toggleSearchField() {
     this.showSearchField.set(true);

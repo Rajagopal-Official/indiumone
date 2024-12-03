@@ -73,54 +73,68 @@
     <mat-icon>search</mat-icon>
   </button>
   <button
-  mat-icon-button
-  [matMenuTriggerFor]="notificationsMenu"
-  class="notification-btn"
-  matTooltip="Click here to access notifications"
->
-  <mat-icon [matBadge]="unreadCount()" matBadgeColor="warn">notifications</mat-icon>
-</button>
-<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
-  <div class="notification-header">
-    <div class="header-content">
-      <button mat-icon-button class="close-btn" (click)="closeMenu()">
-        <mat-icon>close</mat-icon>
+    mat-icon-button
+    [matMenuTriggerFor]="notificationsMenu"
+    class="notification-btn"
+    matTooltip="Click here to access notifications"
+  >
+    <mat-icon [matBadge]="unreadCount()" matBadgeColor="warn"
+      >notifications</mat-icon
+    >
+  </button>
+  <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+    <div class="notification-header">
+      <div class="header-content">
+        <button mat-icon-button class="close-btn" (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <h3>Notifications</h3>
+      </div>
+      <button mat-button color="primary" (click)="markAllAsRead()">
+        Mark all as read
       </button>
-      <h3>Notifications</h3>
     </div>
-    <button mat-button color="primary" (click)="markAllAsRead()">Mark all as read</button>
-  </div>
-  @if (notifications().length === 0) {
-  <div  style="text-align: center;margin-top: 20px;">
-    You've caught up with all your notifications✅.
-  </div>
-  } @else {
-  @for (notification of notifications(); track notification.id) {
-    <div class="notification-item" [class.unread]="notification.read_status === 0">
+    @if (notifications().length === 0) {
+    <div style="text-align: center; margin-top: 20px">
+      You've caught up with all your notifications✅.
+    </div>
+    } @else { @for (notification of notifications(); track notification.id) {
+    <div
+      class="notification-item"
+      [class.unread]="notification.read_status === 0"
+    >
       <div class="notification-content">
         <div class="notification-header">
           <div class="app-info">
-            <img [src]="notification.icon_url" [alt]="notification.n_app_name" class="app-icon">
+            <img
+              [src]="notification.icon_url"
+              [alt]="notification.n_app_name"
+              class="app-icon"
+            />
             <span class="app-name">{{ notification.n_app_name }}</span>
           </div>
-          <span 
-            class="notification-time" 
+          <span
+            class="notification-time"
             [matTooltip]="calculateTimeAgo(notification.updatets)"
-            matTooltipPosition="above">
+            matTooltipPosition="above"
+          >
             {{ calculateTimeAgo(notification.updatets) }}
           </span>
         </div>
-        
+
         <p class="notification-message">{{ notification.n_app_message }}</p>
-        
+
         <div class="notification-actions">
-          <button class="btn-take-action" (click)="openAppUrl(notification.n_app_url)">
+          <button
+            class="btn-take-action"
+            (click)="openAppUrl(notification.n_app_url)"
+          >
             <i class="material-icons">launch</i>
             Take Action
           </button>
-          
-          <button 
-            class="btn-mark-read" 
+
+          <button
+            class="btn-mark-read"
             (click)="markAsRead(notification)"
             [disabled]="notification.read_status === 1"
           >
@@ -130,46 +144,102 @@
         </div>
       </div>
     </div>
-  }
-  }
-</mat-menu>
-<button
-  mat-icon-button
-  [matMenuTriggerFor]="profileMenu"
-  class="profile-btn"
-  matTooltip="View Profile"
->
-  <mat-icon>account_circle</mat-icon>
-</button>
+    } }
+  </mat-menu>
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="profileMenu"
+    class="profile-btn"
+    matTooltip="View Profile"
+  >
+    <mat-icon>account_circle</mat-icon>
+  </button>
 
-<mat-menu #profileMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
-  <div style="padding: 24px; width: 350px; overflow: hidden;">
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-      <!-- User Profile Section -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <mat-icon style="flex-shrink: 0; font-size: 40px; height: 40px; width: 40px; color: #1976d2; background: #e3f2fd; padding: 8px; border-radius: 50%;">
-          account_circle
-        </mat-icon>
-        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
-          <span style="font-weight: 600; font-size: 16px; color: #2c3e50; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ formatUsername(username)}}</span>
-          <span style="color: #666; font-size: 13px; letter-spacing: 0.3px;">User Profile</span>
+  <mat-menu #profileMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
+    <div style="padding: 24px; width: 350px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; align-items: center; gap: 16px">
+          <mat-icon
+            style="
+              flex-shrink: 0;
+              font-size: 40px;
+              height: 40px;
+              width: 40px;
+              color: #1976d2;
+              background: #e3f2fd;
+              padding: 8px;
+              border-radius: 50%;
+            "
+          >
+            account_circle
+          </mat-icon>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              min-width: 0;
+            "
+          >
+            <span
+              style="
+                font-weight: 600;
+                font-size: 16px;
+                color: #2c3e50;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+              "
+              >{{ formatUsername(username) }}</span
+            >
+            <span style="color: #666; font-size: 13px; letter-spacing: 0.3px"
+              >User Profile</span
+            >
+          </div>
         </div>
-      </div>
 
-      <!-- Email Section -->
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <mat-icon style="flex-shrink: 0; font-size: 40px; height: 40px; width: 40px; color: #1976d2; background: #e3f2fd; padding: 8px; border-radius: 50%;">
-          mail
-        </mat-icon>
-        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
-          <span style="font-weight: 500; font-size: 14px; color: #2c3e50; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word;">{{useremail}}</span>
-          <span style="color: #666; font-size: 13px; letter-spacing: 0.3px;">User Email</span>
+        <div style="display: flex; align-items: center; gap: 16px">
+          <mat-icon
+            style="
+              flex-shrink: 0;
+              font-size: 40px;
+              height: 40px;
+              width: 40px;
+              color: #1976d2;
+              background: #e3f2fd;
+              padding: 8px;
+              border-radius: 50%;
+            "
+          >
+            mail
+          </mat-icon>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              min-width: 0;
+            "
+          >
+            <span
+              style="
+                font-weight: 500;
+                font-size: 14px;
+                color: #2c3e50;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+              "
+              >{{ useremail }}</span
+            >
+            <span style="color: #666; font-size: 13px; letter-spacing: 0.3px"
+              >User Email</span
+            >
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</mat-menu>
-
+  </mat-menu>
 
   <div
     class="user-profile"
@@ -202,15 +272,15 @@
     >
       <mat-icon>logout</mat-icon> Logout
     </button>
-  </mat-menu>
-</mat-toolbar><mat-sidenav-container class="sidenav-container">
+  </mat-menu> </mat-toolbar
+><mat-sidenav-container class="sidenav-container">
   <mat-sidenav
-  #sidenav
-  [mode]="isMobile() ? 'over' : 'side'"
-  [opened]="!isMobile() && sidenavOpen()"
-  (openedChange)="sidenavOpen.set($event)"
-  class="sidebar"
->
+    #sidenav
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile() && sidenavOpen()"
+    (openedChange)="sidenavOpen.set($event)"
+    class="sidebar"
+  >
     <div class="sidebar-header">
       <h2 class="sidebar-title">Departments by Categories</h2>
     </div>
@@ -264,7 +334,7 @@
       <div class="page-header">
         <h1>Indium One</h1>
         <p class="subtitle">
-          Hello, {{ getDisplayName() }} !! Welcome to the Indium App Store.
+          Hello, {{ formatUsername(username) }}  Welcome to the Indium App Store!!.
         </p>
         <!-- <div style="display: flex; justify-content: flex-end; width: 100%">
           <p
