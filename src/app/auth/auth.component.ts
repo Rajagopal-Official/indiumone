@@ -28,7 +28,9 @@ export class AuthComponent implements OnInit {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const username = urlParams.get('username')!;
+    const userEmail=urlParams.get('useremail')!;
     localStorage.setItem('username', username);
+    localStorage.setItem('useremail', userEmail);
     this.AuthService.setUsername(username);
 
     if (token) {

@@ -38,7 +38,7 @@
     "
   >
     <mat-icon style="font-size: 24px; height: 24px; width: 24px">apps</mat-icon>
-    Frequently Visited/Used Applications
+    Frequently Used Applications
   </button>
   <mat-menu #appsMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
     <div class="apps-grid">
@@ -133,6 +133,44 @@
   }
   }
 </mat-menu>
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="profileMenu"
+  class="profile-btn"
+  matTooltip="View Profile"
+>
+  <mat-icon>account_circle</mat-icon>
+</button>
+
+<mat-menu #profileMenu="matMenu" class="apps-menu" [overlapTrigger]="false">
+  <div style="padding: 24px; width: 350px; overflow: hidden;">
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <!-- User Profile Section -->
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <mat-icon style="flex-shrink: 0; font-size: 40px; height: 40px; width: 40px; color: #1976d2; background: #e3f2fd; padding: 8px; border-radius: 50%;">
+          account_circle
+        </mat-icon>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+          <span style="font-weight: 600; font-size: 16px; color: #2c3e50; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ formatUsername(username)}}</span>
+          <span style="color: #666; font-size: 13px; letter-spacing: 0.3px;">User Profile</span>
+        </div>
+      </div>
+
+      <!-- Email Section -->
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <mat-icon style="flex-shrink: 0; font-size: 40px; height: 40px; width: 40px; color: #1976d2; background: #e3f2fd; padding: 8px; border-radius: 50%;">
+          mail
+        </mat-icon>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+          <span style="font-weight: 500; font-size: 14px; color: #2c3e50; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word;">{{useremail}}</span>
+          <span style="color: #666; font-size: 13px; letter-spacing: 0.3px;">User Email</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-menu>
+
+
   <div
     class="user-profile"
     [matMenuTriggerFor]="logout"

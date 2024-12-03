@@ -1,8 +1,10 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,6 +23,15 @@ import Swal from 'sweetalert2';
 function urlValidator(control: FormControl): { [key: string]: any } | null {
   const urlPattern = /^(http|https):\/\/[^\s$.?#].[^\s]*$/;
   return urlPattern.test(control.value) ? null : { invalidUrl: true };
+}
+function noWhitespaceValidator(): (control: AbstractControl) => ValidationErrors | null {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (typeof control.value !== 'string') return null;
+    
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { whitespace: true };
+  };
 }
 
 @Component({
@@ -50,21 +61,21 @@ export class EditPageComponent implements OnInit, OnDestroy {
       { value: '', disabled: true },
       Validators.required
     ),
-    applicationDescription: new FormControl('', Validators.required),
-    accessibleDepartments: new FormControl<string[]>([]), // Initialize as array
-    accessibleDivisions: new FormControl<string[]>([]), // Initialize as array
+    applicationDescription: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    accessibleDepartments: new FormControl<string>(''),
+    accessibleDivisions: new FormControl<string>(''),
     bandLevel: new FormControl<string>('', Validators.required),
     applicationStatus: new FormControl(true),
     appUrl: new FormControl('', [Validators.required, urlValidator]),
-    appSecret: new FormControl('', Validators.required),
-    appDevTeam: new FormControl('', Validators.required),
+    appSecret: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    appDevTeam: new FormControl('', [Validators.required, noWhitespaceValidator]),
   });
 
   appId: number | null = null;
   divisions: string[] = [];
-  selectedDivision: string[] = [];
+  selectedDivision: string = '';
   departments: string[] = [];
-  selectedDepartments: string[] = [];
+  selectedDepartment: string = '';
   divisionToDepartments: Record<string, string[]> = {};
   selectedFile: File | null = null;
   fileSizeError: boolean = false;
@@ -112,14 +123,12 @@ export class EditPageComponent implements OnInit, OnDestroy {
 
       this.httpClient.get<any[]>(apiUrl, { headers }).subscribe({
         next: (response) => {
-          // Build the division-to-departments mapping
           this.divisionToDepartments = response.reduce((acc, item) => {
             acc[item.division] = acc[item.division] || [];
             acc[item.division].push(item.department);
             return acc;
           }, {} as Record<string, string[]>);
 
-          // Extract and sort unique divisions
           this.divisions = Object.keys(this.divisionToDepartments).sort();
           resolve();
         },
@@ -151,32 +160,16 @@ export class EditPageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           console.log('API Response', response);
-
-          // Update imagePreviewUrl
           this.imagePreviewUrl = response.data.app_image_url + '?' + new Date().getTime();
           this.isSaveEnabled = false;
 
-          // Handle department access restriction
-          let departmentArray: string[] = [];
-          if (response.data.department_access_restriction) {
-            departmentArray = response.data.department_access_restriction
-              .split(',')
-              .map((dept: string) => dept.trim());
-          }
+          const department = response.data.department_access_restriction || '';
+          const division = response.data.division_access_restriction || '';
 
-          // Handle division access restriction
-          let divisionArray: string[] = [];
-          if (response.data.division_access_restriction) {
-            divisionArray = response.data.division_access_restriction
-              .split(',')
-              .map((div: string) => div.trim());
-          }
-
-          // Update form values
           this.form.patchValue({
             applicationName: response.data.app_name,
             applicationDescription: response.data.app_description,
-            accessibleDepartments: departmentArray,
+            accessibleDepartments: department,
             appUrl: response.data.app_url,
             imageUrl: response.data.app_image_url,
             appSecret: response.data.app_secret,
@@ -185,18 +178,15 @@ export class EditPageComponent implements OnInit, OnDestroy {
             demoUrl: response.data.app_demo_url,
             bandLevel: response.data.level_access_restriction.toString(),
             applicationStatus: response.data.app_status === 1,
-            accessibleDivisions: divisionArray,
+            accessibleDivisions: division,
           });
 
-          // Update selected divisions and departments
-          this.selectedDivision = divisionArray;
-          this.selectedDepartments = departmentArray;
+          this.selectedDivision = division;
+          this.selectedDepartment = department;
 
-          console.log('Selected Departments:', this.selectedDepartments);
-          console.log('Form Values after patchValue:', this.form.value);
-
-          // Update departments dropdown based on selected divisions
-          this.updateDepartments();
+          if (this.selectedDivision) {
+            this.updateDepartments();
+          }
         },
         error: (error) => {
           console.error('Error fetching application details', error);
@@ -220,12 +210,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
       id: this.appId,
       app_status: formData.applicationStatus ? 1 : 0,
       app_url: formData.appUrl,
-      division_access_restriction: (formData.accessibleDivisions ?? []).join(
-        ','
-      ), // Convert to string
-      department_access_restriction: (
-        formData.accessibleDepartments ?? []
-      ).join(','), // Convert to string
+      division_access_restriction: formData.accessibleDivisions || '',
+      department_access_restriction: formData.accessibleDepartments || '',
       level_access_restriction: formData.bandLevel,
       app_documentation_url: formData.documentationUrl,
       app_secret: formData.appSecret,
@@ -248,8 +234,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
         postData,
         { headers }
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           Swal.fire({
             icon: 'success',
             title: 'Application Updated Successfully',
@@ -259,10 +245,10 @@ export class EditPageComponent implements OnInit, OnDestroy {
           this.router.navigate(['/applications']);
           console.log('Application updated successfully', response);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error updating application', error);
         }
-      );
+      });
   }
 
   onFileSelected(event: any) {
@@ -313,13 +299,10 @@ export class EditPageComponent implements OnInit, OnDestroy {
           postData,
           { headers }
         )
-        .subscribe(
-          (response) => {
+        .subscribe({
+          next: (response) => {
             console.log('Image uploaded successfully', response);
-
-            // After successful upload, fetch the updated application details
             this.fetchApplicationDetails();
-
             Swal.fire({
               icon: 'success',
               title: 'Image Uploaded Successfully',
@@ -327,7 +310,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
               timer: 1500,
             });
           },
-          (error) => {
+          error: (error) => {
             console.error('Error uploading image', error);
             Swal.fire({
               icon: 'error',
@@ -336,7 +319,7 @@ export class EditPageComponent implements OnInit, OnDestroy {
               showConfirmButton: true,
             });
           }
-        );
+        });
     };
     reader.onerror = (error) => {
       console.error('Error reading file', error);
@@ -344,30 +327,27 @@ export class EditPageComponent implements OnInit, OnDestroy {
   }
 
   onDepartmentsChange(event: any): void {
-    this.selectedDepartments = event.value;
-    this.form.controls.accessibleDepartments.setValue(this.selectedDepartments);
+    this.selectedDepartment = event.value;
+    this.form.controls.accessibleDepartments.setValue(this.selectedDepartment);
   }
 
   onDivisionChange(event: any): void {
     this.selectedDivision = event.value;
-    console.log('Selected Divisions:', this.selectedDivision);
+    console.log('Selected Division:', this.selectedDivision);
     this.updateDepartments();
+    this.form.controls.accessibleDepartments.setValue('');
   }
 
   updateDepartments(): void {
-    this.departments = this.selectedDivision.flatMap(
-      (division: string) => this.divisionToDepartments[division] || []
-    );
+    this.departments = this.divisionToDepartments[this.selectedDivision] || [];
     console.log('Updated Departments:', this.departments);
-    this.form.controls.accessibleDepartments.setValue(this.selectedDepartments);
   }
 
   onStatusChange(event: any): void {
     if (event.checked && this.form.invalid) {
       Swal.fire({
         icon: 'warning',
-        title:
-          'Please fill all mandatory fields before activating the application.',
+        title: 'Please fill all mandatory fields before activating the application.',
         showConfirmButton: true,
       });
       this.form.controls.applicationStatus.setValue(false);

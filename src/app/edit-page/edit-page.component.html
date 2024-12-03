@@ -22,7 +22,7 @@
   >
     @if (isEditMode) {
     <h2 style="text-align: center; margin-bottom: 20px">
-      Editing a Application
+      Application Configuration
     </h2>
     }@else {
     <h2 style="text-align: center; margin-bottom: 20px">Application View</h2>
@@ -289,7 +289,6 @@
           <mat-select
             [formControl]="form.controls.accessibleDivisions"
             (selectionChange)="onDivisionChange($event)"
-            multiple
             panelClass="custom-dropdown-panel"
             style="width: 100%"
           >
@@ -328,7 +327,6 @@
             [formControl]="form.controls.accessibleDepartments"
             panelClass="custom-dropdown-panel"
             (selectionChange)="onDepartmentsChange($event)"
-            multiple
             style="width: 100%"
           >
             <mat-option

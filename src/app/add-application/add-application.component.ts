@@ -90,7 +90,7 @@ export class AddApplicationComponent implements OnInit {
     const postData = {
       app_name: formData.applicationName,
       app_description: formData.applicationDescription,
-      app_group: formData.accessibleDepartments,
+      // app_group: formData.accessibleDepartments,
     };
 
     const token = localStorage.getItem('token');

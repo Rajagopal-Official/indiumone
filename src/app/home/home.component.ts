@@ -63,6 +63,8 @@ export class HomeComponent {
   sidenavOpen = signal<boolean>(!this.isMobile());
   notifications = signal<Notification[]>([]);
   unreadCount = signal<number>(0);
+  username=localStorage.getItem('username') 
+  useremail=localStorage.getItem('useremail')
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile.set(window.innerWidth <= 768);
@@ -174,6 +176,11 @@ export class HomeComponent {
   }
   closeMenu() {
     this.menuTrigger.closeMenu();
+  }
+  formatUsername(username: string | null): string {
+    if (!username) return '';
+    const firstPart = username.split('.')[0];
+    return firstPart.charAt(0).toUpperCase() + firstPart.slice(1);
   }
 
   filterApps(department: string, searchTerm: string = '') {
