@@ -878,3 +878,24 @@ mat-form-field.small {
     cursor: not-allowed;
   }
 }
+.admin-tooltip {
+  background-color: #f44336;
+  color: white;
+  font-size: 14px;
+}
+.disabled-node {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.disabled-node .submenu-icon,
+.disabled-node .submenu-name {
+  pointer-events: auto !important; 
+}
+
+::ng-deep .mat-tooltip {
+  font-size: 14px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+

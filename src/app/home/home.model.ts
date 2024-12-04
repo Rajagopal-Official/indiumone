@@ -7,4 +7,5 @@ export interface Home {
   app_status: number;
   devTeam: string;
   demoUrl: string | null;
+  appGroup: string;
 }

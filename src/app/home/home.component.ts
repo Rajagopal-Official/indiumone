@@ -27,6 +27,7 @@ interface TreeNode {
   name: string; // parent node
   icon?: string; // Icon as optional prop
   children?: TreeNode[]; // children is sub nodes that is submenu like things
+  disabled?: boolean;
 }
 
 @Component({
@@ -141,7 +142,11 @@ export class HomeComponent {
       {
         name: 'App Configuration',
         icon: 'settings',
-        children: [{ name: 'Applications', icon: 'apps' }],
+        children: [{ 
+          name: 'Applications', 
+          icon: 'apps',
+          disabled: true // Initially disabled
+        }],
       },
     ];
   }
@@ -166,9 +171,8 @@ export class HomeComponent {
       const namePart = username.split('.')[0];
       return namePart.charAt(0).toUpperCase() + namePart.slice(1);
     }
-    return undefined; 
+    return undefined;
   }
-  
 
   searchApps() {
     const searchTerm = this.searchTerm().toLowerCase();
@@ -214,16 +218,44 @@ export class HomeComponent {
     this.isLoading.set(true);
     this.loadNotifications();
     this.applicationsService.fetchApplications().subscribe({
-      complete: () => {
+      next: (data) => {
         this.items.set(this.applicationsService.applications());
-        this.filterApps('All'); //Initially to display the all apps based
+        this.filterApps('All');
+        
+        // Check if Configuration app exists
+        const hasConfigApp = this.items().some(
+          app => app.title.toLowerCase() === 'configuration' && 
+                 app.appGroup?.toLowerCase() === 'config'
+        );
+
+        // Update tree data with new disabled state
+        this.updateAppConfigurationAccess(hasConfigApp);
+        
         this.isLoading.set(false);
       },
       error: (error) => {
         console.error('Error fetching applications:', error);
+        this.isLoading.set(false);
       },
     });
   }
+
+  private updateAppConfigurationAccess(hasAccess: boolean) {
+    const updatedData = this.dataSource.data.map(node => {
+      if (node.name === 'App Configuration') {
+        return {
+          ...node,
+          children: node.children?.map(child => ({
+            ...child,
+            disabled: !hasAccess
+          }))
+        };
+      }
+      return node;
+    });
+    this.dataSource.data = updatedData;
+  }
+
   loadNotifications() {
     this.notificationService.getNotifications().subscribe({
       next: (data) => {
@@ -380,7 +412,15 @@ export class HomeComponent {
   ];
 
   applicationsList(): void {
+    const configNode = this.findConfigNode();
+    if (configNode?.disabled) {
+      return;
+    }
     this.router.navigate(['/applications']);
+  }
+  private findConfigNode(): TreeNode | undefined {
+    const configParent = this.dataSource.data.find(node => node.name === 'App Configuration');
+    return configParent?.children?.find(child => child.name === 'Applications');
   }
 
   handleLogout(): void {
@@ -393,5 +433,12 @@ export class HomeComponent {
       [item.title]: rating,
     }));
     console.log(`Rated ${item.title} with ${rating} stars`);
+  }
+
+  isAppConfigurationEnabled(): boolean {
+    return this.items().some(
+      (item) =>
+        item.title === 'Configuration' && item.appGroup === 'App Configuration'
+    );
   }
 }

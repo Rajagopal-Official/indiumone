@@ -49,6 +49,7 @@ export class ApplicationsService {
           app_status: app.app_status,
           devTeam: app.app_dev_team,
           demoUrl: this.formatUrl(app.app_demo_url),
+          appGroup: app.app_group,
         }));
         this.applications.set(mappedData);
       })
