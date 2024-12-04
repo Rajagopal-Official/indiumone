@@ -268,18 +268,18 @@ export class EditPageComponent implements OnInit, OnDestroy {
       console.error('No file selected');
       return;
     }
-
+  
     if (!this.appId) {
       console.error('No appId found in route parameters');
       return;
     }
-
+  
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-
+  
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedFile);
     reader.onload = () => {
@@ -288,11 +288,11 @@ export class EditPageComponent implements OnInit, OnDestroy {
         id: this.appId,
         imagefile: base64Image.split(',')[1],
       };
-
+  
       const headers = new HttpHeaders()
         .set('Authorization', `Bearer ${token}`)
         .set('Content-Type', 'application/json');
-
+  
       this.httpClient
         .post<{ recid: number; success: string }>(
           'https://indiumssoauth.azurewebsites.net/upload_image_base64',
@@ -302,7 +302,10 @@ export class EditPageComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (response) => {
             console.log('Image uploaded successfully', response);
-            this.fetchApplicationDetails();
+            // Update only the image preview URL
+            this.imagePreviewUrl = base64Image;
+            // Optionally, update the form control for imageUrl
+            this.form.controls.imageUrl.setValue(base64Image);
             Swal.fire({
               icon: 'success',
               title: 'Image Uploaded Successfully',

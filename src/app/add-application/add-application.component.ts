@@ -128,6 +128,12 @@ export class AddApplicationComponent implements OnInit {
         (response: any) => {
           console.log('Application added successfully', response);
           this.sharedService.setRecid(response.recid);
+          Swal.fire({
+            icon: 'success',
+            title: 'Application Added Successfully',
+            showConfirmButton: true,
+            timer: 1500,
+          }); 
           this.router.navigate(['/applications']);
         },
         (error) => {
