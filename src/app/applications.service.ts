@@ -7,15 +7,13 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApplicationsService {
-  private apiUrl =
-    'https://indiumssoauth.azurewebsites.net/get_authorized_apps';
+  private apiUrl = 'https://indiumssoauth.azurewebsites.net/get_authorized_apps';
   applications = signal<Home[]>([]);
   private applicationTitles: string[] = [];
 
   setTitles(titles: string[]) {
     this.applicationTitles = titles;
   }
-
   getTitles(): string[] {
     return this.applicationTitles;
   }
@@ -52,17 +50,10 @@ export class ApplicationsService {
           appGroup: app.app_group,
         }));
         this.applications.set(mappedData);
+        this.setTitles(mappedData.map(app => app.title)); 
       })
     );
   }
-  // getFilteredApplications(searchTerm: string) {
-  //   const currentApps = this.applications();
-  //   if (!searchTerm) return currentApps;
-    
-  //   return currentApps.filter(app => 
-  //     app.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  // }
 
   addApplication(application: Home) {
     this.applications.update((apps) => [...apps, application]);

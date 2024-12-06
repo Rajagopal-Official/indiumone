@@ -59,8 +59,7 @@ export class AddApplicationComponent implements OnInit {
   fetchDepartments() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const fetchDepartmentApi =
-      'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
+    const fetchDepartmentApi = 'https://indiumssoauth.azurewebsites.net/get_zoho_departments';
 
     this.httpClient.get<any[]>(fetchDepartmentApi, { headers }).subscribe({
       next: (response) => {
@@ -69,9 +68,6 @@ export class AddApplicationComponent implements OnInit {
           .filter((value, index, self) => self.indexOf(value) === index)
           .sort((a, b) => a.localeCompare(b));
         console.log('department--->', this.departments);
-        // this.form.controls['accessibleDepartments'].setValue(
-        //   this.departments[0]
-        // );
       },
       error: (error) => {
         console.error('Error fetching departments:', error);
@@ -81,16 +77,14 @@ export class AddApplicationComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) {
-      this.errorMessage.set(
-        'All fields are required and mandatory to proceed.'
-      );
+      this.errorMessage.set('All fields are required and mandatory to proceed.');
       return;
     }
+
     const formData = this.form.value;
     const postData = {
       app_name: formData.applicationName,
       app_description: formData.applicationDescription,
-      // app_group: formData.accessibleDepartments,
     };
 
     const token = localStorage.getItem('token');
@@ -104,26 +98,15 @@ export class AddApplicationComponent implements OnInit {
     const existingTitles: string[] = this.applicationsService.getTitles();
 
     if (postData.app_name && existingTitles.includes(postData.app_name)) {
-      console.error(
-        'Application with this title already exists:',
-        postData.app_name
-      );
-      // alert(
-      //   'An application with this title already exists. Please choose a different title.'
-      // );
       Swal.fire({
         icon: 'warning',
         text: 'An application with this title already exists. Please choose a different title.',
       });
-
       return;
     }
+
     this.httpClient
-      .post(
-        'https://indiumssoauth.azurewebsites.net/add_application',
-        postData,
-        { headers }
-      )
+      .post('https://indiumssoauth.azurewebsites.net/add_application', postData, { headers })
       .subscribe(
         (response: any) => {
           console.log('Application added successfully', response);
@@ -133,7 +116,7 @@ export class AddApplicationComponent implements OnInit {
             title: 'Application Added Successfully',
             showConfirmButton: true,
             timer: 1500,
-          }); 
+          });
           this.router.navigate(['/applications']);
         },
         (error) => {
@@ -157,9 +140,7 @@ export class AddApplicationComponent implements OnInit {
     const index = this.selectedDepartments.indexOf(department);
     if (index >= 0) {
       this.selectedDepartments.splice(index, 1);
-      this.form.controls.accessibleDepartments.setValue(
-        this.selectedDepartments
-      );
+      this.form.controls.accessibleDepartments.setValue(this.selectedDepartments);
     }
   }
 }

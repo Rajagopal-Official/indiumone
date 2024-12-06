@@ -62,8 +62,8 @@ export class EditPageComponent implements OnInit, OnDestroy {
       Validators.required
     ),
     applicationDescription: new FormControl('', [Validators.required, noWhitespaceValidator]),
-    accessibleDepartments: new FormControl<string>(''),
-    accessibleDivisions: new FormControl<string>(''),
+    accessibleDepartments: new FormControl<string>('',Validators.required),
+    accessibleDivisions: new FormControl<string>('',Validators.required),
     bandLevel: new FormControl<string>('', Validators.required),
     applicationStatus: new FormControl(true),
     appUrl: new FormControl('', [Validators.required, urlValidator]),

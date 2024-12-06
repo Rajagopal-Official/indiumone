@@ -279,7 +279,7 @@
             font-weight: 400;
             font-size: 15px;
           "
-          >Accessible Divisions</label
+          >Accessible Divisions*</label
         >
         <mat-form-field
           appearance="fill"
@@ -305,8 +305,11 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        @if(form.get('accessibleDivisions')?.invalid && (form.get('accessibleDivisions')?.dirty || form.get('accessibleDivisions')?.touched)){
+        <div style="color: red; margin-top: 5px">Accessible Divisions is required.</div>
+        }
       </div>
-
+    
       <div style="flex: 1">
         <label
           for="accessibleDepartments"
@@ -316,7 +319,7 @@
             font-weight: 400;
             font-size: 15px;
           "
-          >Accessible Category/Group</label
+          >Accessible Category/Group*</label
         >
         <mat-form-field
           appearance="fill"
@@ -342,6 +345,9 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        @if(form.get('accessibleDepartments')?.invalid && (form.get('accessibleDepartments')?.dirty || form.get('accessibleDepartments')?.touched)){
+        <div style="color: red; margin-top: 5px">Accessible Category/Group is required.</div>
+        }
       </div>
     </div>
     <div style="margin-bottom: 9px">
